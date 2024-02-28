@@ -1,3 +1,6 @@
+         name: Build and push Docker images
+                uses: docker/build-push-action@v5.1.0
+
 name: Trigger auto deployment for imbot24
 
 # When this action will be executed
