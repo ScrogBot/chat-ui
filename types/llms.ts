@@ -21,7 +21,7 @@ export type GoogleLLMID =
 
 // Anthropic Models
 export type AnthropicLLMID =
-  | "claude-3-sonnet-20240229"// claude 3
+  //| "claude-3-sonnet-20240229"// claude 3
   | "claude-2.1" // Claude 2
   | "claude-instant-1.2" // Claude Instant
 
