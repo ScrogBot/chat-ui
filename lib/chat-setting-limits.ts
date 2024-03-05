@@ -9,7 +9,7 @@ type ChatSettingLimits = {
 
 export const CHAT_SETTING_LIMITS: Record<LLMID, ChatSettingLimits> = {
   // ANTHROPIC MODELS
-   "claude-3-sonnet-20240229": 
+   "claude-3-sonnet-20240229": {
     MIN_TEMPERATURE: 0.0,
     MAX_TEMPERATURE: 1.0,
     MAX_TOKEN_OUTPUT_LENGTH: 4096,
