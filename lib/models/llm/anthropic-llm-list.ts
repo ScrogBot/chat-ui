@@ -24,4 +24,4 @@ const CLAUDE_INSTANT: LLM = {
   imageInput: false
 }
 
-export const ANTHROPIC_LLM_LIST: LLM[] = [CLAUDE_3, CLAUDE_2, CLAUDE_INSTANT]
+export const ANTHROPIC_LLM_LIST: LLM[] = [CLAUDE_2, CLAUDE_INSTANT]
