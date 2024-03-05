@@ -4,7 +4,15 @@ const ANTHROPIC_PLATORM_LINK =
   "https://docs.anthropic.com/claude/reference/getting-started-with-the-api"
 
 // Anthropic Models (UPDATED 12/21/23) -----------------------------
-
+// Claude 3 (UPDATED 12/21/23)
+const CLAUDE_3: LLM = {
+  modelId: "claude-3-sonnet-20240229",
+  modelName: "Claude 3",
+  provider: "anthropic",
+  hostedId: "claude-3",
+  platformLink: ANTHROPIC_PLATORM_LINK,
+  imageInput: false
+}
 // Claude 2 (UPDATED 12/21/23)
 const CLAUDE_2: LLM = {
   modelId: "claude-2.1",
