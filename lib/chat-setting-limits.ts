@@ -21,7 +21,7 @@ export const CHAT_SETTING_LIMITS: Record<LLMID, ChatSettingLimits> = {
     MAX_TOKEN_OUTPUT_LENGTH: 4096,
     MAX_CONTEXT_LENGTH: 100000
   },
- 
+
   // GOOGLE MODELS
   "gemini-pro": {
     MIN_TEMPERATURE: 0.0,
