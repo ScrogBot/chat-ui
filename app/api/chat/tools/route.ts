@@ -4,8 +4,7 @@ import { Tables } from "@/supabase/types"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
-import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs";
-
+import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
 export async function POST(request: Request) {
   const json = await request.json()k
   const { chatSettings, messages, selectedTools } = json as {
