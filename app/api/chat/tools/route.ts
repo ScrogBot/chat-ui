@@ -8,7 +8,7 @@ import OpenAI from "openai"
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
 
 export async function POST(request: Request) {
-  const json = await request.json()
+  const json = await request.json()k
   const { chatSettings, messages, selectedTools } = json as {
     chatSettings: ChatSettings
     messages: any[]
