@@ -67,7 +67,7 @@ export const Import: FC<ImportProps> = ({}) => {
     files: setFiles,
     collections: setCollections,
     assistants: setAssistants,
-    setTools
+    tools: setTools
   }
 
   const handleSelectFiles = async (e: any) => {
