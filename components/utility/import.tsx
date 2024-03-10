@@ -33,6 +33,8 @@ export const Import: FC<ImportProps> = ({}) => {
     setFiles,
     setCollections,
     setAssistants,
+    setTools,
+    setplatformTools,
     setTools
   } = useContext(ChatbotUIContext)
 
