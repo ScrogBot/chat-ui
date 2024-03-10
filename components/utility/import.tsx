@@ -33,8 +33,7 @@ export const Import: FC<ImportProps> = ({}) => {
     setFiles,
     setCollections,
     setAssistants,
-    setTools,
-    setPlatformTools
+    setTools,const [platformTools, setPlatformTools] = useState<Tables<"tools">[]>([])    setPlatformTools,
     setTools
   } = useContext(ChatbotUIContext)
 
@@ -68,8 +67,6 @@ export const Import: FC<ImportProps> = ({}) => {
     files: setFiles,
     collections: setCollections,
     assistants: setAssistants,
-    tools: setTools,
-    platformTools: setPlatformTools
     setTools
   }
 
