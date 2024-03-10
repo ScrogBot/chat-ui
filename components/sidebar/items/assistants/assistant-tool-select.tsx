@@ -28,7 +28,7 @@ export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
   const allTools = (tools || []).concat(
     platformTools || []
   ) as Tables<"tools">[]
-  
+
   const inputRef = useRef<HTMLInputElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -46,7 +46,8 @@ export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
   const handleToolSelect = (tool: Tables<"tools">) => {
     onAssistantToolsSelect(tool)
   }
-if (!allTools) return null
+
+  if (!tools) return null
 
   return (
     <DropdownMenu

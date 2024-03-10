@@ -41,6 +41,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setPresets,
     setPrompts,
     setTools,
+    setPlatformTools,
     setModels,
     setPlatformTools,
     selectedWorkspace,
@@ -153,7 +154,6 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const toolData = await getToolWorkspacesByWorkspaceId(workspaceId)
     setTools(toolData.tools)
     setPlatformTools(platformToolDefinitions())
-    
     const modelData = await getModelWorkspacesByWorkspaceId(workspaceId)
     setModels(modelData.models)
 

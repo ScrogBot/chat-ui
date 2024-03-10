@@ -57,6 +57,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     setPlatformTools,
     setAssistantImages,
     setTools,
+    setPlatformTools,
     setModels
   } = useContext(ChatbotUIContext)
 
