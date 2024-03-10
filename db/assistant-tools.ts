@@ -34,7 +34,7 @@ export const getAssistantToolsByAssistantId = async (assistantId: string) => {
     id: assistantTools.id,
     name: assistantTools.name
   }
-
+}
   
  async function insertTools(
   tableName: string,
