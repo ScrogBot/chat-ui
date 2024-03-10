@@ -54,6 +54,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     setFiles,
     setCollections,
     setAssistants,
+    setPlatformTools,
     setAssistantImages,
     setTools,
     setModels
@@ -181,6 +182,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
+    platformTools: setPlatformTools,
     models: setModels
   }
 
