@@ -11,7 +11,6 @@ export const ToolPicker: FC<ToolPickerProps> = ({}) => {
     tools,
     platformTools,
     focusTool,
-    platformTools,
     toolCommand,
     isToolPickerOpen,
     setIsToolPickerOpen
