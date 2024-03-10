@@ -29,8 +29,6 @@ export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
     platformTools || []
   ) as Tables<"tools">[]
   
-  const { tools } = useContext(ChatbotUIContext)
-
   const inputRef = useRef<HTMLInputElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
