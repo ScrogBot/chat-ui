@@ -92,7 +92,10 @@ export const createAssistantTools = async (
 export const deleteAssistantTool = async (
   assistantId: string,
   toolId: string
-) => {
+  ) => {
+const tableName = platformToolList.map(ptool => ptool.id).includes(toolId)
+    ? "assistant_platform_tools"
+    : "assistant_tools"
   const { error } = await supabase
     .from(tableName)
     .delete()
