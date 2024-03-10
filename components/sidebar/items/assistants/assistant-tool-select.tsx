@@ -104,7 +104,7 @@ if (!allTools) return null
             />
           ))}
 
-        {alltools
+        {allTools
           .filter(
             tool =>
               !selectedAssistantTools.some(
