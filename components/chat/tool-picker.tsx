@@ -9,8 +9,8 @@ interface ToolPickerProps {}
 export const ToolPicker: FC<ToolPickerProps> = ({}) => {
   const {
     tools,
-    focusTool,
     platformTools,
+    focusTool,
     toolCommand,
     isToolPickerOpen,
     setIsToolPickerOpen
