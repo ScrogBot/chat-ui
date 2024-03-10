@@ -34,8 +34,7 @@ export const Import: FC<ImportProps> = ({}) => {
     setCollections,
     setAssistants,
     setTools,
-    setPlatformTools,
-    setTools
+    setPlatformTools
   } = useContext(ChatbotUIContext)
 
   const inputRef = useRef<HTMLInputElement>(null)
