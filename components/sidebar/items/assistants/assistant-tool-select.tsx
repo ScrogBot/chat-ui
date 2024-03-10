@@ -105,7 +105,7 @@ export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
             />
           ))}
 
-        {tools
+        {allTools
           .filter(
             tool =>
               !selectedAssistantTools.some(
