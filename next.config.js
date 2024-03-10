@@ -2,6 +2,12 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true"
 })
 
+module.exports = {
+  images: {
+    unoptimized: true,
+  },
+};
+
 const withPWA = require("next-pwa")({
   dest: "public"
 })

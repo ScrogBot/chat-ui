@@ -54,6 +54,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     setFiles,
     setCollections,
     setAssistants,
+    setPlatformTools,
     setAssistantImages,
     setTools,
     setPlatformTools,

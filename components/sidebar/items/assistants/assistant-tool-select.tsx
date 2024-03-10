@@ -28,7 +28,7 @@ export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
   const allTools = (tools || []).concat(
     platformTools || []
   ) as Tables<"tools">[]
-
+  
   const inputRef = useRef<HTMLInputElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 

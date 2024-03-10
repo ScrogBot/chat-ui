@@ -20,6 +20,10 @@ export const getAssistantToolsByAssistantId = async (assistantId: string) => {
   if (!assistantTools) {
     throw new Error(error.message)
   }
+  
+   const platformTools = assistantTools.assistant_platform_tools.map(tool =>
+    platformToolDefinitionById(tool.tool_id)
+  )
 
   const platformTools = assistantTools.assistant_platform_tools.map(tool =>
     platformToolDefinitionById(tool.tool_id)
@@ -28,7 +32,6 @@ export const getAssistantToolsByAssistantId = async (assistantId: string) => {
   const allAssistantTools = (assistantTools.tools || []).concat(
     platformTools || []
   )
-
   return {
     tools: allAssistantTools,
     id: assistantTools.id,
@@ -41,6 +44,15 @@ async function insertAssistantTool(
   const { data, error } = await supabase
     .from("assistant_tools")
     .insert(assistantTool)
+  
+ async function insertTools(
+  tableName: string,
+  tools: TablesInsert<"assistant_tools">[] | TablesInsert<"assistant_tools">
+) {
+  const { data, error } = await supabase
+    .from(tableName)
+    .insert(tools)
+
     .select("*")
 
   if (!data) {
@@ -91,6 +103,11 @@ export const createAssistantTools = async (
   )
 
   return { createdAssistantUserTools, createdPlatformTools }
+
+export const createAssistantPlatformTools = async (
+  assistantPlatformTools: TablesInsert<"assistant_platform_tools">[]
+) => {
+  return await insertTools("assistant_platform_tools", assistantPlatformTools)
 }
 
 export const deleteAssistantTool = async (
@@ -98,6 +115,7 @@ export const deleteAssistantTool = async (
   toolId: string
 ) => {
   const tableName = platformToolList.map(ptool => ptool.id).includes(toolId)
+
     ? "assistant_platform_tools"
     : "assistant_tools"
   const { error } = await supabase
