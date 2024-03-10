@@ -93,25 +93,6 @@ export async function POST(request: Request) {
           throw new Error(`Function ${functionName} not found in any schema`)
         }
 
-        // Reroute to local executor for local tools
-        if (schemaDetail.url === "local://executor") {
-          const toolFunction = platformToolFunction(functionName)
-          if (!toolFunction) {
-            throw new Error(`Function ${functionName} not found`)
-          }
-
-          const data = await toolFunction(parsedArgs)
-
-          messages.push({
-            tool_call_id: toolCall.id,
-            role: "tool",
-            name: functionName,
-            content: JSON.stringify(data)
-          })
-
-          continue
-        }
-
         const pathTemplate = Object.keys(schemaDetail.routeMap).find(
           key => schemaDetail.routeMap[key] === functionName
         )
