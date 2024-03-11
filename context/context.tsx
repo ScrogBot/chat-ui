@@ -164,6 +164,8 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setPrompts: () => {},
   tools: [],
   setTools: () => {},
+  platformTools: [],
+  setPlatformTools: () => {},
   workspaces: [],
   setWorkspaces: () => {},
 
