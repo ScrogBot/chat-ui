@@ -80,7 +80,6 @@ export const createAssistantTool = async (
   return createdAssistantTool
 }
 
-
 export const createAssistantTools = async (
   assistantTools: TablesInsert<"assistant_tools">[]
 ) => {

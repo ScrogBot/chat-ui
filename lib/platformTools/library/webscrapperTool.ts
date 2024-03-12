@@ -49,7 +49,7 @@ const webScrapper = async ({
     mdDoc = "Failed to fetch the URL: " + error.message
   }
 
-   // Fix for relative URLs
+  // Fix for relative URLs
   const urlRegex = /href="((?:\.\.\/)*(?:\.\/)*)\/?(?!\/)/g
   mdDoc = mdDoc.replace(
     urlRegex,
@@ -61,7 +61,7 @@ const webScrapper = async ({
 // This is the definition of the webscrapping tool.
 export const webScrapperTool: PlatformTool = {
   id: "b3f07a6e-5e01-423e-9f06-ee51830608be", // This is the unique identifier of the tool.
-name: "Web Scraper Tools", // This is the name of the tool.
+  name: "Web Scraper Tools", // This is the name of the tool.
   toolName: "webScraperTools", // This is the name of the tool in the code.
   version: "v1.0.0", // This is the version of the tool.
   // This is the description of the tool.

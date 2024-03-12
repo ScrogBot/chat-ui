@@ -20,7 +20,7 @@ import { useParams, useRouter } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState } from "react"
 import Loading from "../loading"
 import { platformToolDefinitions } from "@/lib/platformTools/utils/platformToolsUtils"
-  interface WorkspaceLayoutProps {
+interface WorkspaceLayoutProps {
   children: ReactNode
 }
 
