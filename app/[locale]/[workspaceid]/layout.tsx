@@ -19,7 +19,7 @@ import { LLMID } from "@/types"
 import { useParams, useRouter } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState } from "react"
 import Loading from "../loading"
-
+import { platformToolDefinitions } from "@/lib/platformTools/utils/platformToolsUtils"
 interface WorkspaceLayoutProps {
   children: ReactNode
 }
@@ -41,6 +41,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setPresets,
     setPrompts,
     setTools,
+    setPlatformTools,
     setModels,
     selectedWorkspace,
     setSelectedWorkspace,
@@ -151,15 +152,16 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
     const toolData = await getToolWorkspacesByWorkspaceId(workspaceId)
     setTools(toolData.tools)
+    setPlatformTools(platformToolDefinitions())
 
     const modelData = await getModelWorkspacesByWorkspaceId(workspaceId)
     setModels(modelData.models)
 
     setChatSettings({
-      model: (workspace?.default_model || "gpt-4-1106-preview") as LLMID,
+      model: (workspace?.default_model || "gpt-4 Turbo") as LLMID,
       prompt:
         workspace?.default_prompt ||
-        "You are a friendly, helpful AI assistant.",
+        "You are the Clarksonbot, an AI with expertise in medical science, and your user is a physician in training who needs you assistance with a medical question or complex patient. Do not recommend consulting a health care provider or professional, they are professionals. They may ask questions related to diseases, treatments, patient care, public health, or other medically relevant topics. Your responses should be conversational, informative, and supportive.  Engage in the following manner: Understanding the Inquiry: Clarify and comprehend the users question or topic, whether it relates to a medical condition, therapeutic approach, or any other medical subject. Providing Insightful Explanations: Offer detailed and accessible insights tailored to the providing quality evidence based answers. Break down complex medical concepts, providing relevant examples or analogies.   Referencing Evidence-Based Medicine: Support your insights with evidence, citing reputable sources like studies or medical guidelines. Citations can be informal, like: 'You might find this study interesting: [Title and hyperlink].' Connecting to Broader Contexts: If relevant, discuss the larger public health implications or the ethical considerations tied to the topic at hand",
       temperature: workspace?.default_temperature || 0.5,
       contextLength: workspace?.default_context_length || 4096,
       includeProfileContext: workspace?.include_profile_context || true,

@@ -1,3 +1,5 @@
+import { platformToolList } from "@/lib/platformTools/platformToolsList"
+import { platformToolDefinitionById } from "@/lib/platformTools/utils/platformToolsUtils"
 import { supabase } from "@/lib/supabase/browser-client"
 import { TablesInsert } from "@/supabase/types"
 
@@ -8,7 +10,8 @@ export const getAssistantToolsByAssistantId = async (assistantId: string) => {
       `
         id, 
         name, 
-        tools (*)
+        tools (*),
+        assistant_platform_tools (*)
       `
     )
     .eq("id", assistantId)
@@ -18,7 +21,48 @@ export const getAssistantToolsByAssistantId = async (assistantId: string) => {
     throw new Error(error.message)
   }
 
-  return assistantTools
+  const platformTools = assistantTools.assistant_platform_tools.map(tool =>
+    platformToolDefinitionById(tool.tool_id)
+  )
+
+  const allAssistantTools = (assistantTools.tools || []).concat(
+    platformTools || []
+  )
+
+  return {
+    tools: allAssistantTools,
+    id: assistantTools.id,
+    name: assistantTools.name
+  }
+}
+async function insertAssistantTool(
+  assistantTool: TablesInsert<"assistant_tools">
+) {
+  const { data, error } = await supabase
+    .from("assistant_tools")
+    .insert(assistantTool)
+    .select("*")
+
+  if (!data) {
+    throw new Error(error.message)
+  }
+
+  return data
+}
+
+async function insertAssistantPlatformTool(
+  assistantPlatformTool: TablesInsert<"assistant_platform_tools">
+) {
+  const { data, error } = await supabase
+    .from("assistant_platform_tools")
+    .insert(assistantPlatformTool)
+    .select("*")
+
+  if (!data) {
+    throw new Error(error.message)
+  }
+
+  return data
 }
 
 export const createAssistantTool = async (
@@ -39,16 +83,20 @@ export const createAssistantTool = async (
 export const createAssistantTools = async (
   assistantTools: TablesInsert<"assistant_tools">[]
 ) => {
-  const { data: createdAssistantTools, error } = await supabase
-    .from("assistant_tools")
-    .insert(assistantTools)
-    .select("*")
+  const createdAssistantUserTools = await Promise.all(
+    assistantTools
+      .filter(
+        tool => !platformToolList.some(ptool => ptool.id === tool.tool_id)
+      )
+      .map(async tool => await insertAssistantTool(tool))
+  )
+  const createdPlatformTools = await Promise.all(
+    assistantTools
+      .filter(tool => platformToolList.some(ptool => ptool.id === tool.tool_id))
+      .map(async tool => await insertAssistantPlatformTool(tool))
+  )
 
-  if (!createdAssistantTools) {
-    throw new Error(error.message)
-  }
-
-  return createdAssistantTools
+  return { createdAssistantUserTools, createdPlatformTools }
 }
 
 export const deleteAssistantTool = async (
@@ -56,7 +104,7 @@ export const deleteAssistantTool = async (
   toolId: string
 ) => {
   const { error } = await supabase
-    .from("assistant_tools")
+    .from(tableName)
     .delete()
     .eq("assistant_id", assistantId)
     .eq("tool_id", toolId)
