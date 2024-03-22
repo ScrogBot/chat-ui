@@ -68,18 +68,12 @@ async function insertAssistantPlatformTool(
 export const createAssistantTool = async (
   assistantTool: TablesInsert<"assistant_tools">
 ) => {
-  const { data: createdAssistantTool, error } = await supabase
-    .from("assistant_tools")
-    .insert(assistantTool)
-    .select("*")
-
-  if (!createdAssistantTool) {
-    throw new Error(error.message)
+  if (platformToolList.some(ptool => ptool.id === assistantTool.tool_id)) {
+    return await insertAssistantPlatformTool(assistantTool)
+  } else {
+    return await insertAssistantTool(assistantTool)
   }
-
-  return createdAssistantTool
 }
-
 export const createAssistantTools = async (
   assistantTools: TablesInsert<"assistant_tools">[]
 ) => {
@@ -103,6 +97,9 @@ export const deleteAssistantTool = async (
   assistantId: string,
   toolId: string
 ) => {
+  const tableName = platformToolList.map(ptool => ptool.id).includes(toolId)
+    ? "assistant_platform_tools"
+    : "assistant_tools"
   const { error } = await supabase
     .from(tableName)
     .delete()
