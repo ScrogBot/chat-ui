@@ -11,9 +11,9 @@ export const runtime = "edge"
 export async function POST(request: NextRequest) {
   const json = await request.json()
   const { chatSettings, messages } = json as {
-    chatSettings: ChatSettings
-    messages: any[]
-  }
+    chatSettings: ChatSettings;
+    messages: any[];
+  };
 
   try {
     const profile = await getServerProfile()
@@ -56,8 +56,8 @@ export async function POST(request: NextRequest) {
     )
 
     const anthropic = new Anthropic({
-      apiKey: profile.anthropic_api_key || ""
-    })
+      apiKey: profile.anthropic_api_key || "",
+    });
 
     try {
       const response = await anthropic.messages.create({
@@ -93,15 +93,12 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (error: any) {
-    let errorMessage = error.message || "An unexpected error occurred"
-    const errorCode = error.status || 500
-
+    let errorMessage = error.message || "An unexpected error occurred";
+    const errorCode = error.status || 500;
     if (errorMessage.toLowerCase().includes("api key not found")) {
-      errorMessage =
-        "Anthropic API Key not found. Please set it in your profile settings."
+      errorMessage = "Anthropic API Key not found. Please set it in your profile settings.";
     } else if (errorCode === 401) {
-      errorMessage =
-        "Anthropic API Key is incorrect. Please fix it in your profile settings."
+      errorMessage = "Anthropic API Key is incorrect. Please fix it in your profile settings.";
     }
 
     return new NextResponse(JSON.stringify({ message: errorMessage }), {
