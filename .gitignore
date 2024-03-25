@@ -36,7 +36,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-seed.sql
 .VSCodeCounter
 tool-schemas
 custom-prompts
@@ -45,4 +44,3 @@ sw.js
 sw.js.map
 workbox-*.js
 workbox-*.js.map
-public/worker-10KZEGoRJi9-VHTb-WM2D.js
