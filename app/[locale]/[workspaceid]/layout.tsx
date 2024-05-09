@@ -2,10 +2,7 @@
 
 import { Dashboard } from "@/components/ui/dashboard"
 import { ChatbotUIContext } from "@/context/context"
-import {
-  getAssistantWorkspacesByWorkspaceId,
-  getPublicAssistants
-} from "@/db/assistants"
+import { getAssistantWorkspacesByWorkspaceId } from "@/db/assistants"
 import { getChatsByWorkspaceId } from "@/db/chats"
 import { getCollectionWorkspacesByWorkspaceId } from "@/db/collections"
 import { getFileWorkspacesByWorkspaceId } from "@/db/files"
@@ -13,11 +10,8 @@ import { getFoldersByWorkspaceId } from "@/db/folders"
 import { getModelWorkspacesByWorkspaceId } from "@/db/models"
 import { getPresetWorkspacesByWorkspaceId } from "@/db/presets"
 import { getPromptWorkspacesByWorkspaceId } from "@/db/prompts"
-import {
-  getAssistantImageFromStorage,
-  getAssistantPublicImageUrl
-} from "@/db/storage/assistant-images"
-import { getPublicTools, getToolWorkspacesByWorkspaceId } from "@/db/tools"
+import { getAssistantImageFromStorage } from "@/db/storage/assistant-images"
+import { getToolWorkspacesByWorkspaceId } from "@/db/tools"
 import { getWorkspaceById } from "@/db/workspaces"
 import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { supabase } from "@/lib/supabase/browser-client"
@@ -25,8 +19,7 @@ import { LLMID } from "@/types"
 import { useParams, useRouter } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState } from "react"
 import Loading from "../loading"
-import { getPlatformTools } from "@/db/platform-tools"
-
+import { platformToolDefinitions } from "@/lib/platformTools/utils/platformToolsUtils"
 interface WorkspaceLayoutProps {
   children: ReactNode
 }
@@ -38,7 +31,6 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
   const workspaceId = params.workspaceid as string
 
   const {
-    chatSettings,
     setChatSettings,
     setAssistants,
     setAssistantImages,
@@ -81,11 +73,14 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
   useEffect(() => {
     ;(async () => await fetchWorkspaceData(workspaceId))()
+
     setUserInput("")
     setChatMessages([])
     setSelectedChat(null)
+
     setIsGenerating(false)
     setFirstTokenReceived(false)
+
     setChatFiles([])
     setChatImages([])
     setNewMessageFiles([])
@@ -99,130 +94,80 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const workspace = await getWorkspaceById(workspaceId)
     setSelectedWorkspace(workspace)
 
-    // const assistantData = await getAssistantWorkspacesByWorkspaceId(workspaceId)
+    const assistantData = await getAssistantWorkspacesByWorkspaceId(workspaceId)
+    setAssistants(assistantData.assistants)
 
-    // const publicAssistantData = await getPublicAssistants()
+    for (const assistant of assistantData.assistants) {
+      let url = ""
 
-    // function to fetch unique values from array by id
+      if (assistant.image_path) {
+        url = (await getAssistantImageFromStorage(assistant.image_path)) || ""
+      }
 
-    function onlyUniqueById(value: any, index: any, self: any) {
-      return self.findIndex((item: any) => item.id === value.id) === index
+      if (url) {
+        const response = await fetch(url)
+        const blob = await response.blob()
+        const base64 = await convertBlobToBase64(blob)
+
+        setAssistantImages(prev => [
+          ...prev,
+          {
+            assistantId: assistant.id,
+            path: assistant.image_path,
+            base64,
+            url
+          }
+        ])
+      } else {
+        setAssistantImages(prev => [
+          ...prev,
+          {
+            assistantId: assistant.id,
+            path: assistant.image_path,
+            base64: "",
+            url
+          }
+        ])
+      }
     }
 
-    const [
-      workspaceData,
-      assistantData,
-      publicAssistantData,
-      chats,
-      collectionData,
-      folders,
-      fileData,
-      presetData,
-      promptData,
-      toolData,
-      publicToolData,
-      platformToolData,
-      modelData
-    ] = await Promise.all([
-      getWorkspaceById(workspaceId),
-      getAssistantWorkspacesByWorkspaceId(workspaceId),
-      getPublicAssistants(),
-      getChatsByWorkspaceId(workspaceId),
-      getCollectionWorkspacesByWorkspaceId(workspaceId),
-      getFoldersByWorkspaceId(workspaceId),
-      getFileWorkspacesByWorkspaceId(workspaceId),
-      getPresetWorkspacesByWorkspaceId(workspaceId),
-      getPromptWorkspacesByWorkspaceId(workspaceId),
-      getToolWorkspacesByWorkspaceId(workspaceId),
-      getPublicTools(),
-      getPlatformTools(),
-      getModelWorkspacesByWorkspaceId(workspaceId)
-    ])
-
-    setSelectedWorkspace(workspaceData)
-    setAssistants(
-      [...assistantData.assistants, ...publicAssistantData].filter(
-        onlyUniqueById
-      )
-    )
+    const chats = await getChatsByWorkspaceId(workspaceId)
     setChats(chats)
+
+    const collectionData =
+      await getCollectionWorkspacesByWorkspaceId(workspaceId)
     setCollections(collectionData.collections)
+
+    const folders = await getFoldersByWorkspaceId(workspaceId)
     setFolders(folders)
+
+    const fileData = await getFileWorkspacesByWorkspaceId(workspaceId)
     setFiles(fileData.files)
+
+    const presetData = await getPresetWorkspacesByWorkspaceId(workspaceId)
     setPresets(presetData.presets)
+
+    const promptData = await getPromptWorkspacesByWorkspaceId(workspaceId)
     setPrompts(promptData.prompts)
-    setTools(
-      [...platformToolData, ...toolData.tools, ...publicToolData].filter(
-        onlyUniqueById
-      )
-    )
-    setPlatformTools(platformToolData)
+
+    const toolData = await getToolWorkspacesByWorkspaceId(workspaceId)
+    setTools(toolData.tools)
+    setPlatformTools(platformToolDefinitions())
+
+    const modelData = await getModelWorkspacesByWorkspaceId(workspaceId)
     setModels(modelData.models)
 
-    const parallelize = async (array: any, callback: any) => {
-      const promises = array.map((item: any) => callback(item))
-      return Promise.all(promises)
-    }
-
-    await parallelize(
-      [...assistantData.assistants, ...publicAssistantData],
-      async (assistant: any) => {
-        let url = assistant.image_path
-          ? getAssistantPublicImageUrl(assistant.image_path)
-          : ""
-
-        if (url) {
-          // const response = await fetch(url)
-          // const blob = await response.blob()
-          // const base64 = await convertBlobToBase64(blob)
-
-          setAssistantImages(prev => [
-            ...prev,
-            {
-              assistantId: assistant.id,
-              path: assistant.image_path,
-              base64: "",
-              url
-            }
-          ])
-        } else {
-          setAssistantImages(prev => [
-            ...prev,
-            {
-              assistantId: assistant.id,
-              path: assistant.image_path,
-              base64: "",
-              url
-            }
-          ])
-        }
-      }
-    )
-
-    setLoading(false)
-
     setChatSettings({
-      model: (chatSettings?.model ||
-        workspace?.default_model ||
-        "gpt-3.5-turbo-0125") as LLMID,
+      model: (workspace?.default_model || "gpt-4 Turbo") as LLMID,
       prompt:
-        // chatSettings?.prompt ||
         workspace?.default_prompt ||
-        "You are a friendly, helpful AI assistant.",
-      temperature:
-        // chatSettings?.temperature ||
-        workspace?.default_temperature || 0.5,
-      contextLength:
-        // chatSettings?.contextLength ||
-        workspace?.default_context_length || 4096,
-      includeProfileContext:
-        // chatSettings?.includeProfileContext ||
-        workspace?.include_profile_context || true,
+        "You are the Clarksonbot, an AI with expertise in medical science, and your user is a physician in training who needs you assistance with a medical question or complex patient. Do not recommend consulting a health care provider or professional, they are professionals. They may ask questions related to diseases, treatments, patient care, public health, or other medically relevant topics. Your responses should be conversational, informative, and supportive.  Engage in the following manner: Understanding the Inquiry: Clarify and comprehend the users question or topic, whether it relates to a medical condition, therapeutic approach, or any other medical subject. Providing Insightful Explanations: Offer detailed and accessible insights tailored to the providing quality evidence based answers. Break down complex medical concepts, providing relevant examples or analogies.   Referencing Evidence-Based Medicine: Support your insights with evidence, citing reputable sources like studies or medical guidelines. Citations can be informal, like: 'You might find this study interesting: [Title and hyperlink].' Connecting to Broader Contexts: If relevant, discuss the larger public health implications or the ethical considerations tied to the topic at hand",
+      temperature: workspace?.default_temperature || 0.5,
+      contextLength: workspace?.default_context_length || 4096,
+      includeProfileContext: workspace?.include_profile_context || true,
       includeWorkspaceInstructions:
-        // chatSettings?.includeWorkspaceInstructions ||
         workspace?.include_workspace_instructions || true,
       embeddingsProvider:
-        // chatSettings?.embeddingsProvider ||
         (workspace?.embeddings_provider as "openai" | "local") || "openai"
     })
 
@@ -233,5 +178,5 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     return <Loading />
   }
 
-  return <>{children}</>
+  return <Dashboard>{children}</Dashboard>
 }
