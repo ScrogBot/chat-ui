@@ -333,6 +333,11 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setSelectedTools,
         toolInUse,
         setToolInUse
+
+        // PUBMED STORE
+        searchPubMed,
+        pubMedArticles,
+        setPubMedArticles
       }}
     >
       {children}
