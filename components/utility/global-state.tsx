@@ -121,12 +121,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [useRetrieval, setUseRetrieval] = useState<boolean>(true)
   const [sourceCount, setSourceCount] = useState<number>(4)
   const [pubMedArticles, setPubMedArticles] = useState([])
-  
+
   const searchPubMed = async (query: string) => {
-   const results = await performPubMedSearch(query)
+    const results = await performPubMedSearch(query)
     setPubMedArticles(results.results)
     return results
-    
+  }
+
   // TOOL STORE
   const [selectedTools, setSelectedTools] = useState<Tables<"tools">[]>([])
   const [toolInUse, setToolInUse] = useState<string>("none")
@@ -332,7 +333,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         selectedTools,
         setSelectedTools,
         toolInUse,
-        setToolInUse
+        setToolInUse,
 
         // PUBMED STORE
         searchPubMed,
@@ -342,6 +343,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     >
       {children}
     </ChatbotUIContext.Provider>
-  );
-};
-  export default ChatbotUIProvider;
+  )
+}
+
+export default GlobalState
