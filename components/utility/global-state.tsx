@@ -119,11 +119,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [useRetrieval, setUseRetrieval] = useState<boolean>(true);
   const [sourceCount, setSourceCount] = useState<number>(4);
   const [pubMedArticles, setPubMedArticles] = useState<string[]>([]);
+  const [pubMedWebEnv, setPubMedWebEnv] = useState<string>("");
 
   const searchPubMed = async (query: string) => {
     const results: PubMedSearchResponse = await performPubMedSearch(query);
     console.log('PubMed Search Results:', results); // Log the response structure
     setPubMedArticles(results.esearchresult.idlist); // Update based on actual response structure
+    setPubMedWebEnv(results.esearchresult.webenv); // Store the WebEnv
     return results;
   };
 
