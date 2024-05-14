@@ -267,3 +267,52 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   toolInUse: "none",
   setToolInUse: () => {}
 })
+import { createContext, useContext, useState, Dispatch, SetStateAction } from "react";
+import { fetchPubMedArticles, PubMedArticle } from "../pubmed";
+import { Tables } from "@/supabase/types";
+// Import other necessary types and components...
+
+interface ChatbotUIContext {
+  // ... existing context properties
+  searchPubMed: (query: string) => Promise<PubMedArticle[]>;
+  pubMedArticles: PubMedArticle[];
+  setPubMedArticles: Dispatch<SetStateAction<PubMedArticle[]>>;
+}
+
+export const ChatbotUIContext = createContext<ChatbotUIContext>({
+  // ... existing context defaults
+  searchPubMed: async () => [],
+  pubMedArticles: [],
+  setPubMedArticles: () => {},
+});
+
+export const ChatbotUIContextProvider: React.FC = ({ children }) => {
+  // ... existing state and handlers
+  const [pubMedArticles, setPubMedArticles] = useState<PubMedArticle[]>([]);
+
+  const searchPubMed = async (query: string) => {
+    try {
+      const articles = await fetchPubMedArticles(query);
+      setPubMedArticles(articles);
+      return articles;
+    } catch (error) {
+      console.error("Error fetching PubMed articles:", error);
+      throw error;
+    }
+  };
+
+  return (
+    <ChatbotUIContext.Provider
+      value={{
+        // ... existing context values
+        searchPubMed,
+        pubMedArticles,
+        setPubMedArticles,
+      }}
+    >
+      {children}
+    </ChatbotUIContext.Provider>
+  );
+};
+
+export const useChatbotUIContext = () => useContext(ChatbotUIContext);
