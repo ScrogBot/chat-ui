@@ -1,48 +1,55 @@
-"use client"
+"use client";
 
-import { ChatHelp } from "@/components/chat/chat-help"
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
-import { ChatInput } from "@/components/chat/chat-input"
-import { ChatSettings } from "@/components/chat/chat-settings"
-import { ChatUI } from "@/components/chat/chat-ui"
-import { QuickSettings } from "@/components/chat/quick-settings"
-import { Brand } from "@/components/ui/brand"
-import { ChatbotUIContext } from "@/context/context"
-import useHotkey from "@/lib/hooks/use-hotkey"
-import { useTheme } from "next-themes"
-import { useContext } from "react"
+import { ChatHelp } from "@/components/chat/chat-help";
+import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler";
+import { ChatInput } from "@/components/chat/chat-input";
+import { ChatSettings } from "@/components/chat/chat-settings";
+import { ChatUI } from "@/components/chat/chat-ui";
+import { QuickSettings } from "@/components/chat/quick-settings";
+import { Brand } from "@/components/ui/brand";
+import { ChatbotUIContext } from "@/context/context";
+import useHotkey from "@/lib/hooks/use-hotkey";
+import { useTheme } from "next-themes";
+import { useContext } from "react";
+import { toast } from "sonner"; // Make sure to import toast
 
 export default function ChatPage() {
-  useHotkey("o", () => handleNewChat())
+  useHotkey("o", () => handleNewChat());
   useHotkey("l", () => {
-    handleFocusChatInput()
-  })
+    handleFocusChatInput();
+  });
 
-  const { chatMessages } = useContext(ChatbotUIContext)
+  const {
+    chatMessages,
+    selectedChat,
+    searchPubMed,
+    setPubMedArticles,
+  } = useContext(ChatbotUIContext);
 
-  const { handleNewChat, handleFocusChatInput } = useChatHandler()
+  const { handleNewChat, handleFocusChatInput } = useChatHandler();
 
-  const { theme } = useTheme()
-  
+  const { theme } = useTheme();
+
   const handleUserInput = async (input: string) => {
-    const query = input.trim()
-    const systemPrompt = selectedChat?.prompt || ""
-    const shouldSearchPubMed = systemPrompt.startsWith("pubmed:")
+    const query = input.trim();
+    const systemPrompt = selectedChat?.prompt || "";
+    const shouldSearchPubMed = systemPrompt.startsWith("pubmed:");
 
     if (shouldSearchPubMed) {
-      const searchQuery = query
+      const searchQuery = query;
       if (searchQuery) {
         try {
-          const results = await searchPubMed(searchQuery)
-          setPubMedArticles(results.results)
+          const results = await searchPubMed(searchQuery);
+          setPubMedArticles(results.results);
         } catch (error) {
-          toast.error("Failed to fetch PubMed articles.")
+          toast.error("Failed to fetch PubMed articles.");
         }
       }
     } else {
       // Normal prompt action here
     }
-  }
+  };
+
   return (
     <>
       {chatMessages.length === 0 ? (
@@ -62,7 +69,7 @@ export default function ChatPage() {
           <div className="flex grow flex-col items-center justify-center" />
 
           <div className="w-full min-w-[300px] items-end px-2 pb-3 pt-0 sm:w-[600px] sm:pb-8 sm:pt-5 md:w-[700px] lg:w-[700px] xl:w-[800px]">
-            <ChatInput onUserInput={handleUserInput}/>
+            <ChatInput onUserInput={handleUserInput} />
           </div>
 
           <div className="absolute bottom-2 right-2 hidden md:block lg:bottom-4 lg:right-4">
@@ -73,5 +80,5 @@ export default function ChatPage() {
         <ChatUI />
       )}
     </>
-  )
+  );
 }
