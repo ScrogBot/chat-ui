@@ -17,9 +17,11 @@ import { usePromptAndCommand } from "./chat-hooks/use-prompt-and-command"
 import { useSelectFileHandler } from "./chat-hooks/use-select-file-handler"
 import { PubMedArticle } from "../pubmedService"
 
-interface ChatInputProps {}
+interface ChatInputProps {
+  onUserInput: (input: string) => Promise<void>;
+}
 
-export const ChatInput: FC<ChatInputProps> = ({}) => {
+export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
   const { t } = useTranslation()
 
   useHotkey("l", () => {
@@ -51,9 +53,6 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     selectedTools,
     setSelectedTools,
     assistantImages,
-    searchPubMed,
-    pubMedArticles,
-    setPubMedArticles,
     setUserInput
   } = useContext(ChatbotUIContext)
 
@@ -85,24 +84,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     if (!isTyping && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault()
       const query = userInput.trim()
-
-      // Check if the query should trigger a PubMed search
-      const shouldSearchPubMed = query.startsWith("pubmed:");
-
-      if (shouldSearchPubMed) {
-        const searchQuery = query.replace("pubmed:", "").trim();
-        if (searchQuery) {
-          try {
-            const results = await searchPubMed(searchQuery)
-            setPubMedArticles(results.results)
-          } catch (error) {
-            toast.error("Failed to fetch PubMed articles.")
-          }
-        }
-      } else {
-        handleSendMessage(userInput, chatMessages, false)
-      }
-
+      await onUserInput(query)
       setUserInput("") // Clear the input after sending the message
     }
 
@@ -262,4 +244,20 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
       </div>
 
       {/* Display PubMed Search Results */}
-      {pubMedArticles.length
+      {pubMedArticles.length > 0 && (
+        <div className="mt-4">
+          <h2>PubMed Search Results</h2>
+          {pubMedArticles.map((article, index) => (
+            <div key={index} className="article">
+              <h3>{article.title}</h3>
+              <p>{article.abstract}</p>
+              <a href={article.url} target="_blank" rel="noopener noreferrer">
+                Read more
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  )
+}
