@@ -85,15 +85,24 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     if (!isTyping && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault()
       const query = userInput.trim()
-      if (query) {
-        try {
-          const results = await searchPubMed(query)
-          setPubMedArticles(results.results)
-        } catch (error) {
-          toast.error("Failed to fetch PubMed articles.")
+
+      // Check if the query should trigger a PubMed search
+      const shouldSearchPubMed = query.startsWith("pubmed:");
+
+      if (shouldSearchPubMed) {
+        const searchQuery = query.replace("pubmed:", "").trim();
+        if (searchQuery) {
+          try {
+            const results = await searchPubMed(searchQuery)
+            setPubMedArticles(results.results)
+          } catch (error) {
+            toast.error("Failed to fetch PubMed articles.")
+          }
         }
+      } else {
+        handleSendMessage(userInput, chatMessages, false)
       }
-      handleSendMessage(userInput, chatMessages, false)
+
       setUserInput("") // Clear the input after sending the message
     }
 
@@ -253,20 +262,4 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
       </div>
 
       {/* Display PubMed Search Results */}
-      {pubMedArticles.length > 0 && (
-        <div className="mt-4">
-          <h2>PubMed Search Results</h2>
-          {pubMedArticles.map((article, index) => (
-            <div key={index} className="article">
-              <h3>{article.title}</h3>
-              <p>{article.abstract}</p>
-              <a href={article.url} target="_blank" rel="noopener noreferrer">
-                Read more
-              </a>
-            </div>
-          ))}
-        </div>
-      )}
-    </>
-  )
-}
+      {pubMedArticles.length
