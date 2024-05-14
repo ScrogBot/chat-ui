@@ -25,7 +25,7 @@ import { AssistantImage } from "@/types/images/assistant-image";
 import { VALID_ENV_KEYS } from "@/types/valid-keys";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { performPubMedSearch, PubMedSearchResponse } from "../../pubmedService"; // Ensure this import path is correct
+import { performPubMedSearch, PubMedSearchResponse } from "../../pubmedService";
 
 interface GlobalStateProps {
   children: React.ReactNode;
@@ -118,12 +118,12 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   // RETIEVAL STORE
   const [useRetrieval, setUseRetrieval] = useState<boolean>(true);
   const [sourceCount, setSourceCount] = useState<number>(4);
-  const [pubMedArticles, setPubMedArticles] = useState<any[]>([]);
+  const [pubMedArticles, setPubMedArticles] = useState<string[]>([]);
 
   const searchPubMed = async (query: string) => {
     const results: PubMedSearchResponse = await performPubMedSearch(query);
     console.log('PubMed Search Results:', results); // Log the response structure
-    setPubMedArticles(results.articles); // Update based on actual response structure
+    setPubMedArticles(results.esearchresult.idlist); // Update based on actual response structure
     return results;
   };
 
