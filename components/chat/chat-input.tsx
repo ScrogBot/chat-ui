@@ -15,7 +15,7 @@ import { useChatHandler } from "./chat-hooks/use-chat-handler"
 import { useChatHistoryHandler } from "./chat-hooks/use-chat-history"
 import { usePromptAndCommand } from "./chat-hooks/use-prompt-and-command"
 import { useSelectFileHandler } from "./chat-hooks/use-select-file-handler"
-import { PubMedArticle } from "../pubmedService"
+import { PubMedArticle } from "./pubmedService"
 
 interface ChatInputProps {
   onUserInput: (input: string) => Promise<void>;
