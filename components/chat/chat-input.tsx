@@ -2,12 +2,7 @@ import { ChatbotUIContext } from "@/context/context"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import { LLM_LIST } from "@/lib/models/llm/llm-list"
 import { cn } from "@/lib/utils"
-import {
-  IconBolt,
-  IconCirclePlus,
-  IconPlayerStopFilled,
-  IconSend
-} from "@tabler/icons-react"
+import { IconBolt, IconCirclePlus, IconPlayerStopFilled, IconSend } from "@tabler/icons-react"
 import Image from "next/image"
 import { FC, useContext, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -20,6 +15,7 @@ import { useChatHandler } from "./chat-hooks/use-chat-handler"
 import { useChatHistoryHandler } from "./chat-hooks/use-chat-history"
 import { usePromptAndCommand } from "./chat-hooks/use-prompt-and-command"
 import { useSelectFileHandler } from "./chat-hooks/use-select-file-handler"
+import { PubMedArticle } from "../pubmedService"
 
 interface ChatInputProps {}
 
@@ -54,7 +50,11 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     chatSettings,
     selectedTools,
     setSelectedTools,
-    assistantImages
+    assistantImages,
+    searchPubMed,
+    pubMedArticles,
+    setPubMedArticles,
+    setUserInput
   } = useContext(ChatbotUIContext)
 
   const {
@@ -78,48 +78,25 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   useEffect(() => {
     setTimeout(() => {
       handleFocusChatInput()
-    }, 200) // FIX: hacky
+    }, 200); // FIX: hacky
   }, [selectedPreset, selectedAssistant])
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = async (event: React.KeyboardEvent) => {
     if (!isTyping && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault()
-      setIsPromptPickerOpen(false)
-      handleSendMessage(userInput, chatMessages, false)
-    }
-
-    // Consolidate conditions to avoid TypeScript error
-    if (
-      isPromptPickerOpen ||
-      isFilePickerOpen ||
-      isToolPickerOpen ||
-      isAssistantPickerOpen
-    ) {
-      if (
-        event.key === "Tab" ||
-        event.key === "ArrowUp" ||
-        event.key === "ArrowDown"
-      ) {
-        event.preventDefault()
-        // Toggle focus based on picker type
-        if (isPromptPickerOpen) setFocusPrompt(!focusPrompt)
-        if (isFilePickerOpen) setFocusFile(!focusFile)
-        if (isToolPickerOpen) setFocusTool(!focusTool)
-        if (isAssistantPickerOpen) setFocusAssistant(!focusAssistant)
+      const query = userInput.trim()
+      if (query) {
+        try {
+          const results = await searchPubMed(query)
+          setPubMedArticles(results.results)
+        } catch (error) {
+          toast.error("Failed to fetch PubMed articles.")
+        }
       }
+      handleSendMessage(userInput, chatMessages, false)
+      setUserInput("") // Clear the input after sending the message
     }
 
-    if (event.key === "ArrowUp" && event.shiftKey && event.ctrlKey) {
-      event.preventDefault()
-      setNewMessageContentToPreviousUserMessage()
-    }
-
-    if (event.key === "ArrowDown" && event.shiftKey && event.ctrlKey) {
-      event.preventDefault()
-      setNewMessageContentToNextUserMessage()
-    }
-
-    //use shift+ctrl+up and shift+ctrl+down to navigate through chat history
     if (event.key === "ArrowUp" && event.shiftKey && event.ctrlKey) {
       event.preventDefault()
       setNewMessageContentToPreviousUserMessage()
@@ -182,7 +159,6 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             >
               <div className="flex cursor-pointer items-center justify-center space-x-1 rounded-lg bg-purple-600 px-3 py-1 hover:opacity-50">
                 <IconBolt size={20} />
-
                 <div>{tool.name}</div>
               </div>
             </div>
@@ -203,7 +179,6 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
                 alt={selectedAssistant.name}
               />
             )}
-
             <div className="text-sm font-bold">
               Talking to {selectedAssistant.name}
             </div>
@@ -276,6 +251,22 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
           )}
         </div>
       </div>
+
+      {/* Display PubMed Search Results */}
+      {pubMedArticles.length > 0 && (
+        <div className="mt-4">
+          <h2>PubMed Search Results</h2>
+          {pubMedArticles.map((article, index) => (
+            <div key={index} className="article">
+              <h3>{article.title}</h3>
+              <p>{article.abstract}</p>
+              <a href={article.url} target="_blank" rel="noopener noreferrer">
+                Read more
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   )
 }
