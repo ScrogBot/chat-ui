@@ -25,7 +25,7 @@ import { AssistantImage } from "@/types/images/assistant-image";
 import { VALID_ENV_KEYS } from "@/types/valid-keys";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { performPubMedSearch } from "../../pubmedService";
+import { performPubMedSearch, PubMedSearchResponse } from "../../pubmedService"; // Ensure this import path is correct
 
 interface GlobalStateProps {
   children: React.ReactNode;
@@ -121,9 +121,9 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [pubMedArticles, setPubMedArticles] = useState<any[]>([]);
 
   const searchPubMed = async (query: string) => {
-    const results = await performPubMedSearch(query);
+    const results: PubMedSearchResponse = await performPubMedSearch(query);
     console.log('PubMed Search Results:', results); // Log the response structure
-    setPubMedArticles(results); // Update based on actual response structure
+    setPubMedArticles(results.articles); // Update based on actual response structure
     return results;
   };
 
