@@ -1,253 +1,263 @@
-import Loading from "@/app/[locale]/loading"
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import { ChatbotUIContext } from "@/context/context"
-import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
-import { getChatFilesByChatId } from "@/db/chat-files"
-import { getChatById } from "@/db/chats"
-import { getMessageFileItemsByMessageId } from "@/db/message-file-items"
-import { getMessagesByChatId } from "@/db/messages"
-import { getMessageImageFromStorage } from "@/db/storage/message-images"
-import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import useHotkey from "@/lib/hooks/use-hotkey"
-import { LLMID, MessageImage } from "@/types"
-import { useParams } from "next/navigation"
-import { FC, useContext, useEffect, useState } from "react"
-import { ChatHelp } from "./chat-help"
-import { useScroll } from "./chat-hooks/use-scroll"
-import { ChatInput } from "./chat-input"
-import { ChatMessages } from "./chat-messages"
-import { ChatScrollButtons } from "./chat-scroll-buttons"
-import { ChatSecondaryButtons } from "./chat-secondary-buttons"
+import { LLM_LIST } from "@/lib/models/llm/llm-list"
+import { cn } from "@/lib/utils"
+import { IconBolt, IconCirclePlus, IconPlayerStopFilled, IconSend } from "@tabler/icons-react"
+import Image from "next/image"
+import { FC, useContext, useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { toast } from "sonner"
+import { Input } from "../ui/input"
+import { TextareaAutosize } from "../ui/textarea-autosize"
+import { ChatCommandInput } from "./chat-command-input"
+import { ChatFilesDisplay } from "./chat-files-display"
+import { useChatHandler } from "./chat-hooks/use-chat-handler"
+import { useChatHistoryHandler } from "./chat-hooks/use-chat-history"
+import { usePromptAndCommand } from "./chat-hooks/use-prompt-and-command"
+import { useSelectFileHandler } from "./chat-hooks/use-select-file-handler"
+import { PubMedArticle } from "../pubmedService"
 
-interface ChatUIProps {}
+interface ChatInputProps {
+  onUserInput: (input: string) => Promise<void>;
+}
 
-export const ChatUI: FC<ChatUIProps> = ({}) => {
-  useHotkey("o", () => handleNewChat())
+export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
+  const { t } = useTranslation()
 
-  const params = useParams()
+  useHotkey("l", () => {
+    handleFocusChatInput()
+  })
+
+  const [isTyping, setIsTyping] = useState<boolean>(false)
 
   const {
-    setChatMessages,
-    selectedChat,
-    setSelectedChat,
-    setChatSettings,
-    setChatImages,
-    assistants,
-    setSelectedAssistant,
-    setChatFileItems,
-    setChatFiles,
-    setShowFilesDisplay,
-    setUseRetrieval,
+    isAssistantPickerOpen,
+    focusAssistant,
+    setFocusAssistant,
+    userInput,
+    chatMessages,
+    isGenerating,
+    selectedPreset,
+    selectedAssistant,
+    focusPrompt,
+    setFocusPrompt,
+    focusFile,
+    focusTool,
+    setFocusTool,
+    isToolPickerOpen,
+    isPromptPickerOpen,
+    setIsPromptPickerOpen,
+    isFilePickerOpen,
+    setFocusFile,
+    chatSettings,
+    selectedTools,
     setSelectedTools,
-    searchPubMed,
-    pubMedArticles,
-    setPubMedArticles
+    assistantImages,
+    setUserInput
   } = useContext(ChatbotUIContext)
 
-  const { handleNewChat, handleFocusChatInput } = useChatHandler()
+  const {
+    chatInputRef,
+    handleSendMessage,
+    handleStopMessage,
+    handleFocusChatInput
+  } = useChatHandler()
+
+  const { handleInputChange } = usePromptAndCommand()
+
+  const { filesToAccept, handleSelectDeviceFile } = useSelectFileHandler()
 
   const {
-    messagesStartRef,
-    messagesEndRef,
-    handleScroll,
-    scrollToBottom,
-    setIsAtBottom,
-    isAtTop,
-    isAtBottom,
-    isOverflowing,
-    scrollToTop
-  } = useScroll()
+    setNewMessageContentToNextUserMessage,
+    setNewMessageContentToPreviousUserMessage
+  } = useChatHistoryHandler()
 
-  const [loading, setLoading] = useState(true)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const fetchData = async () => {
-      await fetchMessages()
-      await fetchChat()
+    setTimeout(() => {
+      handleFocusChatInput()
+    }, 200); // FIX: hacky
+  }, [selectedPreset, selectedAssistant])
 
-      scrollToBottom()
-      setIsAtBottom(true)
+  const handleKeyDown = async (event: React.KeyboardEvent) => {
+    if (!isTyping && event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault()
+      const query = userInput.trim()
+      await onUserInput(query)
+      setUserInput("") // Clear the input after sending the message
     }
 
-    if (params.chatid) {
-      fetchData().then(() => {
-        handleFocusChatInput()
-        setLoading(false)
-      })
-    } else {
-      setLoading(false)
+    if (event.key === "ArrowUp" && event.shiftKey && event.ctrlKey) {
+      event.preventDefault()
+      setNewMessageContentToPreviousUserMessage()
     }
-  }, [])
 
-  const fetchMessages = async () => {
-    const fetchedMessages = await getMessagesByChatId(params.chatid as string)
+    if (event.key === "ArrowDown" && event.shiftKey && event.ctrlKey) {
+      event.preventDefault()
+      setNewMessageContentToNextUserMessage()
+    }
 
-    const imagePromises: Promise<MessageImage>[] = fetchedMessages.flatMap(
-      message =>
-        message.image_paths
-          ? message.image_paths.map(async imagePath => {
-              const url = await getMessageImageFromStorage(imagePath)
+    if (
+      isAssistantPickerOpen &&
+      (event.key === "Tab" ||
+        event.key === "ArrowUp" ||
+        event.key === "ArrowDown")
+    ) {
+      event.preventDefault()
+      setFocusAssistant(!focusAssistant)
+    }
+  }
 
-              if (url) {
-                const response = await fetch(url)
-                const blob = await response.blob()
-                const base64 = await convertBlobToBase64(blob)
+  const handlePaste = (event: React.ClipboardEvent) => {
+    const imagesAllowed = LLM_LIST.find(
+      llm => llm.modelId === chatSettings?.model
+    )?.imageInput
 
-                return {
-                  messageId: message.id,
-                  path: imagePath,
-                  base64,
-                  url,
-                  file: null
-                }
-              }
-
-              return {
-                messageId: message.id,
-                path: imagePath,
-                base64: "",
-                url,
-                file: null
-              }
-            })
-          : []
-    )
-
-    const images: MessageImage[] = await Promise.all(imagePromises.flat())
-    setChatImages(images)
-
-    const messageFileItemPromises = fetchedMessages.map(
-      async message => await getMessageFileItemsByMessageId(message.id)
-    )
-
-    const messageFileItems = await Promise.all(messageFileItemPromises)
-
-    const uniqueFileItems = messageFileItems.flatMap(item => item.file_items)
-    setChatFileItems(uniqueFileItems)
-
-    const chatFiles = await getChatFilesByChatId(params.chatid as string)
-
-    setChatFiles(
-      chatFiles.files.map(file => ({
-        id: file.id,
-        name: file.name,
-        type: file.type,
-        file: null
-      }))
-    )
-
-    setUseRetrieval(true)
-    setShowFilesDisplay(true)
-
-    const fetchedChatMessages = fetchedMessages.map(message => {
-      return {
-        message,
-        fileItems: messageFileItems
-          .filter(messageFileItem => messageFileItem.id === message.id)
-          .flatMap(messageFileItem =>
-            messageFileItem.file_items.map(fileItem => fileItem.id)
+    const items = event.clipboardData.items
+    for (const item of items) {
+      if (item.type.indexOf("image") === 0) {
+        if (!imagesAllowed) {
+          toast.error(
+            `Images are not supported for this model. Use models like GPT-4 Vision instead.`
           )
-      }
-    })
-
-    setChatMessages(fetchedChatMessages)
-  }
-
-  const fetchChat = async () => {
-    const chat = await getChatById(params.chatid as string)
-    if (!chat) return
-
-    if (chat.assistant_id) {
-      const assistant = assistants.find(
-        assistant => assistant.id === chat.assistant_id
-      )
-
-      if (assistant) {
-        setSelectedAssistant(assistant)
-
-        const assistantTools = (
-          await getAssistantToolsByAssistantId(assistant.id)
-        ).tools
-        setSelectedTools(assistantTools)
-      }
-    }
-
-    setSelectedChat(chat)
-    setChatSettings({
-      model: chat.model as LLMID,
-      prompt: chat.prompt,
-      temperature: chat.temperature,
-      contextLength: chat.context_length,
-      includeProfileContext: chat.include_profile_context,
-      includeWorkspaceInstructions: chat.include_workspace_instructions,
-      embeddingsProvider: chat.embeddings_provider as "openai" | "local"
-    })
-  }
-
-  const handleUserInput = async (input: string) => {
-    const query = input.trim()
-    const systemPrompt = selectedChat?.prompt || ""
-    const shouldSearchPubMed = systemPrompt.startsWith("pubmed:")
-
-    if (shouldSearchPubMed) {
-      const searchQuery = query
-      if (searchQuery) {
-        try {
-          const results = await searchPubMed(searchQuery)
-          setPubMedArticles(results.results)
-        } catch (error) {
-          toast.error("Failed to fetch PubMed articles.")
+          return
         }
+        const file = item.getAsFile()
+        if (!file) return
+        handleSelectDeviceFile(file)
       }
-    } else {
-      // Normal prompt action here
     }
-  }
-
-  if (loading) {
-    return <Loading />
   }
 
   return (
-    <div className="relative flex h-full flex-col items-center">
-      <div className="absolute left-4 top-2.5 flex justify-center">
-        <ChatScrollButtons
-          isAtTop={isAtTop}
-          isAtBottom={isAtBottom}
-          isOverflowing={isOverflowing}
-          scrollToTop={scrollToTop}
-          scrollToBottom={scrollToBottom}
+    <>
+      <div className="flex flex-col flex-wrap justify-center gap-2">
+        <ChatFilesDisplay />
+
+        {selectedTools &&
+          selectedTools.map((tool, index) => (
+            <div
+              key={index}
+              className="flex justify-center"
+              onClick={() =>
+                setSelectedTools(
+                  selectedTools.filter(
+                    selectedTool => selectedTool.id !== tool.id
+                  )
+                )
+              }
+            >
+              <div className="flex cursor-pointer items-center justify-center space-x-1 rounded-lg bg-purple-600 px-3 py-1 hover:opacity-50">
+                <IconBolt size={20} />
+                <div>{tool.name}</div>
+              </div>
+            </div>
+          ))}
+
+        {selectedAssistant && (
+          <div className="border-primary mx-auto flex w-fit items-center space-x-2 rounded-lg border p-1.5">
+            {selectedAssistant.image_path && (
+              <Image
+                className="rounded"
+                src={
+                  assistantImages.find(
+                    img => img.path === selectedAssistant.image_path
+                  )?.base64
+                }
+                width={28}
+                height={28}
+                alt={selectedAssistant.name}
+              />
+            )}
+            <div className="text-sm font-bold">
+              Talking to {selectedAssistant.name}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="border-input relative mt-3 flex min-h-[60px] w-full items-center justify-center rounded-xl border-2">
+        <div className="absolute bottom-[76px] left-0 max-h-[300px] w-full overflow-auto rounded-xl dark:border-none">
+          <ChatCommandInput />
+        </div>
+
+        <>
+          <IconCirclePlus
+            className="absolute bottom-[12px] left-3 cursor-pointer p-1 hover:opacity-50"
+            size={32}
+            onClick={() => fileInputRef.current?.click()}
+          />
+
+          {/* Hidden input to select files from device */}
+          <Input
+            ref={fileInputRef}
+            className="hidden"
+            type="file"
+            onChange={e => {
+              if (!e.target.files) return
+              handleSelectDeviceFile(e.target.files[0])
+            }}
+            accept={filesToAccept}
+          />
+        </>
+
+        <TextareaAutosize
+          textareaRef={chatInputRef}
+          className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-14 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          placeholder={t(
+            // `Ask anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
+            `Ask anything. Type @  /  #  !`
+          )}
+          onValueChange={handleInputChange}
+          value={userInput}
+          minRows={1}
+          maxRows={18}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          onCompositionStart={() => setIsTyping(true)}
+          onCompositionEnd={() => setIsTyping(false)}
         />
-      </div>
 
-      <div className="absolute right-4 top-1 flex h-[40px] items-center space-x-2">
-        <ChatSecondaryButtons />
-      </div>
+        <div className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50">
+          {isGenerating ? (
+            <IconPlayerStopFilled
+              className="hover:bg-background animate-pulse rounded bg-transparent p-1"
+              onClick={handleStopMessage}
+              size={30}
+            />
+          ) : (
+            <IconSend
+              className={cn(
+                "bg-primary text-secondary rounded p-1",
+                !userInput && "cursor-not-allowed opacity-50"
+              )}
+              onClick={() => {
+                if (!userInput) return
 
-      <div className="bg-secondary flex max-h-[50px] min-h-[50px] w-full items-center justify-center border-b-2 font-bold">
-        <div className="max-w-[200px] truncate sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px]">
-          {selectedChat?.name || "Chat"}
+                handleSendMessage(userInput, chatMessages, false)
+              }}
+              size={30}
+            />
+          )}
         </div>
       </div>
 
-      <div
-        className="flex size-full flex-col overflow-auto border-b"
-        onScroll={handleScroll}
-      >
-        <div ref={messagesStartRef} />
-
-        <ChatMessages />
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="relative w-full min-w-[300px] items-end px-2 pb-3 pt-0 sm:w-[600px] sm:pb-8 sm:pt-5 md:w-[700px] lg:w-[700px] xl:w-[800px]">
-        <ChatInput onUserInput={handleUserInput} />
-      </div>
-
-      <div className="absolute bottom-2 right-2 hidden md:block lg:bottom-4 lg:right-4">
-        <ChatHelp />
-      </div>
-    </div>
+      {/* Display PubMed Search Results */}
+      {pubMedArticles.length > 0 && (
+        <div className="mt-4">
+          <h2>PubMed Search Results</h2>
+          {pubMedArticles.map((article, index) => (
+            <div key={index} className="article">
+              <h3>{article.title}</h3>
+              <p>{article.abstract}</p>
+              <a href={article.url} target="_blank" rel="noopener noreferrer">
+                Read more
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   )
 }
