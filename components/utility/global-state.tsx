@@ -337,5 +337,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     >
       {children}
     </ChatbotUIContext.Provider>
-  )
-}
+  );
+};
+  export default ChatbotUIProvider;
