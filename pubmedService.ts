@@ -17,22 +17,6 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
   const data: PubMedSearchResponse = await response.json();
   return data;
 };
-
-
-export interface PubMedSearchResponse {
-  query: string;
-  results: PubMedArticle[];
-}
-
-export async function performPubMedSearch(query: string): Promise<PubMedSearchResponse> {
-  const searchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi";
-  const searchParams = {
-    db: "pubmed",
-    term: query,
-    usehistory: "y",
-    retmode: "json"
-  };
-
   const searchResponse = await axios.get(searchUrl, { params: searchParams });
   const searchData = searchResponse.data;
 
