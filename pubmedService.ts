@@ -1,12 +1,23 @@
 // src/pubmedService.ts
 import axios from 'axios';
 
-export interface PubMedArticle {
-  title: string;
-  abstract: string;
-  pmid: string;
-  url: string;
+export interface PubMedSearchResponse {
+  esearchresult: {
+    count: string;
+    retmax: string;
+    retstart: string;
+    querykey: string;
+    webenv: string;
+    idlist: string[];
+  };
 }
+
+export const performPubMedSearch = async (query: string): Promise<PubMedSearchResponse> => {
+  const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${query}&usehistory=y&retmode=json`);
+  const data: PubMedSearchResponse = await response.json();
+  return data;
+};
+
 
 export interface PubMedSearchResponse {
   query: string;
