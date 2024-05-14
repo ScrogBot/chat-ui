@@ -27,6 +27,7 @@ import { AssistantImage } from "@/types/images/assistant-image"
 import { VALID_ENV_KEYS } from "@/types/valid-keys"
 import { useRouter } from "next/navigation"
 import { FC, useEffect, useState } from "react"
+import { performPubMedSearch } from "../../pubmedService"
 
 interface GlobalStateProps {
   children: React.ReactNode
@@ -119,7 +120,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   // RETIEVAL STORE
   const [useRetrieval, setUseRetrieval] = useState<boolean>(true)
   const [sourceCount, setSourceCount] = useState<number>(4)
-
+  const [pubMedArticles, setPubMedArticles] = useState([])
+  
+  const searchPubMed = async (query: string) => {
+   const results = await performPubMedSearch(query)
+    setPubMedArticles(results.results)
+    return results
+    
   // TOOL STORE
   const [selectedTools, setSelectedTools] = useState<Tables<"tools">[]>([])
   const [toolInUse, setToolInUse] = useState<string>("none")
