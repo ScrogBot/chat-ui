@@ -151,4 +151,130 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   profile: null,
   setProfile: () => {},
 
-  //
+  // ITEMS STORE
+  assistants: [],
+  setAssistants: () => {},
+  collections: [],
+  setCollections: () => {},
+  chats: [],
+  setChats: () => {},
+  files: [],
+  setFiles: () => {},
+  folders: [],
+  setFolders: () => {},
+  models: [],
+  setModels: () => {},
+  presets: [],
+  setPresets: () => {},
+  prompts: [],
+  setPrompts: () => {},
+  tools: [],
+  setTools: () => {},
+  platformTools: [],
+  setPlatformTools: () => {},
+  workspaces: [],
+  setWorkspaces: () => {},
+
+  // MODELS STORE
+  envKeyMap: {},
+  setEnvKeyMap: () => {},
+  availableHostedModels: [],
+  setAvailableHostedModels: () => {},
+  availableLocalModels: [],
+  setAvailableLocalModels: () => {},
+  availableOpenRouterModels: [],
+  setAvailableOpenRouterModels: () => {},
+
+  // WORKSPACE STORE
+  selectedWorkspace: null,
+  setSelectedWorkspace: () => {},
+  workspaceImages: [],
+  setWorkspaceImages: () => {},
+
+  // PRESET STORE
+  selectedPreset: null,
+  setSelectedPreset: () => {},
+
+  // ASSISTANT STORE
+  selectedAssistant: null,
+  setSelectedAssistant: () => {},
+  assistantImages: [],
+  setAssistantImages: () => {},
+  openaiAssistants: [],
+  setOpenaiAssistants: () => {},
+
+  // PASSIVE CHAT STORE
+  userInput: "",
+  setUserInput: () => {},
+  selectedChat: null,
+  setSelectedChat: () => {},
+  chatMessages: [],
+  setChatMessages: () => {},
+  chatSettings: null,
+  setChatSettings: () => {},
+  chatFileItems: [],
+  setChatFileItems: () => {},
+
+  // ACTIVE CHAT STORE
+  isGenerating: false,
+  setIsGenerating: () => {},
+  firstTokenReceived: false,
+  setFirstTokenReceived: () => {},
+  abortController: null,
+  setAbortController: () => {},
+
+  // CHAT INPUT COMMAND STORE
+  isPromptPickerOpen: false,
+  setIsPromptPickerOpen: () => {},
+  slashCommand: "",
+  setSlashCommand: () => {},
+  isFilePickerOpen: false,
+  setIsFilePickerOpen: () => {},
+  hashtagCommand: "",
+  setHashtagCommand: () => {},
+  isToolPickerOpen: false,
+  setIsToolPickerOpen: () => {},
+  toolCommand: "",
+  setToolCommand: () => {},
+  focusPrompt: false,
+  setFocusPrompt: () => {},
+  focusFile: false,
+  setFocusFile: () => {},
+  focusTool: false,
+  setFocusTool: () => {},
+  focusAssistant: false,
+  setFocusAssistant: () => {},
+  atCommand: "",
+  setAtCommand: () => {},
+  isAssistantPickerOpen: false,
+  setIsAssistantPickerOpen: () => {},
+
+  // ATTACHMENTS STORE
+  chatFiles: [],
+  setChatFiles: () => {},
+  chatImages: [],
+  setChatImages: () => {},
+  newMessageFiles: [],
+  setNewMessageFiles: () => {},
+  newMessageImages: [],
+  setNewMessageImages: () => {},
+  showFilesDisplay: false,
+  setShowFilesDisplay: () => {},
+
+  // RETRIEVAL STORE
+  useRetrieval: false,
+  setUseRetrieval: () => {},
+  sourceCount: 4,
+  setSourceCount: () => {},
+
+  // TOOL STORE
+  selectedTools: [],
+  setSelectedTools: () => {},
+  toolInUse: "none",
+  setToolInUse: () => {},
+
+  // PUBMED SEARCH STORE
+  searchPubMed: performPubMedSearch,
+  pubMedArticles: [],
+  setPubMedArticles: () => {},
+})
