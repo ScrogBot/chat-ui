@@ -1,3 +1,5 @@
+// pubmedService.ts
+
 export interface PubMedSearchResponse {
   header: {
     type: string;
