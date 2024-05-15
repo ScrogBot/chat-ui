@@ -19,7 +19,11 @@ export interface PubMedSearchResponse {
 
 export interface PubMedArticle {
   id: string;
-  // Add other properties if necessary
+  // Add other fields if necessary
+}
+
+export interface PubMedFetchResponse {
+  articles: PubMedArticle[];
 }
 
 export const performPubMedSearch = async (query: string): Promise<PubMedSearchResponse> => {
@@ -28,13 +32,13 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
   return data;
 };
 
-export const performPubMedFetch = async (webenv: string, querykey: string): Promise<PubMedArticle[]> => {
+export const performPubMedFetch = async (webenv: string, querykey: string): Promise<PubMedFetchResponse> => {
   const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=15&rettype=abstract`);
   const data: any = await response.json();
   // Transform the data to match PubMedArticle[]
   const articles: PubMedArticle[] = data.map((article: any) => ({
     id: article.uid,
-    // Add other properties if necessary
+    // Add other fields if necessary
   }));
-  return articles;
+  return { articles };
 };
