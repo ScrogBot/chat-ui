@@ -1,3 +1,4 @@
+// components/chat/chat-ui.tsx
 "use client";
 
 import { FC, useContext, useEffect, useState } from "react";
