@@ -11,7 +11,7 @@ import { ChatbotUIContext } from "@/context/context";
 import useHotkey from "@/lib/hooks/use-hotkey";
 import { useTheme } from "next-themes";
 import { useContext } from "react";
-import { toast } from "sonner"; // Make sure to import toast
+import { toast } from "sonner";
 
 export default function ChatPage() {
   useHotkey("o", () => handleNewChat());
@@ -27,7 +27,6 @@ export default function ChatPage() {
   } = useContext(ChatbotUIContext);
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler();
-
   const { theme } = useTheme();
 
   const handleUserInput = async (input: string) => {
@@ -40,7 +39,7 @@ export default function ChatPage() {
       if (searchQuery) {
         try {
           const results = await searchPubMed(searchQuery);
-          setPubMedArticles(results.results);
+          setPubMedArticles(results.esearchresult.idlist); // Access the correct property
         } catch (error) {
           toast.error("Failed to fetch PubMed articles.");
         }
