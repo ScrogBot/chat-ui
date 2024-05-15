@@ -200,4 +200,4 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
               url: workspaceImageUrl
             }
           ]);
-       
+      
