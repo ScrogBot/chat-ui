@@ -20,7 +20,7 @@ const GlobalState: FC<GlobalStateProps> = ({ children }) => {
 
   const searchPubMed = async (query: string) => {
     const results: PubMedSearchResponse = await performPubMedSearch(query);
-    const articles: PubMedArticle[] = await performPubMedFetch(results.esearchresult.webenv, results.esearchresult.querykey);
+    const articles: PubMedArticle[] = results.esearchresult.idlist.map(id => ({ id })); // Assuming `PubMedArticle` has an `id` field
     setPubMedArticles(articles);
     setPubMedWebEnv(results.esearchresult.webenv);
     return results;
