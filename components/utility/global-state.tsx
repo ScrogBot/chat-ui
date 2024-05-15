@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import { ChatbotUIContext } from "@/context/context";
+import { ChatbotUIContext, Profile } from "@/context/context"; // Update import
 import { performPubMedSearch, PubMedSearchResponse } from "../../pubmedService";
 import { useRouter } from "next/navigation"; // Correct import for Next.js 13
 
@@ -13,7 +13,7 @@ const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const router = useRouter();
 
   // PROFILE STORE
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<Profile | null>(null); // Correct type
   const [pubMedArticles, setPubMedArticles] = useState<string[]>([]);
   const [pubMedWebEnv, setPubMedWebEnv] = useState<string>("");
 
