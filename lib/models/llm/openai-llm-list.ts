@@ -1,4 +1,4 @@
-vimport { LLM } from "@/types"
+import { LLM } from "@/types"
 
 const OPENAI_PLATORM_LINK = "https://platform.openai.com/docs/overview"
 
