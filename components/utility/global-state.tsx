@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import { ChatbotUIContext, Profile } from "@/context/context"; // Update import
+import { ChatbotUIContext } from "@/context/context"; // Update import
 import { performPubMedSearch, PubMedSearchResponse } from "../../pubmedService";
 import { useRouter } from "next/navigation"; // Correct import for Next.js 13
 import { Tables } from "@/supabase/types"; // Import the correct type
