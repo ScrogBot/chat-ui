@@ -232,6 +232,7 @@ const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setPrompts,
         tools,
         setTools,
+        
         workspaces,
         setWorkspaces,
 
