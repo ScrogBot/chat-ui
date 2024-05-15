@@ -54,22 +54,17 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [envKeyMap, setEnvKeyMap] = useState<Record<string, VALID_ENV_KEYS>>({});
   const [availableHostedModels, setAvailableHostedModels] = useState<LLM[]>([]);
   const [availableLocalModels, setAvailableLocalModels] = useState<LLM[]>([]);
-  const [availableOpenRouterModels, setAvailableOpenRouterModels] = useState<
-    OpenRouterLLM[]
-  >([]);
+  const [availableOpenRouterModels, setAvailableOpenRouterModels] = useState<OpenRouterLLM[]>([]);
 
   // WORKSPACE STORE
-  const [selectedWorkspace, setSelectedWorkspace] =
-    useState<Tables<"workspaces"> | null>(null);
+  const [selectedWorkspace, setSelectedWorkspace] = useState<Tables<"workspaces"> | null>(null);
   const [workspaceImages, setWorkspaceImages] = useState<WorkspaceImage[]>([]);
 
   // PRESET STORE
-  const [selectedPreset, setSelectedPreset] =
-    useState<Tables<"presets"> | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState<Tables<"presets"> | null>(null);
 
   // ASSISTANT STORE
-  const [selectedAssistant, setSelectedAssistant] =
-    useState<Tables<"assistants"> | null>(null);
+  const [selectedAssistant, setSelectedAssistant] = useState<Tables<"assistants"> | null>(null);
   const [assistantImages, setAssistantImages] = useState<AssistantImage[]>([]);
   const [openaiAssistants, setOpenaiAssistants] = useState<any[]>([]);
 
@@ -91,8 +86,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   // ACTIVE CHAT STORE
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [firstTokenReceived, setFirstTokenReceived] = useState<boolean>(false);
-  const [abortController, setAbortController] =
-    useState<AbortController | null>(null);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   // CHAT INPUT COMMAND STORE
   const [isPromptPickerOpen, setIsPromptPickerOpen] = useState(false);
@@ -200,4 +194,14 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
               url: workspaceImageUrl
             }
           ]);
-      
+        }
+      }
+
+      return profile;
+    }
+  };
+
+  return (
+    <ChatbotUIContext.Provider
+      value={{
+        //
