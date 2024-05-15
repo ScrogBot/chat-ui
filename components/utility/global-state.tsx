@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useState } from "react";
 import { ChatbotUIContext } from "@/context/context"; // Update import
-import { performPubMedSearch, PubMedSearchResponse } from "../../pubmedService";
+import { performPubMedSearch, performPubMedFetch, PubMedSearchResponse, PubMedArticle } from "../../pubmedService";
 import { useRouter } from "next/navigation"; // Correct import for Next.js 13
 import { Tables } from "@/supabase/types"; // Import the correct type
 
@@ -15,12 +15,13 @@ const GlobalState: FC<GlobalStateProps> = ({ children }) => {
 
   // PROFILE STORE
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
-  const [pubMedArticles, setPubMedArticles] = useState<string[]>([]);
+  const [pubMedArticles, setPubMedArticles] = useState<PubMedArticle[]>([]);
   const [pubMedWebEnv, setPubMedWebEnv] = useState<string>("");
 
   const searchPubMed = async (query: string) => {
     const results: PubMedSearchResponse = await performPubMedSearch(query);
-    setPubMedArticles(results.esearchresult.idlist.map(id => ({ id }))); // Assuming `PubMedArticle` has an `id` field
+    const articles: PubMedArticle[] = await performPubMedFetch(results.esearchresult.webenv, results.esearchresult.querykey);
+    setPubMedArticles(articles);
     setPubMedWebEnv(results.esearchresult.webenv);
     return results;
   };
