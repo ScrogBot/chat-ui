@@ -12,6 +12,7 @@ import useHotkey from "@/lib/hooks/use-hotkey";
 import { useTheme } from "next-themes";
 import { useContext } from "react";
 import { toast } from "sonner";
+import { ChatMessage } from "@/types"
 
 export default function ChatPage() {
   useHotkey("o", () => handleNewChat());
