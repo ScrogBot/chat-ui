@@ -40,7 +40,8 @@ export default function ChatPage() {
       if (searchQuery) {
         try {
           const results = await searchPubMed(searchQuery);
-          setPubMedArticles(results.esearchresult.idlist); // Access the correct property
+          const articles = results.esearchresult.idlist.map(id => ({ id })); // Transform to PubMedArticle[]
+          setPubMedArticles(articles);
         } catch (error) {
           toast.error("Failed to fetch PubMed articles.");
         }
