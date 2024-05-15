@@ -45,9 +45,15 @@ export default function ChatPage() {
           toast.error("Failed to fetch PubMed articles.");
         }
       }
-    } else {
-      // Handle normal prompt action here
-      setChatMessages([...chatMessages, { role: "user", content: input }]);
+    } else {      
+      const newMessage: ChatMessage = {
+        id: `msg-${Date.now()}`, // Generate a unique ID for the message
+        role: "user",
+        content: input,
+        timestamp: Date.now(),
+      };
+      setChatMessages([...chatMessages, newMessage]);
+      //setChatMessages([...chatMessages, { role: "user", content: input }]);
       // Add any additional handling logic
     }
   };
