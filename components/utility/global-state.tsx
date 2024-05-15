@@ -1,16 +1,18 @@
+"use client";
+
 import { FC, useEffect, useState } from "react";
 import { ChatbotUIContext } from "@/context/context";
 import { performPubMedSearch, PubMedSearchResponse } from "../../pubmedService";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation"; // Correct import for Next.js 13
 
 interface GlobalStateProps {
   children: React.ReactNode;
 }
 
-export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
+const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const router = useRouter();
 
-  // Define your state variables here...
+  // PROFILE STORE
   const [profile, setProfile] = useState(null);
   const [pubMedArticles, setPubMedArticles] = useState<string[]>([]);
   const [pubMedWebEnv, setPubMedWebEnv] = useState<string>("");
@@ -23,7 +25,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    // Your initialization code here...
+    // Initialization logic here...
   }, []);
 
   return (
@@ -31,11 +33,10 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
       value={{
         profile,
         setProfile,
-        // Other context values...
         pubMedArticles,
         setPubMedArticles,
-        pubMedWebEnv, // Add this line
-        setPubMedWebEnv, // Add this line
+        pubMedWebEnv,
+        setPubMedWebEnv,
         searchPubMed,
       }}
     >
