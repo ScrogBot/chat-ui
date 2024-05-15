@@ -1,4 +1,4 @@
-import { LLM } from "@/types"
+vimport { LLM } from "@/types"
 
 const OPENAI_PLATORM_LINK = "https://platform.openai.com/docs/overview"
 
@@ -20,10 +20,10 @@ const GPT4o: LLM = {
 
 // GPT-4 Turbo (UPDATED 1/25/24)
 const GPT4Turbo: LLM = {
-  modelId: "gpt-4-turbo",
-  modelName: "GPT-4 Turbo",
+  modelId: "gpt-4-turbo-preview",
+  modelName: "GPT-4 Turbo-preview",
   provider: "openai",
-  hostedId: "gpt-4-turbo",
+  hostedId: "gpt-4-turbo-preview",
   platformLink: OPENAI_PLATORM_LINK,
   imageInput: true,
   pricing: {
