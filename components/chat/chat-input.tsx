@@ -1,10 +1,10 @@
-import { useContext, useRef, useEffect, useState, FC } from "react";
 import { ChatbotUIContext } from "@/context/context";
 import useHotkey from "@/lib/hooks/use-hotkey";
 import { LLM_LIST } from "@/lib/models/llm/llm-list";
 import { cn } from "@/lib/utils";
 import { IconBolt, IconCirclePlus, IconPlayerStopFilled, IconSend } from "@tabler/icons-react";
 import Image from "next/image";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
@@ -53,7 +53,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
     setSelectedTools,
     assistantImages,
     setUserInput,
-    pubMedArticles
+    pubMedArticles, // Ensure this is added to the context
   } = useContext(ChatbotUIContext);
 
   const {
@@ -249,7 +249,8 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
           <h2>PubMed Search Results</h2>
           {pubMedArticles.map((article, index) => (
             <div key={index} className="article">
-              <h3>{article}</h3> {/* Assuming article is a string (PubMed ID) */}
+              <h3>{article.id}</h3> {/* Displaying the ID */}
+              {/* Display other properties if available */}
             </div>
           ))}
         </div>
