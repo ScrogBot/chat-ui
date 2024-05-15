@@ -1,4 +1,3 @@
-// app/[locale]/[workspaceid]/chat/page.tsx
 "use client";
 
 import { ChatHelp } from "@/components/chat/chat-help";
@@ -25,6 +24,7 @@ export default function ChatPage() {
     selectedChat,
     searchPubMed,
     setPubMedArticles,
+    pubMedArticles, // Ensure this is added to the context
   } = useContext(ChatbotUIContext);
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler();
@@ -79,6 +79,19 @@ export default function ChatPage() {
         </div>
       ) : (
         <ChatUI />
+      )}
+
+      {/* Display PubMed Search Results */}
+      {pubMedArticles.length > 0 && (
+        <div className="mt-4">
+          <h2>PubMed Search Results</h2>
+          {pubMedArticles.map((article, index) => (
+            <div key={index} className="article">
+              <h3>{article.id}</h3> {/* Displaying the ID */}
+              {/* Display other properties if available */}
+            </div>
+          ))}
+        </div>
       )}
     </>
   );
