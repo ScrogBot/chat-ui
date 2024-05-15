@@ -19,7 +19,7 @@ export interface PubMedSearchResponse {
 
 export interface PubMedArticle {
   id: string;
-  // Add other fields if necessary
+  // Add other properties if necessary
 }
 
 export const performPubMedSearch = async (query: string): Promise<PubMedSearchResponse> => {
@@ -34,7 +34,7 @@ export const performPubMedFetch = async (webenv: string, querykey: string): Prom
   // Transform the data to match PubMedArticle[]
   const articles: PubMedArticle[] = data.map((article: any) => ({
     id: article.uid,
-    // Add other fields if necessary
+    // Add other properties if necessary
   }));
   return articles;
 };
