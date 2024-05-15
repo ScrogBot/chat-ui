@@ -20,4 +20,3 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
   const data: PubMedSearchResponse = await response.json();
   return data;
 };
-
