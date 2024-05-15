@@ -4,7 +4,7 @@ import { ChatHelp } from "@/components/chat/chat-help";
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatSettings } from "@/components/chat/chat-settings";
-import ChatUI from "@/components/chat/chat-ui"; // Importing as default export
+import ChatUI from "@/components/chat/chat-ui";
 import { QuickSettings } from "@/components/chat/quick-settings";
 import { Brand } from "@/components/ui/brand";
 import { ChatbotUIContext } from "@/context/context";
@@ -24,7 +24,7 @@ export default function ChatPage() {
     selectedChat,
     searchPubMed,
     setPubMedArticles,
-    pubMedArticles, // Ensure this is added to the context
+    setChatMessages,
   } = useContext(ChatbotUIContext);
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler();
@@ -40,14 +40,15 @@ export default function ChatPage() {
       if (searchQuery) {
         try {
           const results = await searchPubMed(searchQuery);
-          const articles = results.esearchresult.idlist.map(id => ({ id })); // Transform to PubMedArticle[]
-          setPubMedArticles(articles);
+          setPubMedArticles(results.esearchresult.idlist.map(id => ({ id }))); // Assuming `PubMedArticle` has an `id` field
         } catch (error) {
           toast.error("Failed to fetch PubMed articles.");
         }
       }
     } else {
-      // Normal prompt action here
+      // Handle normal prompt action here
+      setChatMessages([...chatMessages, { role: "user", content: input }]);
+      // Add any additional handling logic
     }
   };
 
@@ -79,19 +80,6 @@ export default function ChatPage() {
         </div>
       ) : (
         <ChatUI />
-      )}
-
-      {/* Display PubMed Search Results */}
-      {pubMedArticles.length > 0 && (
-        <div className="mt-4">
-          <h2>PubMed Search Results</h2>
-          {pubMedArticles.map((article, index) => (
-            <div key={index} className="article">
-              <h3>{article.id}</h3> {/* Displaying the ID */}
-              {/* Display other properties if available */}
-            </div>
-          ))}
-        </div>
       )}
     </>
   );
