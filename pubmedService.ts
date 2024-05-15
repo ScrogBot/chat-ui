@@ -37,7 +37,7 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
 };
 
 export const performPubMedFetch = async (webenv: string, querykey: string): Promise<PubMedFetchResponse> => {
-  const response = await fetch(`https://eutils.ncbi.nl.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=15&rettype=abstract`);
+  const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=15&rettype=abstract`);
   const data: PubMedFetchResponse = await response.json();
   return data;
 };
