@@ -1,34 +1,36 @@
-import { ChatbotUIContext } from "@/context/context";
-import useHotkey from "@/lib/hooks/use-hotkey";
-import { LLM_LIST } from "@/lib/models/llm/llm-list";
-import { cn } from "@/lib/utils";
-import { IconBolt, IconCirclePlus, IconPlayerStopFilled, IconSend } from "@tabler/icons-react";
-import Image from "next/image";
-import { FC, useContext, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
-import { Input } from "../ui/input";
-import { TextareaAutosize } from "../ui/textarea-autosize";
-import { ChatCommandInput } from "./chat-command-input";
-import { ChatFilesDisplay } from "./chat-files-display";
-import { useChatHandler } from "./chat-hooks/use-chat-handler";
-import { useChatHistoryHandler } from "./chat-hooks/use-chat-history";
-import { usePromptAndCommand } from "./chat-hooks/use-prompt-and-command";
-import { useSelectFileHandler } from "./chat-hooks/use-select-file-handler";
+import { ChatbotUIContext } from "@/context/context"
+import useHotkey from "@/lib/hooks/use-hotkey"
+import { LLM_LIST } from "@/lib/models/llm/llm-list"
+import { cn } from "@/lib/utils"
+import {
+  IconBolt,
+  IconCirclePlus,
+  IconPlayerStopFilled,
+  IconSend
+} from "@tabler/icons-react"
+import Image from "next/image"
+import { FC, useContext, useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { toast } from "sonner"
+import { Input } from "../ui/input"
+import { TextareaAutosize } from "../ui/textarea-autosize"
+import { ChatCommandInput } from "./chat-command-input"
+import { ChatFilesDisplay } from "./chat-files-display"
+import { useChatHandler } from "./chat-hooks/use-chat-handler"
+import { useChatHistoryHandler } from "./chat-hooks/use-chat-history"
+import { usePromptAndCommand } from "./chat-hooks/use-prompt-and-command"
+import { useSelectFileHandler } from "./chat-hooks/use-select-file-handler"
 
-interface ChatInputProps {
-  onUserInput: (input: string) => Promise<void>;
-}
+interface ChatInputProps {}
 
-export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
-  
-  const { t } = useTranslation();
+export const ChatInput: FC<ChatInputProps> = ({}) => {
+  const { t } = useTranslation()
 
   useHotkey("l", () => {
-    handleFocusChatInput();
-  });
+    handleFocusChatInput()
+  })
 
-  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false)
 
   const {
     isAssistantPickerOpen,
@@ -52,51 +54,80 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
     chatSettings,
     selectedTools,
     setSelectedTools,
-    assistantImages,
-    setUserInput,
-    pubMedArticles, // Ensure this is added to the context
-  } = useContext(ChatbotUIContext);
+    assistantImages
+  } = useContext(ChatbotUIContext)
 
   const {
     chatInputRef,
     handleSendMessage,
     handleStopMessage,
     handleFocusChatInput
-  } = useChatHandler();
+  } = useChatHandler()
 
-  const { handleInputChange } = usePromptAndCommand();
+  const { handleInputChange } = usePromptAndCommand()
 
-  const { filesToAccept, handleSelectDeviceFile } = useSelectFileHandler();
+  const { filesToAccept, handleSelectDeviceFile } = useSelectFileHandler()
 
   const {
     setNewMessageContentToNextUserMessage,
     setNewMessageContentToPreviousUserMessage
-  } = useChatHistoryHandler();
+  } = useChatHistoryHandler()
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setTimeout(() => {
-      handleFocusChatInput();
-    }, 200); // FIX: hacky
-  }, [selectedPreset, selectedAssistant]);
+      handleFocusChatInput()
+    }, 200) // FIX: hacky
+  }, [selectedPreset, selectedAssistant])
 
-  const handleKeyDown = async (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if (!isTyping && event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      const query = userInput.trim();
-      await onUserInput(query);
-      setUserInput(""); // Clear the input after sending the message
+      event.preventDefault()
+      setIsPromptPickerOpen(false)
+      handleSendMessage(userInput, chatMessages, false)
+    }
+
+    // Consolidate conditions to avoid TypeScript error
+    if (
+      isPromptPickerOpen ||
+      isFilePickerOpen ||
+      isToolPickerOpen ||
+      isAssistantPickerOpen
+    ) {
+      if (
+        event.key === "Tab" ||
+        event.key === "ArrowUp" ||
+        event.key === "ArrowDown"
+      ) {
+        event.preventDefault()
+        // Toggle focus based on picker type
+        if (isPromptPickerOpen) setFocusPrompt(!focusPrompt)
+        if (isFilePickerOpen) setFocusFile(!focusFile)
+        if (isToolPickerOpen) setFocusTool(!focusTool)
+        if (isAssistantPickerOpen) setFocusAssistant(!focusAssistant)
+      }
     }
 
     if (event.key === "ArrowUp" && event.shiftKey && event.ctrlKey) {
-      event.preventDefault();
-      setNewMessageContentToPreviousUserMessage();
+      event.preventDefault()
+      setNewMessageContentToPreviousUserMessage()
     }
 
     if (event.key === "ArrowDown" && event.shiftKey && event.ctrlKey) {
-      event.preventDefault();
-      setNewMessageContentToNextUserMessage();
+      event.preventDefault()
+      setNewMessageContentToNextUserMessage()
+    }
+
+    //use shift+ctrl+up and shift+ctrl+down to navigate through chat history
+    if (event.key === "ArrowUp" && event.shiftKey && event.ctrlKey) {
+      event.preventDefault()
+      setNewMessageContentToPreviousUserMessage()
+    }
+
+    if (event.key === "ArrowDown" && event.shiftKey && event.ctrlKey) {
+      event.preventDefault()
+      setNewMessageContentToNextUserMessage()
     }
 
     if (
@@ -105,31 +136,31 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
         event.key === "ArrowUp" ||
         event.key === "ArrowDown")
     ) {
-      event.preventDefault();
-      setFocusAssistant(!focusAssistant);
+      event.preventDefault()
+      setFocusAssistant(!focusAssistant)
     }
-  };
+  }
 
   const handlePaste = (event: React.ClipboardEvent) => {
     const imagesAllowed = LLM_LIST.find(
       llm => llm.modelId === chatSettings?.model
-    )?.imageInput;
+    )?.imageInput
 
-    const items = event.clipboardData.items;
+    const items = event.clipboardData.items
     for (const item of items) {
       if (item.type.indexOf("image") === 0) {
         if (!imagesAllowed) {
           toast.error(
             `Images are not supported for this model. Use models like GPT-4 Vision instead.`
-          );
-          return;
+          )
+          return
         }
-        const file = item.getAsFile();
-        if (!file) return;
-        handleSelectDeviceFile(file);
+        const file = item.getAsFile()
+        if (!file) return
+        handleSelectDeviceFile(file)
       }
     }
-  };
+  }
 
   return (
     <>
@@ -151,6 +182,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
             >
               <div className="flex cursor-pointer items-center justify-center space-x-1 rounded-lg bg-purple-600 px-3 py-1 hover:opacity-50">
                 <IconBolt size={20} />
+
                 <div>{tool.name}</div>
               </div>
             </div>
@@ -171,6 +203,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
                 alt={selectedAssistant.name}
               />
             )}
+
             <div className="text-sm font-bold">
               Talking to {selectedAssistant.name}
             </div>
@@ -196,8 +229,8 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
             className="hidden"
             type="file"
             onChange={e => {
-              if (!e.target.files) return;
-              handleSelectDeviceFile(e.target.files[0]);
+              if (!e.target.files) return
+              handleSelectDeviceFile(e.target.files[0])
             }}
             accept={filesToAccept}
           />
@@ -234,28 +267,15 @@ export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
                 !userInput && "cursor-not-allowed opacity-50"
               )}
               onClick={() => {
-                if (!userInput) return;
+                if (!userInput) return
 
-                handleSendMessage(userInput, chatMessages, false);
+                handleSendMessage(userInput, chatMessages, false)
               }}
               size={30}
             />
           )}
         </div>
       </div>
-
-      {/* Display PubMed Search Results */}
-      {pubMedArticles.length > 0 && (
-        <div className="mt-4">
-          <h2>PubMed Search Results</h2>
-          {pubMedArticles.map((article, index) => (
-            <div key={index} className="article">
-              <h3>{article.id}</h3> {/* Displaying the ID */}
-              {/* Display other properties if available */}
-            </div>
-          ))}
-        </div>
-      )}
     </>
-  );
-};
+  )
+}

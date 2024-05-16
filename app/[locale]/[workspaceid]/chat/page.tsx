@@ -1,63 +1,28 @@
-"use client";
+"use client"
 
-import { ChatHelp } from "@/components/chat/chat-help";
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler";
-import ChatInput from "@/components/chat/chat-input";
-import { ChatSettings } from "@/components/chat/chat-settings";
-import  { ChatUI } from "@/components/chat/chat-ui";
-import { QuickSettings } from "@/components/chat/quick-settings";
-import { Brand } from "@/components/ui/brand";
-import { ChatbotUIContext } from "@/context/context";
-import useHotkey from "@/lib/hooks/use-hotkey";
-import { useTheme } from "next-themes";
-import { useContext } from "react";
-import { toast } from "sonner";
-import { ChatMessage } from "@/types"
+import { ChatHelp } from "@/components/chat/chat-help"
+import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
+import { ChatInput } from "@/components/chat/chat-input"
+import { ChatSettings } from "@/components/chat/chat-settings"
+import { ChatUI } from "@/components/chat/chat-ui"
+import { QuickSettings } from "@/components/chat/quick-settings"
+import { Brand } from "@/components/ui/brand"
+import { ChatbotUIContext } from "@/context/context"
+import useHotkey from "@/lib/hooks/use-hotkey"
+import { useTheme } from "next-themes"
+import { useContext } from "react"
 
 export default function ChatPage() {
-  useHotkey("o", () => handleNewChat());
+  useHotkey("o", () => handleNewChat())
   useHotkey("l", () => {
-    handleFocusChatInput();
-  });
-  
-  const {
-    chatMessages,
-    selectedChat,
-    searchPubMed,
-    setPubMedArticles,
-    setChatMessages,
-  } = useContext(ChatbotUIContext);
+    handleFocusChatInput()
+  })
 
-  const { handleNewChat, handleFocusChatInput } = useChatHandler();
-  const { theme } = useTheme();
+  const { chatMessages } = useContext(ChatbotUIContext)
 
-  const handleUserInput = async (input: string) => {
-    const query = input.trim();
-    const systemPrompt = selectedChat?.prompt || "";
-    const shouldSearchPubMed = systemPrompt.startsWith("pubmed:");
+  const { handleNewChat, handleFocusChatInput } = useChatHandler()
 
-    if (shouldSearchPubMed) {
-      const searchQuery = query;
-      if (searchQuery) {
-        try {
-          const results = await searchPubMed(searchQuery);
-          setPubMedArticles(results.esearchresult.idlist.map(id => ({ id }))); // Assuming `PubMedArticle` has an `id` field
-        } catch (error) {
-          toast.error("Failed to fetch PubMed articles.");
-        }
-      }
-    } else {      
-      const newMessage: ChatMessage = {
-        id: `msg-${Date.now()}`, // Generate a unique ID for the message
-        role: "user",
-        content: input,
-        timestamp: Date.now(),
-      };
-      setChatMessages([...chatMessages, newMessage]);
-      //setChatMessages([...chatMessages, { role: "user", content: input }]);
-      // Add any additional handling logic
-    }
-  };
+  const { theme } = useTheme()
 
   return (
     <>
@@ -78,7 +43,7 @@ export default function ChatPage() {
           <div className="flex grow flex-col items-center justify-center" />
 
           <div className="w-full min-w-[300px] items-end px-2 pb-3 pt-0 sm:w-[600px] sm:pb-8 sm:pt-5 md:w-[700px] lg:w-[700px] xl:w-[800px]">
-            <ChatInput onUserInput={handleUserInput} />
+            <ChatInput />
           </div>
 
           <div className="absolute bottom-2 right-2 hidden md:block lg:bottom-4 lg:right-4">
@@ -89,5 +54,5 @@ export default function ChatPage() {
         <ChatUI />
       )}
     </>
-  );
+  )
 }

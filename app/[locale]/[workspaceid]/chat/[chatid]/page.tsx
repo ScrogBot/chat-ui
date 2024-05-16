@@ -1,8 +1,7 @@
-// app/[locale]/[workspaceid]/chat/[chatid]/page.tsx
-"use client";
+"use client"
 
-import ChatUI from "@/components/chat/chat-ui"; // Importing as default export
+import { ChatUI } from "@/components/chat/chat-ui"
 
 export default function ChatIDPage() {
-  return <ChatUI />;
+  return <ChatUI />
 }
