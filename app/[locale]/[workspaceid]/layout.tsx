@@ -72,6 +72,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
   }, [])
 
   useEffect(() => {
+      fetchWorkspaceData(workspaceId);
+}, [fetchWorkspaceData, router, workspaceId]);
     ;(async () => await fetchWorkspaceData(workspaceId))()
 
     setUserInput("")
