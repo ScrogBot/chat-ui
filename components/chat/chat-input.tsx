@@ -21,6 +21,7 @@ interface ChatInputProps {
 }
 
 export const ChatInput: FC<ChatInputProps> = ({ onUserInput }) => {
+  
   const { t } = useTranslation();
 
   useHotkey("l", () => {
