@@ -19,7 +19,7 @@ export default function ChatPage() {
   useHotkey("l", () => {
     handleFocusChatInput();
   });
-
+  
   const {
     chatMessages,
     selectedChat,
