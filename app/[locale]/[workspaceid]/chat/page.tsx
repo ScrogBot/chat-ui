@@ -52,6 +52,7 @@ export default function ChatPage() {
         role: "user",
         content: input,
         timestamp: Date.now(),
+        message: input
       };
        setChatMessages([...chatMessages, newMessage]);
     }
