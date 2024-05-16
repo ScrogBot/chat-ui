@@ -53,6 +53,8 @@ export default function ChatPage() {
         content: input,
         timestamp: Date.now(),
       };
+       setChatMessages([...chatMessages, newMessage]);
+    }
   };
 
   return (
