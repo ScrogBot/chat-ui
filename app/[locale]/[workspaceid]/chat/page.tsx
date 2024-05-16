@@ -47,13 +47,7 @@ export default function ChatPage() {
         }
       }
     } else {      
-    const newMessage: ChatMessage = {
-        id: `msg-${Date.now()}`, // Generate a unique ID for the message
-        role: "user",
-        content: input,
-        timestamp: Date.now(),
-        message: input
-      };
+   
        setChatMessages([...chatMessages, newMessage]);
     }
   };
