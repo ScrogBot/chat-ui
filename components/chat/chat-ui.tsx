@@ -47,7 +47,11 @@ const ChatUI: FC = () => {
             }
           }
         } else {
-          // Normal prompt action here
+           messageId: message.id,
+                path: imagePath,
+                base64: "",
+                url,
+                file: null
         }
       }} />
     </div>
