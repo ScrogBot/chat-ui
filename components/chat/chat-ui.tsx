@@ -6,7 +6,7 @@ import { ChatInput } from "./chat-input";
 import { ChatMessages } from "./chat-messages";
 
 const ChatUI: FC = () => {
-  const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, pubMedArticles } = useContext(ChatbotUIContext);
+  const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, pubMedArticles, setChatMessages } = useContext(ChatbotUIContext);
 
   useEffect(() => {
     if (selectedChat) {
@@ -29,7 +29,7 @@ const ChatUI: FC = () => {
 
   return (
     <div className="chat-ui">
-      <ChatMessages />
+      <ChatMessages messages={chatMessages} />
       <ChatInput onUserInput={async (input) => {
         const query = input.trim();
         const systemPrompt = selectedChat?.prompt || "";
@@ -47,11 +47,13 @@ const ChatUI: FC = () => {
             }
           }
         } else {
-           messageId: message.id,
-                path: imagePath,
-                base64: "",
-                url,
-                file: null
+          const newMessage = {
+            id: `msg-${Date.now()}`, // Generate a unique ID for the message
+            role: "user",
+            content: input,
+            timestamp: Date.now(),
+          };
+          setChatMessages([...chatMessages, newMessage]);
         }
       }} />
     </div>
