@@ -1,0 +1,44 @@
+import { performPubMedSearch, performPubMedFetch, PubMedArticle } from './pubmedService.ts';
+
+interface UserQueryResponse {
+  articles: PubMedArticle[];
+  error?: string;
+}
+
+export const handleUserQuery = async (userInput: string): Promise<UserQueryResponse> => {
+  try {
+    const searchResponse = await performPubMedSearch(userInput);
+    
+    if (searchResponse.esearchresult.idlist.length === 0) {
+      return { articles: [], error: 'No articles found for the given query.' };
+    }
+
+    const { webenv, querykey } = searchResponse.esearchresult;
+    const fetchResponse = await performPubMedFetch(webenv, querykey);
+    
+    return { articles: fetchResponse.articles };
+  } catch (error) {
+    return { articles: [], error: `Error fetching articles: ${error.message}` };
+  }
+};
+
+// Simulating how to use JSON to call the function
+const jsonInput = {
+  "functionName": "handleUserQuery",
+  "parameters": {
+    "userInput": "example search query"
+  }
+};
+
+// A function to handle JSON input and call the appropriate TypeScript function
+const processJsonInput = async (json: any) => {
+  if (json.functionName === "handleUserQuery" && json.parameters?.userInput) {
+    const result = await handleUserQuery(json.parameters.userInput);
+    console.log(result);
+  } else {
+    console.log("Invalid function name or parameters");
+  }
+};
+
+// Process the JSON input
+processJsonInput(jsonInput);
