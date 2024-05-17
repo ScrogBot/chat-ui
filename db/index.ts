@@ -1,6 +1,6 @@
 import "./assistants"
 import "./chats"
-import "./message-file-items"
+import "./file-items"
 import "./files"
 import "./folders"
 import "./messages"
