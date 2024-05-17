@@ -62,4 +62,4 @@ const ChatUI: FC = () => {
   );
 };
 
-export default ChatUI;
+export default { ChatUI };
