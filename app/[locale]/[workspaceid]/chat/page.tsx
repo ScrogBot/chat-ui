@@ -4,7 +4,7 @@ import { ChatHelp } from "@/components/chat/chat-help";
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler";
 import ChatInput from "@/components/chat/chat-input";
 import { ChatSettings } from "@/components/chat/chat-settings";
-import { ChatUI } from "@/components/chat/chat-ui"; // Importing as a named export
+import ChatUI from "@/components/chat/chat-ui"; // Importing as a named export
 import { QuickSettings } from "@/components/chat/quick-settings";
 import { Brand } from "@/components/ui/brand";
 import { ChatbotUIContext } from "@/context/context";
