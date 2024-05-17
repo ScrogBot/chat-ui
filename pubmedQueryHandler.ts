@@ -1,4 +1,4 @@
-import { performPubMedSearch, performPubMedFetch, PubMedArticle } from './pubmedService.ts';
+import { performPubMedSearch, performPubMedFetch, PubMedArticle } from './pubmedService';
 
 interface UserQueryResponse {
   articles: PubMedArticle[];
@@ -18,8 +18,13 @@ export const handleUserQuery = async (userInput: string): Promise<UserQueryRespo
 
     return { articles: fetchResponse.articles };
   } catch (error) {
-    console.error(`Error in handleUserQuery: ${error.message}`);
-    return { articles: [], error: `Error fetching articles: ${error.message}` };
+    if (error instanceof Error) {
+      console.error(`Error in handleUserQuery: ${error.message}`);
+      return { articles: [], error: `Error fetching articles: ${error.message}` };
+    } else {
+      console.error(`Unexpected error in handleUserQuery: ${error}`);
+      return { articles: [], error: 'An unexpected error occurred' };
+    }
   }
 };
 
@@ -32,7 +37,11 @@ const processJsonInput = async (json: any) => {
       console.error("Invalid function name or parameters");
     }
   } catch (error) {
-    console.error(`Error in processJsonInput: ${error.message}`);
+    if (error instanceof Error) {
+      console.error(`Error in processJsonInput: ${error.message}`);
+    } else {
+      console.error(`Unexpected error in processJsonInput: ${error}`);
+    }
   }
 };
 
