@@ -53,8 +53,36 @@ export default function ChatPage() {
         content: input,
         timestamp: Date.now(),
       };
-      setChatMessages([...chatMessages, newMessage]);
-      // Add any additional handling logic
+
+      setChatMessages(prevMessages => [...prevMessages, newMessage]);
+
+      // Add additional handling logic here, for example, sending the message to an API
+      try {
+        const response = await fetch('/api/sendMessage', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newMessage)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send message');
+        }
+
+        const responseData = await response.json();
+        // Assuming the API returns a response message
+        const responseMessage: ChatMessage = {
+          id: `msg-${Date.now() + 1}`, // Generate a unique ID for the response message
+          role: "assistant",
+          content: responseData.message,
+          timestamp: Date.now(),
+        };
+
+        setChatMessages(prevMessages => [...prevMessages, responseMessage]);
+      } catch (error) {
+        toast.error("Failed to send message.");
+      }
     }
   };
 
