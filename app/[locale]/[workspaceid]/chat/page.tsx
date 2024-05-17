@@ -1,28 +1,90 @@
-"use client"
+"use client";
 
-import { ChatHelp } from "@/components/chat/chat-help"
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
-import { ChatInput } from "@/components/chat/chat-input"
-import { ChatSettings } from "@/components/chat/chat-settings"
-import { ChatUI } from "@/components/chat/chat-ui"
-import { QuickSettings } from "@/components/chat/quick-settings"
-import { Brand } from "@/components/ui/brand"
-import { ChatbotUIContext } from "@/context/context"
-import useHotkey from "@/lib/hooks/use-hotkey"
-import { useTheme } from "next-themes"
-import { useContext } from "react"
+import { ChatHelp } from "@/components/chat/chat-help";
+import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler";
+import ChatInput from "@/components/chat/chat-input";
+import ChatSettings from "@/components/chat/chat-settings"; // Import as default
+import ChatUI from "@/components/chat/chat-ui"; // Importing as default export
+import { QuickSettings } from "@/components/chat/quick-settings";
+import { Brand } from "@/components/ui/brand";
+import { ChatbotUIContext } from "@/context/context";
+import useHotkey from "@/lib/hooks/use-hotkey";
+import { useTheme } from "next-themes";
+import { useContext } from "react";
+import { toast } from "sonner";
+import { ChatMessage } from "@/types";
 
 export default function ChatPage() {
-  useHotkey("o", () => handleNewChat())
+  useHotkey("o", () => handleNewChat());
   useHotkey("l", () => {
-    handleFocusChatInput()
-  })
+    handleFocusChatInput();
+  });
 
-  const { chatMessages } = useContext(ChatbotUIContext)
+  const {
+    chatMessages,
+    selectedChat,
+    searchPubMed,
+    setPubMedArticles,
+    setChatMessages,
+  } = useContext(ChatbotUIContext);
 
-  const { handleNewChat, handleFocusChatInput } = useChatHandler()
+  const { handleNewChat, handleFocusChatInput } = useChatHandler();
+  const { theme } = useTheme();
 
-  const { theme } = useTheme()
+  const handleUserInput = async (input: string) => {
+    const query = input.trim();
+    const systemPrompt = selectedChat?.prompt || "";
+    const shouldSearchPubMed = systemPrompt.startsWith("pubmed:");
+
+    if (shouldSearchPubMed) {
+      const searchQuery = query;
+      if (searchQuery) {
+        try {
+          const results = await searchPubMed(searchQuery);
+          setPubMedArticles(results.esearchresult.idlist.map(id => ({ id }))); // Assuming `PubMedArticle` has an `id` field
+        } catch (error) {
+          toast.error("Failed to fetch PubMed articles.");
+        }
+      }
+    } else {
+      const newMessage: ChatMessage = {
+        id: `msg-${Date.now()}`, // Optional if id is needed
+        role: "user",
+        content: input,
+        timestamp: Date.now(),
+      };
+
+      setChatMessages(prevMessages => [...prevMessages, newMessage]);
+
+      // Add additional handling logic here, for example, sending the message to an API
+      try {
+        const response = await fetch('/api/sendMessage', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newMessage)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send message');
+        }
+
+        const responseData = await response.json();
+        // Assuming the API returns a response message
+        const responseMessage: ChatMessage = {
+          id: `msg-${Date.now() + 1}`, // Generate a unique ID for the response message
+          role: "assistant",
+          content: responseData.message,
+          timestamp: Date.now(),
+        };
+
+        setChatMessages(prevMessages => [...prevMessages, responseMessage]);
+      } catch (error) {
+        toast.error("Failed to send message.");
+      }
+    }
+  };
 
   return (
     <>
@@ -43,7 +105,7 @@ export default function ChatPage() {
           <div className="flex grow flex-col items-center justify-center" />
 
           <div className="w-full min-w-[300px] items-end px-2 pb-3 pt-0 sm:w-[600px] sm:pb-8 sm:pt-5 md:w-[700px] lg:w-[700px] xl:w-[800px]">
-            <ChatInput />
+            <ChatInput onUserInput={handleUserInput} />
           </div>
 
           <div className="absolute bottom-2 right-2 hidden md:block lg:bottom-4 lg:right-4">
@@ -54,5 +116,5 @@ export default function ChatPage() {
         <ChatUI />
       )}
     </>
-  )
+  );
 }
