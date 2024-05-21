@@ -27,6 +27,7 @@ import { AssistantImage } from "@/types/images/assistant-image"
 import { VALID_ENV_KEYS } from "@/types/valid-keys"
 import { useRouter } from "next/navigation"
 import { FC, useEffect, useState } from "react"
+import { performPubMedSearch, performPubMedFetch, PubMedSearchResponse, PubMedArticle } from "../../pubmedService";
 
 interface GlobalStateProps {
   children: React.ReactNode
@@ -37,7 +38,16 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
 
   // PROFILE STORE
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null)
-
+  const [pubMedArticles, setPubMedArticles] = useState<PubMedArticle[]>([]);
+  const [pubMedWebEnv, setPubMedWebEnv] = useState<string>("");
+  const searchPubMed = async (query: string) => {
+    const results: PubMedSearchResponse = await performPubMedSearch(query);
+    const articles: PubMedArticle[] = results.esearchresult.idlist.map(id => ({ id })); // Assuming `PubMedArticle` has an `id` field
+    setPubMedArticles(articles);
+    setPubMedWebEnv(results.esearchresult.webenv);
+    return results;
+  };
+  
   // ITEMS STORE
   const [assistants, setAssistants] = useState<Tables<"assistants">[]>([])
   const [collections, setCollections] = useState<Tables<"collections">[]>([])
