@@ -22,7 +22,6 @@ export interface PubMedArticle {
   title?: string;
   abstract?: string;
   authors?: string[];
-  // Add other fields if necessary
 }
 
 export interface PubMedFetchResponse {
@@ -35,30 +34,33 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
   return data;
 };
 
-export const performPubMedFetch = async (webenv: string, querykey: string): Promise<PubMedFetchResponse> => {
-  const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&query_key=${querykey}&WebEnv=${webenv}&retmode=xml&retmax=15&rettype=abstract`);
+const fetchArticle = async (id: string): Promise<PubMedArticle> => {
+  const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${id}&retmode=xml`);
   const textData = await response.text();
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(textData, "application/xml");
 
-  const articles: PubMedArticle[] = Array.from(xmlDoc.getElementsByTagName("PubmedArticle")).map(article => {
-    const id = article.getElementsByTagName("PMID")[0].textContent || '';
-    const title = article.getElementsByTagName("ArticleTitle")[0]?.textContent || '';
-    const abstractNode = article.getElementsByTagName("AbstractText")[0];
-    const abstract = abstractNode ? abstractNode.textContent : '';
-    const authors = Array.from(article.getElementsByTagName("Author")).map(author => {
-      const lastName = author.getElementsByTagName("LastName")[0]?.textContent || '';
-      const foreName = author.getElementsByTagName("ForeName")[0]?.textContent || '';
-      return `${foreName} ${lastName}`;
-    });
-
-    return {
-      id,
-      title,
-      abstract,
-      authors,
-    };
+  const article = xmlDoc.getElementsByTagName("PubmedArticle")[0];
+  const articleId = article.getElementsByTagName("PMID")[0]?.textContent || '';
+  const title = article.getElementsByTagName("ArticleTitle")[0]?.textContent || '';
+  const abstractNode = article.getElementsByTagName("AbstractText")[0];
+  const abstract = abstractNode ? abstractNode.textContent : '';
+  const authors = Array.from(article.getElementsByTagName("Author")).map(author => {
+    const lastName = author.getElementsByTagName("LastName")[0]?.textContent || '';
+    const foreName = author.getElementsByTagName("ForeName")[0]?.textContent || '';
+    return `${foreName} ${lastName}`;
   });
 
+  return {
+    id: articleId,
+    title,
+    abstract,
+    authors,
+  };
+};
+
+export const performPubMedFetch = async (ids: string[]): Promise<PubMedFetchResponse> => {
+  const articlePromises = ids.map(id => fetchArticle(id));
+  const articles = await Promise.all(articlePromises);
   return { articles };
 };
