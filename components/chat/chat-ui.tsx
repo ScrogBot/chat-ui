@@ -25,7 +25,7 @@ interface ChatUIProps {}
 
 export const ChatUI: FC<ChatUIProps> = ({}) => {
   useHotkey("o", () => handleNewChat())
-  const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, setChatMessages } = useContext(ChatbotUIContext);
+ //const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, setChatMessages } = useContext(ChatbotUIContext);
   
   const params = useParams()
 
@@ -41,7 +41,9 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     setChatFiles,
     setShowFilesDisplay,
     setUseRetrieval,
-    setSelectedTools
+    setSelectedTools,
+    searchPubMed, 
+    setPubMedArticles
   } = useContext(ChatbotUIContext)
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler()
