@@ -141,7 +141,7 @@ interface ChatbotUIContext {
   setToolInUse: Dispatch<SetStateAction<string>>
 
   // PUBMED SEARCH STORE
-   pubMedArticles: PubMedArticle[];
+  pubMedArticles: PubMedArticle[];
   setPubMedArticles: Dispatch<SetStateAction<PubMedArticle[]>>;
   pubMedWebEnv: string;
   setPubMedWebEnv: Dispatch<SetStateAction<string>>;
