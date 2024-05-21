@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { ChatbotUIContext } from "@/context/context";
 import { toast } from "sonner";
 import { ChatInput } from "./chat-input";
