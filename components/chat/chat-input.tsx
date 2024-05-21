@@ -57,7 +57,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     assistantImages
   } = useContext(ChatbotUIContext)
 
- const {
+  const {
     chatInputRef,
     handleSendMessage,
     handleStopMessage,
@@ -182,6 +182,28 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             >
               <div className="flex cursor-pointer items-center justify-center space-x-1 rounded-lg bg-purple-600 px-3 py-1 hover:opacity-50">
                 <IconBolt size={20} />
+
+                <div>{tool.name}</div>
+              </div>
+            </div>
+          ))}
+
+        {selectedAssistant && (
+          <div className="border-primary mx-auto flex w-fit items-center space-x-2 rounded-lg border p-1.5">
+            {selectedAssistant.image_path && (
+              <Image
+                className="rounded"
+                src={
+                  assistantImages.find(
+                    img => img.path === selectedAssistant.image_path
+                  )?.base64
+                }
+                width={28}
+                height={28}
+                alt={selectedAssistant.name}
+              />
+            )}
+
             <div className="text-sm font-bold">
               Talking to {selectedAssistant.name}
             </div>
@@ -218,7 +240,8 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
           textareaRef={chatInputRef}
           className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-14 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder={t(
-            `Ask anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
+            // `Ask anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
+            `Ask anything. Type @  /  #  !`
           )}
           onValueChange={handleInputChange}
           value={userInput}
