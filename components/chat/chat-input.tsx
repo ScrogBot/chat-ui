@@ -160,6 +160,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
       }
     }
   }
+  
  return (
     <>
     <div className="relative flex flex-1 flex-col overflow-hidden bg-white dark:bg-dark-bg">
