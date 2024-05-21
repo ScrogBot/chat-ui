@@ -6,7 +6,6 @@ import { ChatMessages } from "./chat-messages";
 import { ChatMessage } from "@/types"; // Ensure ChatMessage type is imported
 import Loading from "@/app/[locale]/loading"
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
-import { ChatbotUIContext } from "@/context/context"
 import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
 import { getChatFilesByChatId } from "@/db/chat-files"
 import { getChatById } from "@/db/chats"
