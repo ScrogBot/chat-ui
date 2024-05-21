@@ -1,7 +1,7 @@
 import { FC, useContext, useEffect } from "react";
 import { ChatbotUIContext } from "@/context/context";
 import { toast } from "sonner";
-import ChatInput from "./chat-input";
+import { ChatInput } from "./chat-input";
 import { ChatMessages } from "./chat-messages";
 import { ChatMessage } from "@/types"; // Ensure ChatMessage type is imported
 
