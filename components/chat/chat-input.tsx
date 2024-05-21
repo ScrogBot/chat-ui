@@ -279,3 +279,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     </>
   )
 }
+export const ChatInput = () => {
+  // Component code here
+};
+
