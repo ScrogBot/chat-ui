@@ -2,8 +2,8 @@
 
 import { Dashboard } from "@/components/ui/dashboard"
 import { ChatbotUIContext } from "@/context/context"
+import {getAssistantWorkspacesByWorkspaceId } from @/db/assistants/
 import {
-  getAssistantWorkspacesByWorkspaceId,
   getChatsByWorkspaceId,
   getCollectionWorkspacesByWorkspaceId,
   getFileWorkspacesByWorkspaceId,
