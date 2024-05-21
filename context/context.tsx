@@ -10,7 +10,8 @@ import {
 } from "@/types"
 import { AssistantImage } from "@/types/images/assistant-image"
 import { VALID_ENV_KEYS } from "@/types/valid-keys"
-import { Dispatch, SetStateAction, createContext } from "react"
+import { Dispatch, SetStateAction, createContext, useState } from "react"
+import { performPubMedSearch, PubMedArticle, PubMedSearchResponse } from "../pubmedService"
 
 interface ChatbotUIContext {
   // PROFILE STORE
@@ -138,6 +139,13 @@ interface ChatbotUIContext {
   setSelectedTools: Dispatch<SetStateAction<Tables<"tools">[]>>
   toolInUse: string
   setToolInUse: Dispatch<SetStateAction<string>>
+
+  // PUBMED SEARCH STORE
+   pubMedArticles: PubMedArticle[];
+  setPubMedArticles: Dispatch<SetStateAction<PubMedArticle[]>>;
+  pubMedWebEnv: string;
+  setPubMedWebEnv: Dispatch<SetStateAction<string>>;
+  searchPubMed: (query: string) => Promise<PubMedSearchResponse>;
 }
 
 export const ChatbotUIContext = createContext<ChatbotUIContext>({
@@ -265,5 +273,12 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   selectedTools: [],
   setSelectedTools: () => {},
   toolInUse: "none",
-  setToolInUse: () => {}
+  setToolInUse: () => {},
+
+  // PUBMED SEARCH STORE
+  pubMedArticles: [],
+  setPubMedArticles: () => {},
+  pubMedWebEnv: "",
+  setPubMedWebEnv: () => {},
+  searchPubMed: performPubMedSearch,
 })
