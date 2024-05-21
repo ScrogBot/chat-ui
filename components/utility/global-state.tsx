@@ -204,8 +204,8 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         // PROFILE STORE
         profile,
         setProfile,   
-        pubMedArticles,
-        setPubMedArticles,
+        pubMedArticle,
+        setPubMedArticle,
         pubMedWebEnv,
         setPubMedWebEnv,
         searchPubMed,
