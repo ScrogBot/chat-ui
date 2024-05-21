@@ -204,8 +204,8 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
         <ChatSecondaryButtons />
       </div>
 
-      <div className="bg-secondary flex max-h-[50px] min-h-[50px] w-full items-center justify-center border-b-2 px-20 font-bold">
-        <div className="max-w-[300px] truncate sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px]">
+      <div className="bg-secondary flex max-h-[50px] min-h-[50px] w-full items-center justify-center border-b-2 font-bold">
+        <div className="max-w-[200px] truncate sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px]">
           {selectedChat?.name || "Chat"}
         </div>
       </div>
@@ -221,7 +221,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="relative w-[300px] items-end pb-8 pt-5 sm:w-[400px] md:w-[500px] lg:w-[660px] xl:w-[800px]">
+      <div className="relative w-full min-w-[300px] items-end px-2 pb-3 pt-0 sm:w-[600px] sm:pb-8 sm:pt-5 md:w-[700px] lg:w-[700px] xl:w-[800px]">
         <ChatInput />
       </div>
 
@@ -231,60 +231,4 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     </div>
   )
 }
-
-
-  useEffect(() => {
-    if (selectedChat) {
-      const systemPrompt = selectedChat.prompt || "";
-      if (systemPrompt.startsWith("pubmed:")) {
-        const searchQuery = systemPrompt.slice(7).trim(); // Extract search term
-        if (searchQuery) {
-          searchPubMed(searchQuery)
-            .then((results) => {
-              const articles = results.esearchresult.idlist.map(id => ({ id })); // Transform to PubMedArticle[]
-              setPubMedArticles(articles);
-            })
-            .catch((error) => {
-              toast.error("Failed to fetch PubMed articles.");
-            });
-        }
-      }
-    }
-  }, [selectedChat, searchPubMed, setPubMedArticles]);
-
-  const handleUserInput = async (input: string) => {
-    const query = input.trim();
-    const systemPrompt = selectedChat?.prompt || "";
-    const shouldSearchPubMed = systemPrompt.startsWith("pubmed:");
-
-    if (shouldSearchPubMed) {
-      const searchQuery = query;
-      if (searchQuery) {
-        try {
-          const results = await searchPubMed(searchQuery);
-          const articles = results.esearchresult.idlist.map(id => ({ id })); // Transform to PubMedArticle[]
-          setPubMedArticles(articles);
-        } catch (error) {
-          toast.error("Failed to fetch PubMed articles.");
-        }
-      }
-    } else {
-      const newMessage: ChatMessage = {
-        id: `msg-${Date.now()}`, // Generate a unique ID for the message
-        role: "user",
-        content: input,
-        timestamp: Date.now(),
-      };
-      setChatMessages([...chatMessages, newMessage]);
-    }
-  };
-
-  return (
-    <div className="chat-ui">
-      <ChatMessages messages={chatMessages} />
-      <ChatInput onUserInput={handleUserInput} />
-    </div>
-  );
-};
-
 export default ChatUI; // Ensure it is exported as a default export
