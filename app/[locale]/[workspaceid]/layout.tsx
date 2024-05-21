@@ -2,19 +2,18 @@
 
 import { Dashboard } from "@/components/ui/dashboard"
 import { ChatbotUIContext } from "@/context/context"
-import {getAssistantWorkspacesByWorkspaceId } from "@/db/assistants"
-import {
-  getChatsByWorkspaceId,
-  getCollectionWorkspacesByWorkspaceId,
-  getFileWorkspacesByWorkspaceId,
-  getFoldersByWorkspaceId,
-  getModelWorkspacesByWorkspaceId,
-  getPresetWorkspacesByWorkspaceId,
-  getPromptWorkspacesByWorkspaceId,
-  getAssistantImageFromStorage,
-  getToolWorkspacesByWorkspaceId,
-  getWorkspaceById
-} from "@/db"
+import { getAssistantWorkspacesByWorkspaceId } from "@/db/assistants"
+import { getChatsByWorkspaceId } from "@/db/chats"
+import { getCollectionWorkspacesByWorkspaceId } from "@/db/collections"
+  import { getFileWorkspacesByWorkspaceId } from "@/db/files"
+  import { getFoldersByWorkspaceId } from "@/db/folders"
+  import { getModelWorkspacesByWorkspaceId } from "@/db/models"
+  import { getPresetWorkspacesByWorkspaceId } from "@/db/presets"
+  import { getPromptWorkspacesByWorkspaceId } from "@/db/prompts"
+ import {  getAssistantImageFromStorage } from "@/db/assistant-images"
+  import { getToolWorkspacesByWorkspaceId } from "@/db/tools"
+  import { getWorkspaceById } from "@/db/workspaces"
+
 import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { supabase } from "@/lib/supabase/browser-client"
 import { LLMID } from "@/types"
