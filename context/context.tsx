@@ -141,8 +141,8 @@ interface ChatbotUIContext {
   setToolInUse: Dispatch<SetStateAction<string>>
 
   // PUBMED SEARCH STORE
-  pubMedArticle: PubMedArticle[];
-  setPubMedArticle: Dispatch<SetStateAction<PubMedArticle[]>>;
+  pubMedArticles: PubMedArticle[];
+  setPubMedArticles: Dispatch<SetStateAction<PubMedArticle[]>>;
   pubMedWebEnv: string;
   setPubMedWebEnv: Dispatch<SetStateAction<string>>;
   searchPubMed: (query: string) => Promise<PubMedSearchResponse>;
@@ -276,8 +276,8 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setToolInUse: () => {},
 
   // PUBMED SEARCH STORE
-  pubMedArticle: [],
-  setPubMedArticle: () => {},
+  pubMedArticles: [],
+  setPubMedArticles: () => {},
   pubMedWebEnv: "",
   setPubMedWebEnv: () => {},
   searchPubMed: performPubMedSearch,
