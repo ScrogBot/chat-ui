@@ -25,7 +25,8 @@ interface ChatUIProps {}
 
 export const ChatUI: FC<ChatUIProps> = ({}) => {
   useHotkey("o", () => handleNewChat())
-
+  // const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, setChatMessages } = useContext(ChatbotUIContext);
+  
   const params = useParams()
 
   const {
@@ -230,8 +231,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     </div>
   )
 }
-const ChatUI: FC = () => {
-  const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, setChatMessages } = useContext(ChatbotUIContext);
+
 
   useEffect(() => {
     if (selectedChat) {
