@@ -129,8 +129,8 @@ export const ChatInput: FC<ChatInputProps> = () => {
       event.preventDefault()
       setNewMessageContentToNextUserMessage()
     }
-      if (
-      isAssistantPickerOpen &&
+     
+    if (isAssistantPickerOpen &&
       (event.key === "Tab" ||
         event.key === "ArrowUp" ||
         event.key === "ArrowDown")
