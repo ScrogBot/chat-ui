@@ -14,7 +14,7 @@ const handleUserQuery = async (userInput: string): Promise<UserQueryResponse> =>
     console.log(`Search response: ${JSON.stringify(searchResponse)}`);
     console.log(`Search time: ${Date.now() - searchStartTime}ms`);
 
-    if (searchResponse.esearchresult.idlist.length === 0) {
+    if (!searchResponse.esearchresult || searchResponse.esearchresult.idlist.length === 0) {
       return { articles: [], error: 'No articles found for the given query.' };
     }
 
