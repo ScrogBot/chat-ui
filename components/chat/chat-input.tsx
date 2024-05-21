@@ -57,15 +57,6 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     assistantImages
   } = useContext(ChatbotUIContext)
 
-  const {
-    chatInputRef,
-    handleSendMessage,
-    handleStopMessage,
-    handleFocusChatInput
-  } = useChatHandler()
-
-  const { handleInputChange } = usePromptAndCommand()
-
  const {
     chatInputRef,
     handleSendMessage,
@@ -87,34 +78,48 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   useEffect(() => {
     setTimeout(() => {
       handleFocusChatInput()
-    }, 200); // FIX: hacky
+    }, 200) // FIX: hacky
   }, [selectedPreset, selectedAssistant])
 
-  const handleKeyDown = async (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if (!isTyping && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault()
-      const query = userInput.trim()
-
-      // Check if the query should trigger a PubMed search
-      const shouldSearchPubMed = query.startsWith("pubmed:");
-
-      if (shouldSearchPubMed) {
-        const searchQuery = query.replace("pubmed:", "").trim();
-        if (searchQuery) {
-          try {
-            const results = await searchPubMed(searchQuery)
-            setPubMedArticles(results.results)
-          } catch (error) {
-            toast.error("Failed to fetch PubMed articles.")
-          }
-        }
-      } else {
-        handleSendMessage(userInput, chatMessages, false)
-      }
-
-      setUserInput("") // Clear the input after sending the message
+      setIsPromptPickerOpen(false)
+      handleSendMessage(userInput, chatMessages, false)
     }
 
+    // Consolidate conditions to avoid TypeScript error
+    if (
+      isPromptPickerOpen ||
+      isFilePickerOpen ||
+      isToolPickerOpen ||
+      isAssistantPickerOpen
+    ) {
+      if (
+        event.key === "Tab" ||
+        event.key === "ArrowUp" ||
+        event.key === "ArrowDown"
+      ) {
+        event.preventDefault()
+        // Toggle focus based on picker type
+        if (isPromptPickerOpen) setFocusPrompt(!focusPrompt)
+        if (isFilePickerOpen) setFocusFile(!focusFile)
+        if (isToolPickerOpen) setFocusTool(!focusTool)
+        if (isAssistantPickerOpen) setFocusAssistant(!focusAssistant)
+      }
+    }
+
+    if (event.key === "ArrowUp" && event.shiftKey && event.ctrlKey) {
+      event.preventDefault()
+      setNewMessageContentToPreviousUserMessage()
+    }
+
+    if (event.key === "ArrowDown" && event.shiftKey && event.ctrlKey) {
+      event.preventDefault()
+      setNewMessageContentToNextUserMessage()
+    }
+
+    //use shift+ctrl+up and shift+ctrl+down to navigate through chat history
     if (event.key === "ArrowUp" && event.shiftKey && event.ctrlKey) {
       event.preventDefault()
       setNewMessageContentToPreviousUserMessage()
@@ -177,26 +182,6 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             >
               <div className="flex cursor-pointer items-center justify-center space-x-1 rounded-lg bg-purple-600 px-3 py-1 hover:opacity-50">
                 <IconBolt size={20} />
-                <div>{tool.name}</div>
-              </div>
-            </div>
-          ))}
-
-        {selectedAssistant && (
-          <div className="border-primary mx-auto flex w-fit items-center space-x-2 rounded-lg border p-1.5">
-            {selectedAssistant.image_path && (
-              <Image
-                className="rounded"
-                src={
-                  assistantImages.find(
-                    img => img.path === selectedAssistant.image_path
-                  )?.base64
-                }
-                width={28}
-                height={28}
-                alt={selectedAssistant.name}
-              />
-            )}
             <div className="text-sm font-bold">
               Talking to {selectedAssistant.name}
             </div>
@@ -233,8 +218,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
           textareaRef={chatInputRef}
           className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-14 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder={t(
-            // `Ask anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
-            `Ask anything. Type @  /  #  !`
+            `Ask anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
           )}
           onValueChange={handleInputChange}
           value={userInput}
@@ -268,5 +252,9 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             />
           )}
         </div>
+      </div>
+    </>
+  )
+}
       </div>
 
