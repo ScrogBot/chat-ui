@@ -256,5 +256,3 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     </>
   )
 }
-      </div>
-
