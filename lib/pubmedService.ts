@@ -29,19 +29,25 @@ export interface PubMedFetchResponse {
 }
 
 export const performPubMedSearch = async (query: string): Promise<PubMedSearchResponse> => {
-  const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${query}&usehistory=y&retmode=json`);
-  const data: PubMedSearchResponse = await response.json();
-  return data;
+  try {
+    const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${query}&usehistory=y&retmode=json`);
+    const data: PubMedSearchResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error in performPubMedSearch: ${error.message}`);
+    throw new Error(`Failed to perform PubMed search: ${error.message}`);
+  }
 };
 
-export const performPubMedFetch = async (webenv: string, querykey: string): Promise<PubMedFetchResponse> => {
-  const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&query_key=${querykey}&WebEnv=${webenv}&retmode=xml&retmax=15&rettype=abstract`);
-  const textData = await response.text();
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(textData, "application/xml");
+const fetchArticle = async (id: string): Promise<PubMedArticle> => {
+  try {
+    const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${id}&retmode=xml`);
+    const textData = await response.text();
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(textData, "application/xml");
 
-  const articles: PubMedArticle[] = Array.from(xmlDoc.getElementsByTagName("PubmedArticle")).map(article => {
-    const id = article.getElementsByTagName("PMID")[0].textContent || '';
+    const article = xmlDoc.getElementsByTagName("PubmedArticle")[0];
+    const articleId = article.getElementsByTagName("PMID")[0]?.textContent || '';
     const title = article.getElementsByTagName("ArticleTitle")[0]?.textContent || '';
     const abstractNode = article.getElementsByTagName("AbstractText")[0];
     const abstract = abstractNode ? abstractNode.textContent : '';
@@ -52,12 +58,24 @@ export const performPubMedFetch = async (webenv: string, querykey: string): Prom
     });
 
     return {
-      id,
+      id: articleId,
       title,
       abstract,
       authors,
     };
-  });
+  } catch (error) {
+    console.error(`Error in fetchArticle: ${error.message}`);
+    throw new Error(`Failed to fetch article with ID ${id}: ${error.message}`);
+  }
+};
 
-  return { articles };
+export const performPubMedFetch = async (ids: string[]): Promise<PubMedFetchResponse> => {
+  try {
+    const articlePromises = ids.map(id => fetchArticle(id));
+    const articles = await Promise.all(articlePromises);
+    return { articles };
+  } catch (error) {
+    console.error(`Error in performPubMedFetch: ${error.message}`);
+    throw new Error(`Failed to fetch articles: ${error.message}`);
+  }
 };
