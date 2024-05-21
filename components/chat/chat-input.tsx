@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChatbotUIContext } from '../context/ChatbotUIContext';
+import { ChatbotUIContext } from '../context/Context';
 import { useChatHandler } from '../hooks/useChatHandler';
 import { usePromptAndCommand } from '../hooks/usePromptAndCommand';
 import { useSelectFileHandler } from '../hooks/useSelectFileHandler';
