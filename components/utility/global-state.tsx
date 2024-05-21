@@ -203,7 +203,12 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
       value={{
         // PROFILE STORE
         profile,
-        setProfile,
+        setProfile,   
+        pubMedArticles,
+        setPubMedArticles,
+        pubMedWebEnv,
+        setPubMedWebEnv,
+        searchPubMed,
 
         // ITEMS STORE
         assistants,
