@@ -10,7 +10,7 @@ import { getCollectionWorkspacesByWorkspaceId } from "@/db/collections"
   import { getModelWorkspacesByWorkspaceId } from "@/db/models"
   import { getPresetWorkspacesByWorkspaceId } from "@/db/presets"
   import { getPromptWorkspacesByWorkspaceId } from "@/db/prompts"
- import {  getAssistantImageFromStorage } from "@/db/assistant-images"
+ import {  getAssistantImageFromStorage } from "@/db/storage/assistant-images"
   import { getToolWorkspacesByWorkspaceId } from "@/db/tools"
   import { getWorkspaceById } from "@/db/workspaces"
 
