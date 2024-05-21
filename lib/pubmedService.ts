@@ -32,6 +32,7 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
   try {
     const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${query}&usehistory=y&retmode=json`);
     const data: PubMedSearchResponse = await response.json();
+    console.log(`performPubMedSearch response data: ${JSON.stringify(data)}`);
     return data;
   } catch (error) {
     console.error(`Error in performPubMedSearch: ${error.message}`);
@@ -47,11 +48,11 @@ const fetchArticle = async (id: string): Promise<PubMedArticle> => {
     const xmlDoc = parser.parseFromString(textData, "application/xml");
 
     const article = xmlDoc.getElementsByTagName("PubmedArticle")[0];
-    const articleId = article.getElementsByTagName("PMID")[0]?.textContent || '';
-    const title = article.getElementsByTagName("ArticleTitle")[0]?.textContent || '';
-    const abstractNode = article.getElementsByTagName("AbstractText")[0];
+    const articleId = article?.getElementsByTagName("PMID")[0]?.textContent || '';
+    const title = article?.getElementsByTagName("ArticleTitle")[0]?.textContent || '';
+    const abstractNode = article?.getElementsByTagName("AbstractText")[0];
     const abstract = abstractNode ? abstractNode.textContent : '';
-    const authors = Array.from(article.getElementsByTagName("Author")).map(author => {
+    const authors = Array.from(article?.getElementsByTagName("Author") || []).map(author => {
       const lastName = author.getElementsByTagName("LastName")[0]?.textContent || '';
       const foreName = author.getElementsByTagName("ForeName")[0]?.textContent || '';
       return `${foreName} ${lastName}`;
@@ -73,6 +74,7 @@ export const performPubMedFetch = async (ids: string[]): Promise<PubMedFetchResp
   try {
     const articlePromises = ids.map(id => fetchArticle(id));
     const articles = await Promise.all(articlePromises);
+    console.log(`performPubMedFetch articles: ${JSON.stringify(articles)}`);
     return { articles };
   } catch (error) {
     console.error(`Error in performPubMedFetch: ${error.message}`);
