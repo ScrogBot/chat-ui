@@ -35,8 +35,12 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
     console.log(`performPubMedSearch response data: ${JSON.stringify(data)}`);
     return data;
   } catch (error) {
-    console.error(`Error in performPubMedSearch: ${error.message}`);
-    throw new Error(`Failed to perform PubMed search: ${error.message}`);
+     if (error instanceof Error) {
+      console.error(`Error in performPubMedSearch: ${error.message}`);
+      throw new Error(`Failed to perform PubMed search: ${error.message}`);
+    } else {
+      console.error(`Error in performPubMedSearch: ${String(error)}`);
+      throw new Error(`Failed to perform PubMed search: ${String(error)}`);
   }
 };
 
@@ -77,7 +81,11 @@ export const performPubMedFetch = async (ids: string[]): Promise<PubMedFetchResp
     console.log(`performPubMedFetch articles: ${JSON.stringify(articles)}`);
     return { articles };
   } catch (error) {
-    console.error(`Error in performPubMedFetch: ${error.message}`);
-    throw new Error(`Failed to fetch articles: ${error.message}`);
+    if (error instanceof Error) {
+      console.error(`Error in performPubMedFetch: ${error.message}`);
+      throw new Error(`Failed to fetch articles: ${error.message}`);
+    } else {
+      console.error(`Error in performPubMedFetch: ${String(error)}`);
+      throw new Error(`Failed to fetch articles: ${String(error)}`);
   }
 };
