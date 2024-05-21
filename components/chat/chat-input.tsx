@@ -129,6 +129,36 @@ export const ChatInput: FC<ChatInputProps> = () => {
       event.preventDefault()
       setNewMessageContentToNextUserMessage()
     }
+      if (
+      isAssistantPickerOpen &&
+      (event.key === "Tab" ||
+        event.key === "ArrowUp" ||
+        event.key === "ArrowDown")
+    ) {
+      event.preventDefault()
+      setFocusAssistant(!focusAssistant)
+    }
+  }
+
+  const handlePaste = (event: React.ClipboardEvent) => {
+    const imagesAllowed = LLM_LIST.find(
+      llm => llm.modelId === chatSettings?.model
+    )?.imageInput
+
+    const items = event.clipboardData.items
+    for (const item of items) {
+      if (item.type.indexOf("image") === 0) {
+        if (!imagesAllowed) {
+          toast.error(
+            `Images are not supported for this model. Use models like GPT-4 Vision instead.`
+          )
+          return
+        }
+        const file = item.getAsFile()
+        if (!file) return
+        handleSelectDeviceFile(file)
+      }
+    }
   }
  return (
     <>
