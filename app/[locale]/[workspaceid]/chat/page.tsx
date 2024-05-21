@@ -2,7 +2,7 @@
 
 import { ChatHelp } from "@/components/chat/chat-help"
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
-import ChatInput from "@/components/chat/chat-input"
+import { ChatInput } from "@/components/chat/chat-input"
 import ChatSettings from "@/components/chat/chat-settings"
 import ChatUI from "@/components/chat/chat-ui"
 import { QuickSettings } from "@/components/chat/quick-settings"
