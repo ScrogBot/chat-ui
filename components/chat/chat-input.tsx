@@ -23,7 +23,7 @@ import { useSelectFileHandler } from "./chat-hooks/use-select-file-handler"
 
 interface ChatInputProps {}
 
-export const ChatInput: FC<ChatInputProps> = () => {
+export const ChatInput: FC<ChatInputProps> = ({}) => {
   const { t } = useTranslation()
 
   useHotkey("l", () => {
@@ -129,8 +129,9 @@ export const ChatInput: FC<ChatInputProps> = () => {
       event.preventDefault()
       setNewMessageContentToNextUserMessage()
     }
-     
-    if (isAssistantPickerOpen &&
+
+    if (
+      isAssistantPickerOpen &&
       (event.key === "Tab" ||
         event.key === "ArrowUp" ||
         event.key === "ArrowDown")
@@ -160,12 +161,54 @@ export const ChatInput: FC<ChatInputProps> = () => {
       }
     }
   }
-  
- return (
+
+  return (
     <>
-    <div className="relative flex flex-1 flex-col overflow-hidden bg-white dark:bg-dark-bg">
-      <div className="flex items-center justify-between bg-white dark:bg-dark-bg p-3">
-        <h2 className="text-lg font-bold">{t("Chat with")} {selectedAssistant.name}</h2>
+      <div className="flex flex-col flex-wrap justify-center gap-2">
+        <ChatFilesDisplay />
+
+        {selectedTools &&
+          selectedTools.map((tool, index) => (
+            <div
+              key={index}
+              className="flex justify-center"
+              onClick={() =>
+                setSelectedTools(
+                  selectedTools.filter(
+                    selectedTool => selectedTool.id !== tool.id
+                  )
+                )
+              }
+            >
+              <div className="flex cursor-pointer items-center justify-center space-x-1 rounded-lg bg-purple-600 px-3 py-1 hover:opacity-50">
+                <IconBolt size={20} />
+
+                <div>{tool.name}</div>
+              </div>
+            </div>
+          ))}
+
+        {selectedAssistant && (
+          <div className="border-primary mx-auto flex w-fit items-center space-x-2 rounded-lg border p-1.5">
+            {selectedAssistant.image_path && (
+              <Image
+                className="rounded"
+                src={
+                  assistantImages.find(
+                    img => img.path === selectedAssistant.image_path
+                  )?.base64
+                }
+                width={28}
+                height={28}
+                alt={selectedAssistant.name}
+              />
+            )}
+
+            <div className="text-sm font-bold">
+              Talking to {selectedAssistant.name}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="border-input relative mt-3 flex min-h-[60px] w-full items-center justify-center rounded-xl border-2">
@@ -233,6 +276,6 @@ export const ChatInput: FC<ChatInputProps> = () => {
           )}
         </div>
       </div>
-       </>
-      )
+    </>
+  )
 }
