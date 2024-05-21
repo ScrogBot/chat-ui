@@ -131,7 +131,6 @@ export const ChatInput: FC<ChatInputProps> = () => {
     }
   }
 
-  <>
     <div className="relative flex flex-1 flex-col overflow-hidden bg-white dark:bg-dark-bg">
       <div className="flex items-center justify-between bg-white dark:bg-dark-bg p-3">
         <h2 className="text-lg font-bold">{t("Chat with")} {selectedAssistant.name}</h2>
@@ -202,5 +201,4 @@ export const ChatInput: FC<ChatInputProps> = () => {
           )}
         </div>
       </div>
-    </>
 }
