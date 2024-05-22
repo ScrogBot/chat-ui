@@ -20,7 +20,7 @@ export interface PubMedSearchResponse {
 export interface PubMedArticle {
   id: string;
   title?: string;
-  abstract: abstract !== null ? abstract : undefined,
+  abstract: string | null | undefined;
   authors?: string[];
   // Add other fields if necessary
 }
