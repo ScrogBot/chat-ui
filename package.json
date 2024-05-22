@@ -2,6 +2,7 @@
   "name": "chatbot-ui",
   "version": "2.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "chat": "supabase start && npm run db-types && npm run dev",
     "restart": "supabase stop && npm run chat",
@@ -23,6 +24,7 @@
     "db-types": "supabase gen types typescript --local > supabase/types.ts",
     "db-pull": "supabase db remote commit",
     "db-push": "supabase db push",
+    "start-pubMed": "node dist/testPubMed.js",
     "test": "jest"
   },
   "dependencies": {
@@ -72,6 +74,7 @@
     "d3-dsv": "^2.0.0",
     "date-fns": "^2.30.0",
     "endent": "^2.1.0",
+    "fast-xml-parser": "^4.4.0",
     "gpt-tokenizer": "^2.1.2",
     "html-to-md": "^0.8.5",
     "i18next": "^23.7.16",
@@ -83,6 +86,7 @@
     "next-i18n-router": "^5.2.0",
     "next-pwa": "5.6.0",
     "next-themes": "^0.2.1",
+    "node-fetch": "^3.3.2",
     "openai": "^4.23.0",
     "pdf-parse": "^1.1.1",
     "react": "^18",

@@ -47,7 +47,7 @@ export const performPubMedSearch = async (query: string): Promise<PubMedSearchRe
   
 const fetchArticle = async (id: string): Promise<PubMedArticle> => {  
   try {  
-    const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${id}&retmode=xml`);  
+    const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${id}&retmode=json`);  
     const textData = await response.text();  
     const parser = new DOMParser();  
     const xmlDoc = parser.parseFromString(textData, "application/xml");  

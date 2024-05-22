@@ -11,7 +11,7 @@ import {
 import { AssistantImage } from "@/types/images/assistant-image"
 import { VALID_ENV_KEYS } from "@/types/valid-keys"
 import { Dispatch, SetStateAction, createContext, useState } from "react"
-import { performPubMedSearch, PubMedArticle, PubMedSearchResponse } from "../pubmedService"
+import { performPubMedSearch, PubMedArticle, PubMedSearchResponse } from "../src/pubmedService"
 
 interface ChatbotUIContext {
   // PROFILE STORE
