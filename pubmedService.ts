@@ -14,7 +14,7 @@ export interface PubMedSearchResponse {
     idlist: string[];
     translationset: any[];
     querytranslation: string;
-  };
+  }
 }
 
 export interface PubMedArticle {
