@@ -33,7 +33,7 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['sharp', 'onnxruntime-node'],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
       config.plugins.push(new NodePolyfillPlugin());
 
@@ -46,12 +46,28 @@ const nextConfig = {
         util: require.resolve('util/'),
         process: require.resolve('process/browser'),
       };
+
+      // Handle node: scheme URIs
+      config.plugins.push(new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+        resource.request = resource.request.replace(/^node:/, '');
+      }));
     }
 
-    // Handle node: scheme URIs
+    // Ensure Webpack handles node: URIs
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve.alias,
+        buffer: 'buffer',
+      },
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.node'],
+    };
+
     config.module.rules.push({
-      test: /\.node$/,
-      use: 'node-loader',
+      test: /\.m?js/,
+      resolve: {
+        fullySpecified: false, // disable the behavior
+      },
     });
 
     return config;
