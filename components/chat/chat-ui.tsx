@@ -1,9 +1,9 @@
-import { FC, useContext, useEffect, useState } from "react";
-import { ChatbotUIContext } from "@/context/context";
-import { toast } from "sonner";
-import { ChatInput } from "./chat-input";
-import { ChatMessages } from "./chat-messages";
-import { ChatMessage } from "@/types"; // Ensure ChatMessage type is imported
+import { FC, useContext, useEffect, useState } from "react"
+import { ChatbotUIContext } from "@/context/context"
+import { toast } from "sonner"
+import { ChatInput } from "./chat-input"
+import { ChatMessages } from "./chat-messages"
+import { ChatMessage } from "@/types" // Ensure ChatMessage type is imported
 import Loading from "@/app/[locale]/loading"
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
@@ -25,8 +25,8 @@ interface ChatUIProps {}
 
 export const ChatUI: FC<ChatUIProps> = ({}) => {
   useHotkey("o", () => handleNewChat())
- //const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, setChatMessages } = useContext(ChatbotUIContext);
-  
+  //const { chatMessages, selectedChat, searchPubMed, setPubMedArticles, setChatMessages } = useContext(ChatbotUIContext);
+
   const params = useParams()
 
   const {
@@ -42,7 +42,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     setShowFilesDisplay,
     setUseRetrieval,
     setSelectedTools,
-    searchPubMed, 
+    searchPubMed,
     setPubMedArticles
   } = useContext(ChatbotUIContext)
 
@@ -233,4 +233,4 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     </div>
   )
 }
-export default ChatUI; // Ensure it is exported as a default export
+export default ChatUI // Ensure it is exported as a default export

@@ -1,4 +1,4 @@
-const i18nConfig = {
+export const i18nConfig = {
   defaultLocale: "en",
   locales: [
     "ar",
@@ -20,6 +20,6 @@ const i18nConfig = {
     "vi",
     "zh"
   ]
-}
+};
 
-module.exports = i18nConfig
+export default i18nConfig
