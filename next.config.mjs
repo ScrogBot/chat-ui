@@ -17,43 +17,45 @@ const nextConfig = {
     unoptimized: true,
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost"
+        protocol: 'http',
+        hostname: 'localhost',
       },
       {
-        protocol: "http",
-        hostname: "127.0.0.1"
+        protocol: 'http',
+        hostname: '127.0.0.1',
       },
       {
-        protocol: "https",
-        hostname: "**"
-      }
-    ]
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   experimental: {
-    serverComponentsExternalPackages: ["sharp", "onnxruntime-node"]
+    serverComponentsExternalPackages: ['sharp', 'onnxruntime-node'],
   },
-webpack: (config, { isServer }) => {
-  if (!isServer) {
-    config.plugins.push(new NodePolyfillPlugin());
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.plugins.push(new NodePolyfillPlugin());
 
-    // Polyfill for 'worker_threads' and other Node.js modules
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      worker_threads: false,
-      buffer: require.resolve('buffer/'),
-      stream: require.resolve('stream-browserify'),
-      util: require.resolve('util/'),
-      process: require.resolve('process/browser'),
-    };
-  }
+      // Polyfill for 'worker_threads' and other Node.js modules
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        worker_threads: false,
+        buffer: require.resolve('buffer/'),
+        stream: require.resolve('stream-browserify'),
+        util: require.resolve('util/'),
+        process: require.resolve('process/browser'),
+      };
+    }
 
-  return config;
-},
+    // Handle node: scheme URIs
+    config.module.rules.push({
+      test: /\.node$/,
+      use: 'node-loader',
+    });
+
+    return config;
+  },
 };
 
-export default bundleAnalyzer(withPWA({
-  ...nextConfig,
-  ...pwaConfig
-}));
-
+export default bundleAnalyzer(withPWA(nextConfig));
