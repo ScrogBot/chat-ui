@@ -1,4 +1,4 @@
-import { performPubMedSearch, performPubMedFetch, PubMedArticle } from './src/pubmedService';
+import { performPubMedSearch, performPubMedFetch, PubMedArticle } from './lib/supabase/pubmedService';
 
 interface UserQueryResponse {
   articles: PubMedArticle[];

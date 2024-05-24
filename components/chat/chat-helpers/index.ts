@@ -1,4 +1,11 @@
-// Only used in use-chat-handler.tsx to keep it clean
+import express, { Request, Response } from "express"
+import bodyParser from "body-parser"
+import {
+  performPubMedSearch,
+  performPubMedFetch
+} from "@/lib/supabase/pubmedService" // Adjust the path as necessary
+
+import { handleToolRequest } from "lib/handleToolRequest"
 
 import { createChatFiles } from "@/db/chat-files"
 import { createChat } from "@/db/chats"
@@ -22,6 +29,39 @@ import {
 import React from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
+
+const app = express()
+const port = 3000
+
+app.use(bodyParser.json())
+
+app.post("/app/api/pubmedQuery", async (req: Request, res: Response) => {
+  const { functionName, parameters } = req.body
+
+  if (functionName === "handleUserQuery") {
+    const query: string = parameters.userInput
+
+    try {
+      const searchResults = await performPubMedSearch(query)
+      const articleIds = searchResults.esearchresult.idlist
+
+      if (articleIds.length > 0) {
+        const fetchResults = await performPubMedFetch(articleIds)
+        res.json(fetchResults)
+      } else {
+        res.status(404).json({ message: "No articles found for the query." })
+      }
+    } catch (error) {
+      res
+        .status(500)
+        .json({
+          message: error instanceof Error ? error.message : String(error)
+        })
+    }
+  } else {
+    res.status(400).json({ message: "Invalid functionName" })
+  }
+})
 
 export const validateChatSettings = (
   chatSettings: ChatSettings | null,
@@ -387,7 +427,7 @@ export const handleCreateChat = async (
   return createdChat
 }
 
-export const handleCreateMessages = async (
+export async function handleCreateMessages(
   chatMessages: ChatMessage[],
   currentChat: Tables<"chats">,
   profile: Tables<"profiles">,
@@ -403,7 +443,7 @@ export const handleCreateMessages = async (
   >,
   setChatImages: React.Dispatch<React.SetStateAction<MessageImage[]>>,
   selectedAssistant: Tables<"assistants"> | null
-) => {
+) {
   const finalUserMessage: TablesInsert<"messages"> = {
     chat_id: currentChat.id,
     assistant_id: null,
@@ -451,9 +491,7 @@ export const handleCreateMessages = async (
     const uploadPromises = newMessageImages
       .filter(obj => obj.file !== null)
       .map(obj => {
-        let filePath = `${profile.user_id}/${currentChat.id}/${
-          createdMessages[0].id
-        }/${uuidv4()}`
+        let filePath = `${profile.user_id}/${currentChat.id}/${createdMessages[0].id}/${uuidv4()}`
 
         return uploadMessageImage(filePath, obj.file as File).catch(error => {
           console.error(`Failed to upload image at ${filePath}:`, error)
@@ -511,4 +549,7 @@ export const handleCreateMessages = async (
 
     setChatMessages(finalChatMessages)
   }
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`)
+  })
 }

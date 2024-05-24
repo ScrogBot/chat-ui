@@ -32,7 +32,7 @@ import {
   performPubMedFetch,
   PubMedSearchResponse,
   PubMedArticle
-} from "../../src/pubmedService"
+} from "../../lib/supabase/pubmedService"
 
 interface GlobalStateProps {
   children: React.ReactNode

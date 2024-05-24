@@ -15,7 +15,7 @@ import {
   performPubMedSearch,
   PubMedArticle,
   PubMedSearchResponse
-} from "../src/pubmedService"
+} from "../lib/supabase/pubmedService"
 
 interface ChatbotUIContext {
   // PROFILE STORE

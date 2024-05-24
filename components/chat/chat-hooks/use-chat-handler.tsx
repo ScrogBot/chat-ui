@@ -22,6 +22,28 @@ import {
   validateChatSettings
 } from "../chat-helpers"
 
+const handleUserQuery = async (userInput: string) => {
+  const response = await fetch("/api", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      functionName: "handleUserQuery",
+      parameters: {
+        userInput
+      }
+    })
+  })
+
+  if (response.ok) {
+    const data = await response.json()
+    console.log("Fetch Results:", data)
+  } else {
+    const errorData = await response.json()
+    console.error("Error:", errorData.message)
+  }
+}
 export const useChatHandler = () => {
   const router = useRouter()
 

@@ -1,4 +1,4 @@
-import { performPubMedSearch, performPubMedFetch } from './pubmedService.js';
+import { performPubMedSearch, performPubMedFetch } from '../lib/supabase/pubmedService';
 
 const testPerformPubMedSearch = async (query: string) => {
   try {
