@@ -25,11 +25,9 @@ export default async function handler(
           res.status(404).json({ message: "No articles found for the query." })
         }
       } catch (error) {
-        res
-          .status(500)
-          .json({
-            message: error instanceof Error ? error.message : String(error)
-          })
+        res.status(500).json({
+          message: error instanceof Error ? error.message : String(error)
+        })
       }
     } else {
       res.status(400).json({ message: "Invalid functionName" })
