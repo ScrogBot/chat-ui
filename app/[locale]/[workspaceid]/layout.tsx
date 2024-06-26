@@ -16,7 +16,7 @@ import { getWorkspaceById } from "@/db/workspaces"
 import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { supabase } from "@/lib/supabase/browser-client"
 import { LLMID } from "@/types"
-import { useParams, useRouter } from "next/navigation"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState } from "react"
 import Loading from "../loading"
 import { platformToolDefinitions } from "@/lib/platformTools/utils/platformToolsUtils"
@@ -28,6 +28,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
   const router = useRouter()
 
   const params = useParams()
+  const searchParams = useSearchParams()
   const workspaceId = params.workspaceid as string
 
   const {
