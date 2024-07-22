@@ -28,17 +28,18 @@ const MISTRAL_7B_INSTRUCT: LLM = {
 }
 
 // CodeLlama 70B Instruct (UPDATED 1/31/24)
-const llama-3-8b-instruct"": LLM = {
-  modelId: "llama-3-70b-instruct"",
+const llama_3_70b_instruct: LLM = {
+  modelId: "llama-3-70b-instruct",
   modelName: "Llama 3 70B Instruct",
   provider: "perplexity",
   hostedId: "llama-3-70b-instruct",
   platformLink: PERPLEXITY_PLATORM_LINK,
   imageInput: false
+}
 
 // CodeLlama 8B Instruct (UPDATED 1/31/24)
-const llama-3-8b-instruct"": LLM = {
-  modelId: "llama-3-8b-instruct"",
+const llama_3_8b_instruct: LLM = {
+  modelId: "llama-3-8b-instruct",
   modelName: "Llama 3 8B Instruct",
   provider: "perplexity",
   hostedId: "llama-3-8b-instruct",
@@ -47,7 +48,7 @@ const llama-3-8b-instruct"": LLM = {
 }
 
 // Sonar Small Chat (UPDATED 7/25/24)
-const llama-3-sonar-small-32k-chat: LLM = {
+const llama_3_sonar_small_32k_chat: LLM = {
   modelId: "llama-3-sonar-small-32k-chat",
   modelName: "Sonar Small Chat",
   provider: "perplexity",
@@ -57,7 +58,7 @@ const llama-3-sonar-small-32k-chat: LLM = {
 }
 
 // Sonar Small Online (UPDATED 7/25/24)
-const llama-3-sonar-small-32k-online: LLM = {
+const llama_3_sonar_small_32k_online: LLM = {
   modelId: "llama-3-sonar-small-32k-online",
   modelName: "Sonar Small Online",
   provider: "perplexity",
@@ -67,7 +68,7 @@ const llama-3-sonar-small-32k-online: LLM = {
 }
 
 // llama-3-sonar-large-32k-chat (Updated 7/22/24)
-const llama-3-sonar-large-32k-chat: LLM = {
+const llama_3_sonar_large_32k_chat: LLM = {
   modelId: "llama-3-sonar-large-32k-chat",
   modelName: "Sonar Large Chat",
   provider: "perplexity",
@@ -77,8 +78,8 @@ const llama-3-sonar-large-32k-chat: LLM = {
 }
 
 // Sonar Large Online (UPDATED 7/25/24)
-const llama-3-sonar-large-32k-online: LLM = {
-  modelId: "llama-3-sonar-large-32k-chat-online",
+const llama_3_sonar_large_32k_online: LLM = {
+  modelId: "llama-3-sonar-large-32k-online",
   modelName: "Sonar Large Online",
   provider: "perplexity",
   hostedId: "llama-3-sonar-large-32k-online",
@@ -89,10 +90,10 @@ const llama-3-sonar-large-32k-online: LLM = {
 export const PERPLEXITY_LLM_LIST: LLM[] = [
   MIXTRAL_8X7B_INSTRUCT,
   MISTRAL_7B_INSTRUCT,
-  llama-3-70b-instruct
-  llama-3-8b-instruct",
-  llama-3-sonar-small-32k-chat,
-  llama-3-sonar-small-32k-online,
-  llama-3-sonar-large-32k-chat,
-  llama-3-sonar-large-32k-online
+  llama_3_70b_instruct,
+  llama_3_8b_instruct,
+  llama_3_sonar_small_32k_chat,
+  llama_3_sonar_small_32k_online,
+  llama_3_sonar_large_32k_chat,
+  llama_3_sonar_large_32k_online
 ]
