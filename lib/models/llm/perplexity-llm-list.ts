@@ -48,41 +48,41 @@ const llama_3_8b_instruct: LLM = {
 }
 
 // Sonar Small Chat (UPDATED 7/25/24)
-const llama_3_sonar_small_32k_chat: LLM = {
-  modelId: "llama-3-sonar-small-32k-chat",
+const llama_31_sonar_small_128k_chat: LLM = {
+  modelId: "llama-3.1-sonar-small-128k-chat",
   modelName: "Sonar Small Chat",
   provider: "perplexity",
-  hostedId: "llama-3-sonar-small-32k-online",
+  hostedId: "llama-3.1-sonar-small-128k-chat",
   platformLink: PERPLEXITY_PLATORM_LINK,
   imageInput: false
 }
 
 // Sonar Small Online (UPDATED 7/25/24)
-const llama_3_sonar_small_32k_online: LLM = {
-  modelId: "llama-3-sonar-small-32k-online",
+const llama_31_sonar_small_128k_online: LLM = {
+  modelId: "llama-3.1-sonar-small-128k-online",
   modelName: "Sonar Small Online",
   provider: "perplexity",
-  hostedId: "llama-3-sonar-small-32k-online",
+  hostedId: "llama-3.1-sonar-small-128k-online",
   platformLink: PERPLEXITY_PLATORM_LINK,
   imageInput: false
 }
 
 // llama-3-sonar-large-32k-chat (Updated 7/22/24)
-const llama_3_sonar_large_32k_chat: LLM = {
-  modelId: "llama-3-sonar-large-32k-chat",
+const llama_31_sonar_large_128k_chat: LLM = {
+  modelId: "llama-3.1-sonar-large-128k-chat",
   modelName: "Sonar Large Chat",
   provider: "perplexity",
-  hostedId: "llama-3-sonar-large-32k-chat",
+  hostedId: "llama-3.1-sonar-large-128k-chat",
   platformLink: PERPLEXITY_PLATORM_LINK,
   imageInput: false
 }
 
 // Sonar Large Online (UPDATED 7/25/24)
-const llama_3_sonar_large_32k_online: LLM = {
-  modelId: "llama-3-sonar-large-32k-online",
+const llama_31_sonar_large_128k_online: LLM = {
+  modelId: "llama-3.1-sonar-large-128k-online",
   modelName: "Sonar Large Online",
   provider: "perplexity",
-  hostedId: "llama-3-sonar-large-32k-online",
+  hostedId: "llama-3.1-sonar-large-128k-online",
   platformLink: PERPLEXITY_PLATORM_LINK,
   imageInput: false
 }
@@ -92,8 +92,8 @@ export const PERPLEXITY_LLM_LIST: LLM[] = [
   MISTRAL_7B_INSTRUCT,
   llama_3_70b_instruct,
   llama_3_8b_instruct,
-  llama_3_sonar_small_32k_chat,
-  llama_3_sonar_small_32k_online,
-  llama_3_sonar_large_32k_chat,
-  llama_3_sonar_large_32k_online
+  llama_31_sonar_small_128k_chat,
+  llama_31_sonar_small_128k_online,
+  llama_31_sonar_large_128k_chat,
+  llama_31_sonar_large_128k_online
 ]

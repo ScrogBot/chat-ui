@@ -196,25 +196,25 @@ export const CHAT_SETTING_LIMITS: Record<LLMID, ChatSettingLimits> = {
     MAX_CONTEXT_LENGTH: 16384
   },
 
-  "llama-3-sonar-small-32k-chat": {
+  "llama-3.1-sonar-small-128k-chat": {
     MIN_TEMPERATURE: 0.0,
     MAX_TEMPERATURE: 1.0,
     MAX_TOKEN_OUTPUT_LENGTH: 16384,
     MAX_CONTEXT_LENGTH: 16384
   },
-  "llama-3-sonar-small-32k-online": {
+  "llama-3.1-sonar-small-128k-online": {
     MIN_TEMPERATURE: 0.0,
     MAX_TEMPERATURE: 1.0,
     MAX_TOKEN_OUTPUT_LENGTH: 12000,
     MAX_CONTEXT_LENGTH: 12000
   },
-  "llama-3-sonar-large-32k-chat": {
+  "llama-3.1-sonar-large-128k-chat": {
     MIN_TEMPERATURE: 0.0,
     MAX_TEMPERATURE: 1.0,
     MAX_TOKEN_OUTPUT_LENGTH: 128000,
     MAX_CONTEXT_LENGTH: 128000
   },
-  "llama-3-sonar-large-32k-online": {
+  "llama-3.1-sonar-large-128k-online": {
     MIN_TEMPERATURE: 0.0,
     MAX_TEMPERATURE: 1.0,
     MAX_TOKEN_OUTPUT_LENGTH: 128000,
