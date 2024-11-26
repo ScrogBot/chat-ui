@@ -9,7 +9,9 @@ export const FinishStep: FC<FinishStepProps> = ({ displayName }) => {
     <div className="space-y-4">
       <div>
         Welcome to Chatbot UI
-        {displayName.length > 0 ? `, ${displayName.split(" ")[0]}` : null}!
+        {displayName.length > 0
+          ? `, ${displayName.split(" ")[0]}`
+          : null}!
       </div>
 
       <div>Click next to start chatting.</div>
