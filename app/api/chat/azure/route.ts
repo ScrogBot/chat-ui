@@ -35,6 +35,9 @@ export async function POST(request: Request) {
         })
     }
 
+    // override real deployment id
+    DEPLOYMENT_ID = "pcp-gpt4o"
+
     if (!ENDPOINT || !KEY || !DEPLOYMENT_ID) {
       return new Response(
         JSON.stringify({ message: "Azure resources not found" }),
@@ -47,7 +50,9 @@ export async function POST(request: Request) {
     const azureOpenai = new OpenAI({
       apiKey: KEY,
       baseURL: `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`,
-      defaultQuery: { "api-version": "2023-12-01-preview" },
+      // defaultQuery: { "api-version": "2023-12-01-preview" },
+      // override real api version
+      defaultQuery: { "api-version": "2024-06-01" },
       defaultHeaders: { "api-key": KEY }
     })
 
