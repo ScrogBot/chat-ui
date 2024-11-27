@@ -205,7 +205,7 @@ export const handleHostedChat = async (
   //   modelData.provider === "openai" && profile.use_azure_openai
   //     ? "azure"
   //     : modelData.provider
-  const provider = "azure"
+  const provider: string = "azure"
 
   let draftMessages = await buildFinalMessages(payload, profile, chatImages)
 
