@@ -3,6 +3,7 @@ import { ChatAPIPayload } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
+import { wrapOpenAI } from "langsmith/wrappers"
 
 export const runtime = "edge"
 
@@ -48,14 +49,16 @@ export async function POST(request: Request) {
       )
     }
 
-    const azureOpenai = new OpenAI({
-      apiKey: KEY,
-      baseURL: `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`,
-      // defaultQuery: { "api-version": "2023-12-01-preview" },
-      // override real api version
-      defaultQuery: { "api-version": "2024-08-01-preview" },
-      defaultHeaders: { "api-key": KEY }
-    })
+    const azureOpenai = wrapOpenAI(
+      new OpenAI({
+        apiKey: KEY,
+        baseURL: `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`,
+        // defaultQuery: { "api-version": "2023-12-01-preview" },
+        // override real api version
+        defaultQuery: { "api-version": "2024-08-01-preview" },
+        defaultHeaders: { "api-key": KEY }
+      })
+    )
 
     const response = await azureOpenai.chat.completions.create({
       model: DEPLOYMENT_ID as ChatCompletionCreateParamsBase["model"],
