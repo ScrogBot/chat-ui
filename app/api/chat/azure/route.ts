@@ -36,7 +36,8 @@ export async function POST(request: Request) {
     }
 
     // override real deployment id
-    DEPLOYMENT_ID = "babbage-002"
+    // DEPLOYMENT_ID = "babbage-002"
+    DEPLOYMENT_ID = "gpt-35-turbo-16k"
 
     if (!ENDPOINT || !KEY || !DEPLOYMENT_ID) {
       return new Response(
@@ -52,33 +53,33 @@ export async function POST(request: Request) {
       baseURL: `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`,
       // defaultQuery: { "api-version": "2023-12-01-preview" },
       // override real api version
-      defaultQuery: { "api-version": "2024-06-01" },
+      defaultQuery: { "api-version": "2024-08-01-preview" },
       defaultHeaders: { "api-key": KEY }
     })
 
-    // const response = await azureOpenai.chat.completions.create({
-    //   model: DEPLOYMENT_ID as ChatCompletionCreateParamsBase["model"],
-    //   messages: messages as ChatCompletionCreateParamsBase["messages"],
-    //   temperature: chatSettings.temperature,
-    //   max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null, // TODO: Fix
-    //   stream: true
-    // })
+    const response = await azureOpenai.chat.completions.create({
+      model: DEPLOYMENT_ID as ChatCompletionCreateParamsBase["model"],
+      messages: messages as ChatCompletionCreateParamsBase["messages"],
+      temperature: chatSettings.temperature,
+      max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null, // TODO: Fix
+      stream: true
+    })
 
-    const response = await azureOpenai.completions.create(
-      {
-        prompt: messages.map((msg: any) => msg.content).join("\n"),
-        model: DEPLOYMENT_ID as string,
-        temperature: chatSettings.temperature,
-        max_tokens: null,
-        stream: true
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "api-key": KEY
-        }
-      }
-    )
+    // const response = await azureOpenai.completions.create(
+    //   {
+    //     prompt: messages.map((msg: any) => msg.content).join("\n"),
+    //     model: DEPLOYMENT_ID as string,
+    //     temperature: chatSettings.temperature,
+    //     max_tokens: null,
+    //     stream: true
+    //   },
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "api-key": KEY
+    //     }
+    //   }
+    // )
 
     const stream = OpenAIStream(response)
 
