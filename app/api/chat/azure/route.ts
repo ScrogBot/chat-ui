@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     }
 
     // override real deployment id
-    DEPLOYMENT_ID = "pcp-gpt4o"
+    DEPLOYMENT_ID = "babbage-002"
 
     if (!ENDPOINT || !KEY || !DEPLOYMENT_ID) {
       return new Response(
@@ -56,13 +56,29 @@ export async function POST(request: Request) {
       defaultHeaders: { "api-key": KEY }
     })
 
-    const response = await azureOpenai.chat.completions.create({
-      model: DEPLOYMENT_ID as ChatCompletionCreateParamsBase["model"],
-      messages: messages as ChatCompletionCreateParamsBase["messages"],
-      temperature: chatSettings.temperature,
-      max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null, // TODO: Fix
-      stream: true
-    })
+    // const response = await azureOpenai.chat.completions.create({
+    //   model: DEPLOYMENT_ID as ChatCompletionCreateParamsBase["model"],
+    //   messages: messages as ChatCompletionCreateParamsBase["messages"],
+    //   temperature: chatSettings.temperature,
+    //   max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null, // TODO: Fix
+    //   stream: true
+    // })
+
+    const response = await azureOpenai.completions.create(
+      {
+        prompt: messages.map((msg: any) => msg.content).join("\n"),
+        model: DEPLOYMENT_ID as string,
+        temperature: chatSettings.temperature,
+        max_tokens: 16384,
+        stream: true
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": KEY
+        }
+      }
+    )
 
     const stream = OpenAIStream(response)
 
