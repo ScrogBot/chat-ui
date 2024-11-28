@@ -69,8 +69,8 @@ export async function POST(request: Request) {
         prompt: messages.map((msg: any) => msg.content).join("\n"),
         model: DEPLOYMENT_ID as string,
         temperature: chatSettings.temperature,
-        max_tokens: null,
-        stream: false
+        max_tokens: 4096,
+        stream: true
       },
       {
         headers: {
