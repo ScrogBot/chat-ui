@@ -70,7 +70,7 @@ export async function POST(request: Request) {
         model: DEPLOYMENT_ID as string,
         temperature: chatSettings.temperature,
         max_tokens: null,
-        stream: true
+        stream: false
       },
       {
         headers: {
