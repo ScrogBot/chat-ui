@@ -38,7 +38,8 @@ export async function POST(request: Request) {
 
     // override real deployment id
     // DEPLOYMENT_ID = "babbage-002"
-    DEPLOYMENT_ID = "gpt-35-turbo-16k"
+    // DEPLOYMENT_ID = "gpt-35-turbo-16k"
+    DEPLOYMENT_ID = "pcp-gpt4o"
 
     if (!ENDPOINT || !KEY || !DEPLOYMENT_ID) {
       return new Response(
