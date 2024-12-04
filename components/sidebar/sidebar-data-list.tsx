@@ -28,6 +28,37 @@ interface SidebarDataListProps {
   folders: Tables<"folders">[]
 }
 
+const predefinedModels: Tables<"models">[] = [
+  {
+    api_key: "",
+    base_url: "https://pcp-ai.openai.azure.com/openai",
+    context_length: 4096,
+    created_at: "",
+    description: "jailbreaking model 1",
+    folder_id: null,
+    id: "",
+    model_id: "jailbreaking-model-1",
+    name: "jailbreaking-model-1",
+    sharing: "",
+    updated_at: null,
+    user_id: ""
+  },
+  {
+    api_key: "",
+    base_url: "https://pcp-ai.openai.azure.com/openai",
+    context_length: 4096,
+    created_at: "",
+    description: "jailbreaking model 2",
+    folder_id: null,
+    id: "",
+    model_id: "jailbreaking-model-2",
+    name: "jailbreaking-model-2",
+    sharing: "",
+    updated_at: null,
+    user_id: ""
+  }
+]
+
 export const SidebarDataList: FC<SidebarDataListProps> = ({
   contentType,
   data,
@@ -86,7 +117,12 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
         return <ToolItem key={item.id} tool={item as Tables<"tools">} />
 
       case "models":
-        return <ModelItem key={item.id} model={item as Tables<"models">} />
+        // add predefinedModels here
+        return predefinedModels.map(model => (
+          <ModelItem key={model.id} model={model} />
+        ))
+
+      // return <ModelItem key={item.id} model={item as Tables<"models">} />
 
       default:
         return null
