@@ -12,6 +12,7 @@ import { Input } from '../ui/input';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { ModelIcon } from './model-icon';
 import { ModelOption } from './model-option';
+import { undefined } from 'zod';
 
 interface ModelSelectProps {
   selectedModelId: string;
@@ -49,34 +50,41 @@ export const ModelSelect: FC<ModelSelectProps> = ({
     onSelectModel(modelId);
     setIsOpen(false);
   };
-  models.push({
-    model_id: 'test-model-1-id',
-    name: 'test-model-1-name',
-    api_key: '',
-    base_url: '',
-    context_length: 0,
-    created_at: '',
-    description: '',
-    folder_id: '',
-    id: '',
-    sharing: '',
-    updated_at: '',
-    user_id: ''
-  });
-  models.push({
-    model_id: 'test-model-2-id',
-    name: 'test-model-2-name',
-    api_key: '',
-    base_url: '',
-    context_length: 0,
-    created_at: '',
-    description: '',
-    folder_id: '',
-    id: '',
-    sharing: '',
-    updated_at: '',
-    user_id: ''
-  });
+
+  // if model_id 'test-model-1-id' and 'test-model-2-id' are not in the models array, push them to models array
+  if (!models.find(model => model.model_id === 'jailbreaking-model-1')) {
+    models.push({
+      api_key: 'https://pcp-ai.openai.azure.com/openai',
+      base_url: '',
+      context_length: 0,
+      created_at: '',
+      description: '',
+      folder_id: null,
+      id: '',
+      sharing: '',
+      updated_at: null,
+      user_id: '',
+      model_id: 'jailbreaking-model-1',
+      name: 'jailbreaking-model-1'
+    });
+  }
+  if (!models.find(model => model.model_id === 'jailbreaking-model-2')) {
+    models.push({
+      api_key: 'https://pcp-ai.openai.azure.com/openai',
+      base_url: '',
+      context_length: 0,
+      created_at: '',
+      description: '',
+      folder_id: null,
+      id: '',
+      sharing: '',
+      updated_at: null,
+      user_id: '',
+      model_id: 'jailbreaking-model-2',
+      name: 'jailbreaking-model-2'
+    });
+  }
+
   const allModels = [
     ...models.map(model => ({
       modelId: model.model_id as LLMID,

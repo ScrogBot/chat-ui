@@ -117,12 +117,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
         return <ToolItem key={item.id} tool={item as Tables<'tools'>} />;
 
       case 'models':
-        // add predefinedModels here
-        return predefinedModels.map(model => (
-          <ModelItem key={model.id} model={model} />
-        ));
-
-      // return <ModelItem key={item.id} model={item as Tables<"models">} />
+        return <ModelItem key={item.id} model={item as Tables<'models'>} />;
 
       default:
         return null;
