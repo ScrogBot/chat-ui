@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,24 +7,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "@/components/ui/dialog"
-import { ChatbotUIContext } from "@/context/context"
-import { deleteAssistant } from "@/db/assistants"
-import { deleteChat } from "@/db/chats"
-import { deleteCollection } from "@/db/collections"
-import { deleteFile } from "@/db/files"
-import { deleteModel } from "@/db/models"
-import { deletePreset } from "@/db/presets"
-import { deletePrompt } from "@/db/prompts"
-import { deleteFileFromStorage } from "@/db/storage/files"
-import { deleteTool } from "@/db/tools"
-import { Tables } from "@/supabase/types"
-import { ContentType, DataItemType } from "@/types"
-import { FC, useContext, useRef, useState } from "react"
+} from '@/components/ui/dialog';
+import { ChatbotUIContext } from '@/context/context';
+import { deleteAssistant } from '@/db/assistants';
+import { deleteChat } from '@/db/chats';
+import { deleteCollection } from '@/db/collections';
+import { deleteFile } from '@/db/files';
+import { deleteModel } from '@/db/models';
+import { deletePreset } from '@/db/presets';
+import { deletePrompt } from '@/db/prompts';
+import { deleteFileFromStorage } from '@/db/storage/files';
+import { deleteTool } from '@/db/tools';
+import { Tables } from '@/supabase/types';
+import { ContentType, DataItemType } from '@/types';
+import { FC, useContext, useRef, useState } from 'react';
 
 interface SidebarDeleteItemProps {
-  item: DataItemType
-  contentType: ContentType
+  item: DataItemType;
+  contentType: ContentType;
 }
 
 export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
@@ -40,42 +40,42 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     setAssistants,
     setTools,
     setModels
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [showDialog, setShowDialog] = useState(false)
+  const [showDialog, setShowDialog] = useState(false);
 
   const deleteFunctions = {
-    chats: async (chat: Tables<"chats">) => {
-      await deleteChat(chat.id)
+    chats: async (chat: Tables<'chats'>) => {
+      await deleteChat(chat.id);
     },
-    presets: async (preset: Tables<"presets">) => {
-      await deletePreset(preset.id)
+    presets: async (preset: Tables<'presets'>) => {
+      await deletePreset(preset.id);
     },
-    prompts: async (prompt: Tables<"prompts">) => {
-      await deletePrompt(prompt.id)
+    prompts: async (prompt: Tables<'prompts'>) => {
+      await deletePrompt(prompt.id);
     },
-    files: async (file: Tables<"files">) => {
-      await deleteFileFromStorage(file.file_path)
-      await deleteFile(file.id)
+    files: async (file: Tables<'files'>) => {
+      await deleteFileFromStorage(file.file_path);
+      await deleteFile(file.id);
     },
-    collections: async (collection: Tables<"collections">) => {
-      await deleteCollection(collection.id)
+    collections: async (collection: Tables<'collections'>) => {
+      await deleteCollection(collection.id);
     },
-    assistants: async (assistant: Tables<"assistants">) => {
-      await deleteAssistant(assistant.id)
+    assistants: async (assistant: Tables<'assistants'>) => {
+      await deleteAssistant(assistant.id);
       setChats(prevState =>
         prevState.filter(chat => chat.assistant_id !== assistant.id)
-      )
+      );
     },
-    tools: async (tool: Tables<"tools">) => {
-      await deleteTool(tool.id)
+    tools: async (tool: Tables<'tools'>) => {
+      await deleteTool(tool.id);
     },
-    models: async (model: Tables<"models">) => {
-      await deleteModel(model.id)
+    models: async (model: Tables<'models'>) => {
+      await deleteModel(model.id);
     }
-  }
+  };
 
   const stateUpdateFunctions = {
     chats: setChats,
@@ -86,29 +86,29 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels
-  }
+  };
 
   const handleDelete = async () => {
-    const deleteFunction = deleteFunctions[contentType]
-    const setStateFunction = stateUpdateFunctions[contentType]
+    const deleteFunction = deleteFunctions[contentType];
+    const setStateFunction = stateUpdateFunctions[contentType];
 
-    if (!deleteFunction || !setStateFunction) return
+    if (!deleteFunction || !setStateFunction) return;
 
-    await deleteFunction(item as any)
+    await deleteFunction(item as any);
 
     setStateFunction((prevItems: any) =>
       prevItems.filter((prevItem: any) => prevItem.id !== item.id)
-    )
+    );
 
-    setShowDialog(false)
-  }
+    setShowDialog(false);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      e.stopPropagation()
-      buttonRef.current?.click()
+    if (e.key === 'Enter') {
+      e.stopPropagation();
+      buttonRef.current?.click();
     }
-  }
+  };
 
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -138,5 +138,5 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

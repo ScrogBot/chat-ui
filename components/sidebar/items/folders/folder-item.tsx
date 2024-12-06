@@ -1,16 +1,16 @@
-import { cn } from "@/lib/utils"
-import { Tables } from "@/supabase/types"
-import { ContentType } from "@/types"
-import { IconChevronDown, IconChevronRight } from "@tabler/icons-react"
-import { FC, useRef, useState } from "react"
-import { DeleteFolder } from "./delete-folder"
-import { UpdateFolder } from "./update-folder"
+import { cn } from '@/lib/utils';
+import { Tables } from '@/supabase/types';
+import { ContentType } from '@/types';
+import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import { FC, useRef, useState } from 'react';
+import { DeleteFolder } from './delete-folder';
+import { UpdateFolder } from './update-folder';
 
 interface FolderProps {
-  folder: Tables<"folders">
-  contentType: ContentType
-  children: React.ReactNode
-  onUpdateFolder: (itemId: string, folderId: string | null) => void
+  folder: Tables<'folders'>;
+  contentType: ContentType;
+  children: React.ReactNode;
+  onUpdateFolder: (itemId: string, folderId: string | null) => void;
 }
 
 export const Folder: FC<FolderProps> = ({
@@ -19,51 +19,51 @@ export const Folder: FC<FolderProps> = ({
   children,
   onUpdateFolder
 }) => {
-  const itemRef = useRef<HTMLDivElement>(null)
+  const itemRef = useRef<HTMLDivElement>(null);
 
-  const [isDragOver, setIsDragOver] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isHovering, setIsHovering] = useState(false)
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragOver(true)
-  }
+    e.preventDefault();
+    setIsDragOver(true);
+  };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragOver(false)
-  }
+    e.preventDefault();
+    setIsDragOver(false);
+  };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragOver(true)
-  }
+    e.preventDefault();
+    setIsDragOver(true);
+  };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    setIsDragOver(false)
-    const itemId = e.dataTransfer.getData("text/plain")
-    onUpdateFolder(itemId, folder.id)
-  }
+    setIsDragOver(false);
+    const itemId = e.dataTransfer.getData('text/plain');
+    onUpdateFolder(itemId, folder.id);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      e.stopPropagation()
-      itemRef.current?.click()
+    if (e.key === 'Enter') {
+      e.stopPropagation();
+      itemRef.current?.click();
     }
-  }
+  };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsExpanded(!isExpanded)
-  }
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div
       ref={itemRef}
       id="folder"
-      className={cn("rounded focus:outline-none", isDragOver && "bg-accent")}
+      className={cn('rounded focus:outline-none', isDragOver && 'bg-accent')}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
@@ -75,7 +75,7 @@ export const Folder: FC<FolderProps> = ({
       <div
         tabIndex={0}
         className={cn(
-          "hover:bg-accent focus:bg-accent flex w-full cursor-pointer items-center justify-between rounded p-2 hover:opacity-50 focus:outline-none"
+          'hover:bg-accent focus:bg-accent flex w-full cursor-pointer items-center justify-between rounded p-2 hover:opacity-50 focus:outline-none'
         )}
         onClick={handleClick}
       >
@@ -93,8 +93,8 @@ export const Folder: FC<FolderProps> = ({
           {isHovering && (
             <div
               onClick={e => {
-                e.stopPropagation()
-                e.preventDefault()
+                e.stopPropagation();
+                e.preventDefault();
               }}
               className="ml-2 flex space-x-2"
             >
@@ -110,5 +110,5 @@ export const Folder: FC<FolderProps> = ({
         <div className="ml-5 mt-2 space-y-2 border-l-2 pl-4">{children}</div>
       )}
     </div>
-  )
-}
+  );
+};

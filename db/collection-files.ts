@@ -1,11 +1,11 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert } from '@/supabase/types';
 
 export const getCollectionFilesByCollectionId = async (
   collectionId: string
 ) => {
   const { data: collectionFiles, error } = await supabase
-    .from("collections")
+    .from('collections')
     .select(
       `
         id, 
@@ -13,57 +13,57 @@ export const getCollectionFilesByCollectionId = async (
         files ( id, name, type )
       `
     )
-    .eq("id", collectionId)
-    .single()
+    .eq('id', collectionId)
+    .single();
 
   if (!collectionFiles) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return collectionFiles
-}
+  return collectionFiles;
+};
 
 export const createCollectionFile = async (
-  collectionFile: TablesInsert<"collection_files">
+  collectionFile: TablesInsert<'collection_files'>
 ) => {
   const { data: createdCollectionFile, error } = await supabase
-    .from("collection_files")
+    .from('collection_files')
     .insert(collectionFile)
-    .select("*")
+    .select('*');
 
   if (!createdCollectionFile) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdCollectionFile
-}
+  return createdCollectionFile;
+};
 
 export const createCollectionFiles = async (
-  collectionFiles: TablesInsert<"collection_files">[]
+  collectionFiles: TablesInsert<'collection_files'>[]
 ) => {
   const { data: createdCollectionFiles, error } = await supabase
-    .from("collection_files")
+    .from('collection_files')
     .insert(collectionFiles)
-    .select("*")
+    .select('*');
 
   if (!createdCollectionFiles) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdCollectionFiles
-}
+  return createdCollectionFiles;
+};
 
 export const deleteCollectionFile = async (
   collectionId: string,
   fileId: string
 ) => {
   const { error } = await supabase
-    .from("collection_files")
+    .from('collection_files')
     .delete()
-    .eq("collection_id", collectionId)
-    .eq("file_id", fileId)
+    .eq('collection_id', collectionId)
+    .eq('file_id', fileId);
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return true
-}
+  return true;
+};

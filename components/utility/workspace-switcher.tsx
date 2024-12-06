@@ -1,26 +1,26 @@
-"use client"
+'use client';
 
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
+import { useChatHandler } from '@/components/chat/chat-hooks/use-chat-handler';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from "@/components/ui/popover"
-import { ChatbotUIContext } from "@/context/context"
-import { createWorkspace } from "@/db/workspaces"
-import useHotkey from "@/lib/hooks/use-hotkey"
-import { IconBuilding, IconHome, IconPlus } from "@tabler/icons-react"
-import { ChevronsUpDown } from "lucide-react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { FC, useContext, useEffect, useState } from "react"
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
+} from '@/components/ui/popover';
+import { ChatbotUIContext } from '@/context/context';
+import { createWorkspace } from '@/db/workspaces';
+import useHotkey from '@/lib/hooks/use-hotkey';
+import { IconBuilding, IconHome, IconPlus } from '@tabler/icons-react';
+import { ChevronsUpDown } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { FC, useContext, useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 
 interface WorkspaceSwitcherProps {}
 
 export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
-  useHotkey(";", () => setOpen(prevState => !prevState))
+  useHotkey(';', () => setOpen(prevState => !prevState));
 
   const {
     workspaces,
@@ -28,24 +28,24 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
     selectedWorkspace,
     setSelectedWorkspace,
     setWorkspaces
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const { handleNewChat } = useChatHandler()
+  const { handleNewChat } = useChatHandler();
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
-  const [search, setSearch] = useState("")
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (!selectedWorkspace) return
+    if (!selectedWorkspace) return;
 
-    setValue(selectedWorkspace.id)
-  }, [selectedWorkspace])
+    setValue(selectedWorkspace.id);
+  }, [selectedWorkspace]);
 
   const handleCreateWorkspace = async () => {
-    if (!selectedWorkspace) return
+    if (!selectedWorkspace) return;
 
     const createdWorkspace = await createWorkspace({
       user_id: selectedWorkspace.user_id,
@@ -53,52 +53,56 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
       default_model: selectedWorkspace.default_model,
       default_prompt: selectedWorkspace.default_prompt,
       default_temperature: selectedWorkspace.default_temperature,
-      description: "",
-      embeddings_provider: "openai",
+      description: '',
+      embeddings_provider: 'openai',
       include_profile_context: selectedWorkspace.include_profile_context,
       include_workspace_instructions:
         selectedWorkspace.include_workspace_instructions,
       instructions: selectedWorkspace.instructions,
       is_home: false,
-      name: "New Workspace"
-    })
+      name: 'New Workspace'
+    });
 
-    setWorkspaces([...workspaces, createdWorkspace])
-    setSelectedWorkspace(createdWorkspace)
-    setOpen(false)
+    setWorkspaces([...workspaces, createdWorkspace]);
+    setSelectedWorkspace(createdWorkspace);
+    setOpen(false);
 
-    return router.push(`/${createdWorkspace.id}/chat`)
-  }
+    return router.push(`/${createdWorkspace.id}/chat`);
+  };
 
   const getWorkspaceName = (workspaceId: string) => {
-    const workspace = workspaces.find(workspace => workspace.id === workspaceId)
+    const workspace = workspaces.find(
+      workspace => workspace.id === workspaceId
+    );
 
-    if (!workspace) return
+    if (!workspace) return;
 
-    return workspace.name
-  }
+    return workspace.name;
+  };
 
   const handleSelect = (workspaceId: string) => {
-    const workspace = workspaces.find(workspace => workspace.id === workspaceId)
+    const workspace = workspaces.find(
+      workspace => workspace.id === workspaceId
+    );
 
-    if (!workspace) return
+    if (!workspace) return;
 
-    setSelectedWorkspace(workspace)
-    setOpen(false)
+    setSelectedWorkspace(workspace);
+    setOpen(false);
 
-    return router.push(`/${workspace.id}/chat`)
-  }
+    return router.push(`/${workspace.id}/chat`);
+  };
 
   const workspaceImage = workspaceImages.find(
     image => image.workspaceId === selectedWorkspace?.id
-  )
+  );
   const imageSrc = workspaceImage
     ? workspaceImage.url
     : selectedWorkspace?.is_home
-      ? ""
-      : ""
+      ? ''
+      : '';
 
-  const IconComponent = selectedWorkspace?.is_home ? IconHome : IconBuilding
+  const IconComponent = selectedWorkspace?.is_home ? IconHome : IconBuilding;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -111,7 +115,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
             <div className="flex items-center">
               {workspaceImage ? (
                 <Image
-                  style={{ width: "22px", height: "22px" }}
+                  style={{ width: '22px', height: '22px' }}
                   className="mr-2 rounded"
                   src={imageSrc}
                   width={22}
@@ -124,7 +128,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
             </div>
           )}
 
-          {getWorkspaceName(value) || "Select workspace..."}
+          {getWorkspaceName(value) || 'Select workspace...'}
         </div>
 
         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
@@ -154,7 +158,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
               .map(workspace => {
                 const image = workspaceImages.find(
                   image => image.workspaceId === workspace.id
-                )
+                );
 
                 return (
                   <Button
@@ -165,9 +169,9 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                   >
                     {image ? (
                       <Image
-                        style={{ width: "28px", height: "28px" }}
+                        style={{ width: '28px', height: '28px' }}
                         className="mr-3 rounded"
-                        src={image.url || ""}
+                        src={image.url || ''}
                         width={28}
                         height={28}
                         alt={workspace.name}
@@ -180,7 +184,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                       {workspace.name}
                     </div>
                   </Button>
-                )
+                );
               })}
 
             {workspaces
@@ -193,7 +197,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
               .map(workspace => {
                 const image = workspaceImages.find(
                   image => image.workspaceId === workspace.id
-                )
+                );
 
                 return (
                   <Button
@@ -204,9 +208,9 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                   >
                     {image ? (
                       <Image
-                        style={{ width: "28px", height: "28px" }}
+                        style={{ width: '28px', height: '28px' }}
                         className="mr-3 rounded"
-                        src={image.url || ""}
+                        src={image.url || ''}
                         width={28}
                         height={28}
                         alt={workspace.name}
@@ -219,11 +223,11 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                       {workspace.name}
                     </div>
                   </Button>
-                )
+                );
               })}
           </div>
         </div>
       </PopoverContent>
     </Popover>
-  )
-}
+  );
+};

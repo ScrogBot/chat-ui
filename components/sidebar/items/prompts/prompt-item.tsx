@@ -1,20 +1,20 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { TextareaAutosize } from "@/components/ui/textarea-autosize"
-import { PROMPT_NAME_MAX } from "@/db/limits"
-import { Tables } from "@/supabase/types"
-import { IconPencil } from "@tabler/icons-react"
-import { FC, useState } from "react"
-import { SidebarItem } from "../all/sidebar-display-item"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { TextareaAutosize } from '@/components/ui/textarea-autosize';
+import { PROMPT_NAME_MAX } from '@/db/limits';
+import { Tables } from '@/supabase/types';
+import { IconPencil } from '@tabler/icons-react';
+import { FC, useState } from 'react';
+import { SidebarItem } from '../all/sidebar-display-item';
 
 interface PromptItemProps {
-  prompt: Tables<"prompts">
+  prompt: Tables<'prompts'>;
 }
 
 export const PromptItem: FC<PromptItemProps> = ({ prompt }) => {
-  const [name, setName] = useState(prompt.name)
-  const [content, setContent] = useState(prompt.content)
-  const [isTyping, setIsTyping] = useState(false)
+  const [name, setName] = useState(prompt.name);
+  const [content, setContent] = useState(prompt.content);
+  const [isTyping, setIsTyping] = useState(false);
   return (
     <SidebarItem
       item={prompt}
@@ -53,5 +53,5 @@ export const PromptItem: FC<PromptItemProps> = ({ prompt }) => {
         </>
       )}
     />
-  )
-}
+  );
+};

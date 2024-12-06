@@ -1,23 +1,23 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert, TablesUpdate } from '@/supabase/types';
 
 export const getPresetById = async (presetId: string) => {
   const { data: preset, error } = await supabase
-    .from("presets")
-    .select("*")
-    .eq("id", presetId)
-    .single()
+    .from('presets')
+    .select('*')
+    .eq('id', presetId)
+    .single();
 
   if (!preset) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return preset
-}
+  return preset;
+};
 
 export const getPresetWorkspacesByWorkspaceId = async (workspaceId: string) => {
   const { data: workspace, error } = await supabase
-    .from("workspaces")
+    .from('workspaces')
     .select(
       `
       id,
@@ -25,19 +25,19 @@ export const getPresetWorkspacesByWorkspaceId = async (workspaceId: string) => {
       presets (*)
     `
     )
-    .eq("id", workspaceId)
-    .single()
+    .eq('id', workspaceId)
+    .single();
 
   if (!workspace) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return workspace
-}
+  return workspace;
+};
 
 export const getPresetWorkspacesByPresetId = async (presetId: string) => {
   const { data: preset, error } = await supabase
-    .from("presets")
+    .from('presets')
     .select(
       `
       id, 
@@ -45,50 +45,50 @@ export const getPresetWorkspacesByPresetId = async (presetId: string) => {
       workspaces (*)
     `
     )
-    .eq("id", presetId)
-    .single()
+    .eq('id', presetId)
+    .single();
 
   if (!preset) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return preset
-}
+  return preset;
+};
 
 export const createPreset = async (
-  preset: TablesInsert<"presets">,
+  preset: TablesInsert<'presets'>,
   workspace_id: string
 ) => {
   const { data: createdPreset, error } = await supabase
-    .from("presets")
+    .from('presets')
     .insert([preset])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createPresetWorkspace({
     user_id: preset.user_id,
     preset_id: createdPreset.id,
     workspace_id: workspace_id
-  })
+  });
 
-  return createdPreset
-}
+  return createdPreset;
+};
 
 export const createPresets = async (
-  presets: TablesInsert<"presets">[],
+  presets: TablesInsert<'presets'>[],
   workspace_id: string
 ) => {
   const { data: createdPresets, error } = await supabase
-    .from("presets")
+    .from('presets')
     .insert(presets)
-    .select("*")
+    .select('*');
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createPresetWorkspaces(
@@ -97,81 +97,81 @@ export const createPresets = async (
       preset_id: preset.id,
       workspace_id
     }))
-  )
+  );
 
-  return createdPresets
-}
+  return createdPresets;
+};
 
 export const createPresetWorkspace = async (item: {
-  user_id: string
-  preset_id: string
-  workspace_id: string
+  user_id: string;
+  preset_id: string;
+  workspace_id: string;
 }) => {
   const { data: createdPresetWorkspace, error } = await supabase
-    .from("preset_workspaces")
+    .from('preset_workspaces')
     .insert([item])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdPresetWorkspace
-}
+  return createdPresetWorkspace;
+};
 
 export const createPresetWorkspaces = async (
   items: { user_id: string; preset_id: string; workspace_id: string }[]
 ) => {
   const { data: createdPresetWorkspaces, error } = await supabase
-    .from("preset_workspaces")
+    .from('preset_workspaces')
     .insert(items)
-    .select("*")
+    .select('*');
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return createdPresetWorkspaces
-}
+  return createdPresetWorkspaces;
+};
 
 export const updatePreset = async (
   presetId: string,
-  preset: TablesUpdate<"presets">
+  preset: TablesUpdate<'presets'>
 ) => {
   const { data: updatedPreset, error } = await supabase
-    .from("presets")
+    .from('presets')
     .update(preset)
-    .eq("id", presetId)
-    .select("*")
-    .single()
+    .eq('id', presetId)
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return updatedPreset
-}
+  return updatedPreset;
+};
 
 export const deletePreset = async (presetId: string) => {
-  const { error } = await supabase.from("presets").delete().eq("id", presetId)
+  const { error } = await supabase.from('presets').delete().eq('id', presetId);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return true
-}
+  return true;
+};
 
 export const deletePresetWorkspace = async (
   presetId: string,
   workspaceId: string
 ) => {
   const { error } = await supabase
-    .from("preset_workspaces")
+    .from('preset_workspaces')
     .delete()
-    .eq("preset_id", presetId)
-    .eq("workspace_id", workspaceId)
+    .eq('preset_id', presetId)
+    .eq('workspace_id', workspaceId);
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return true
-}
+  return true;
+};

@@ -1,25 +1,25 @@
-import { FileIcon } from "@/components/ui/file-icon"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { FILE_DESCRIPTION_MAX, FILE_NAME_MAX } from "@/db/limits"
-import { getFileFromStorage } from "@/db/storage/files"
-import { Tables } from "@/supabase/types"
-import { FC, useState } from "react"
-import { SidebarItem } from "../all/sidebar-display-item"
+import { FileIcon } from '@/components/ui/file-icon';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { FILE_DESCRIPTION_MAX, FILE_NAME_MAX } from '@/db/limits';
+import { getFileFromStorage } from '@/db/storage/files';
+import { Tables } from '@/supabase/types';
+import { FC, useState } from 'react';
+import { SidebarItem } from '../all/sidebar-display-item';
 
 interface FileItemProps {
-  file: Tables<"files">
+  file: Tables<'files'>;
 }
 
 export const FileItem: FC<FileItemProps> = ({ file }) => {
-  const [name, setName] = useState(file.name)
-  const [isTyping, setIsTyping] = useState(false)
-  const [description, setDescription] = useState(file.description)
+  const [name, setName] = useState(file.name);
+  const [isTyping, setIsTyping] = useState(false);
+  const [description, setDescription] = useState(file.description);
 
   const getLinkAndView = async () => {
-    const link = await getFileFromStorage(file.file_path)
-    window.open(link, "_blank")
-  }
+    const link = await getFileFromStorage(file.file_path);
+    window.open(link, '_blank');
+  };
 
   return (
     <SidebarItem
@@ -69,27 +69,27 @@ export const FileItem: FC<FileItemProps> = ({ file }) => {
         </>
       )}
     />
-  )
-}
+  );
+};
 
 export const formatFileSize = (sizeInBytes: number): string => {
-  let size = sizeInBytes
-  let unit = "bytes"
+  let size = sizeInBytes;
+  let unit = 'bytes';
 
   if (size >= 1024) {
-    size /= 1024
-    unit = "KB"
+    size /= 1024;
+    unit = 'KB';
   }
 
   if (size >= 1024) {
-    size /= 1024
-    unit = "MB"
+    size /= 1024;
+    unit = 'MB';
   }
 
   if (size >= 1024) {
-    size /= 1024
-    unit = "GB"
+    size /= 1024;
+    unit = 'GB';
   }
 
-  return `${size.toFixed(2)} ${unit}`
-}
+  return `${size.toFixed(2)} ${unit}`;
+};

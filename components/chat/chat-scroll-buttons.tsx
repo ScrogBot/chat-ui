@@ -1,15 +1,15 @@
 import {
   IconCircleArrowDownFilled,
   IconCircleArrowUpFilled
-} from "@tabler/icons-react"
-import { FC } from "react"
+} from '@tabler/icons-react';
+import { FC } from 'react';
 
 interface ChatScrollButtonsProps {
-  isAtTop: boolean
-  isAtBottom: boolean
-  isOverflowing: boolean
-  scrollToTop: () => void
-  scrollToBottom: () => void
+  isAtTop: boolean;
+  isAtBottom: boolean;
+  isOverflowing: boolean;
+  scrollToTop: () => void;
+  scrollToBottom: () => void;
 }
 
 export const ChatScrollButtons: FC<ChatScrollButtonsProps> = ({
@@ -37,5 +37,5 @@ export const ChatScrollButtons: FC<ChatScrollButtonsProps> = ({
         />
       )}
     </>
-  )
-}
+  );
+};

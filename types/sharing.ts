@@ -1,1 +1,1 @@
-export type Sharing = "private" | "public" | "unlisted"
+export type Sharing = 'private' | 'public' | 'unlisted';

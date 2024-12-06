@@ -1,17 +1,17 @@
-import { LLM_LIST } from "@/lib/models/llm/llm-list"
-import { Tables } from "@/supabase/types"
-import { IconCircleCheckFilled, IconRobotFace } from "@tabler/icons-react"
-import Image from "next/image"
-import { FC } from "react"
-import { ModelIcon } from "../models/model-icon"
-import { DropdownMenuItem } from "../ui/dropdown-menu"
+import { LLM_LIST } from '@/lib/models/llm/llm-list';
+import { Tables } from '@/supabase/types';
+import { IconCircleCheckFilled, IconRobotFace } from '@tabler/icons-react';
+import Image from 'next/image';
+import { FC } from 'react';
+import { ModelIcon } from '../models/model-icon';
+import { DropdownMenuItem } from '../ui/dropdown-menu';
 
 interface QuickSettingOptionProps {
-  contentType: "presets" | "assistants"
-  isSelected: boolean
-  item: Tables<"presets"> | Tables<"assistants">
-  onSelect: () => void
-  image: string
+  contentType: 'presets' | 'assistants';
+  isSelected: boolean;
+  item: Tables<'presets'> | Tables<'assistants'>;
+  onSelect: () => void;
+  image: string;
 }
 
 export const QuickSettingOption: FC<QuickSettingOptionProps> = ({
@@ -21,7 +21,7 @@ export const QuickSettingOption: FC<QuickSettingOptionProps> = ({
   onSelect,
   image
 }) => {
-  const modelDetails = LLM_LIST.find(model => model.modelId === item.model)
+  const modelDetails = LLM_LIST.find(model => model.modelId === item.model);
 
   return (
     <DropdownMenuItem
@@ -30,15 +30,15 @@ export const QuickSettingOption: FC<QuickSettingOptionProps> = ({
       onSelect={onSelect}
     >
       <div className="w-[32px]">
-        {contentType === "presets" ? (
+        {contentType === 'presets' ? (
           <ModelIcon
-            provider={modelDetails?.provider || "custom"}
+            provider={modelDetails?.provider || 'custom'}
             width={32}
             height={32}
           />
         ) : image ? (
           <Image
-            style={{ width: "32px", height: "32px" }}
+            style={{ width: '32px', height: '32px' }}
             className="rounded"
             src={image}
             alt="Assistant"
@@ -67,5 +67,5 @@ export const QuickSettingOption: FC<QuickSettingOptionProps> = ({
         ) : null}
       </div>
     </DropdownMenuItem>
-  )
-}
+  );
+};

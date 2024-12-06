@@ -1,16 +1,16 @@
-import { ChatbotUIContext } from "@/context/context"
-import { getAssistantCollectionsByAssistantId } from "@/db/assistant-collections"
-import { getAssistantFilesByAssistantId } from "@/db/assistant-files"
-import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
-import { updateChat } from "@/db/chats"
-import { getCollectionFilesByCollectionId } from "@/db/collection-files"
-import { deleteMessagesIncludingAndAfter } from "@/db/messages"
-import { buildFinalMessages } from "@/lib/build-prompt"
-import { Tables } from "@/supabase/types"
-import { ChatMessage, ChatPayload, LLMID, ModelProvider } from "@/types"
-import { useRouter } from "next/navigation"
-import { useContext, useEffect, useRef } from "react"
-import { LLM_LIST } from "../../../lib/models/llm/llm-list"
+import { ChatbotUIContext } from '@/context/context';
+import { getAssistantCollectionsByAssistantId } from '@/db/assistant-collections';
+import { getAssistantFilesByAssistantId } from '@/db/assistant-files';
+import { getAssistantToolsByAssistantId } from '@/db/assistant-tools';
+import { updateChat } from '@/db/chats';
+import { getCollectionFilesByCollectionId } from '@/db/collection-files';
+import { deleteMessagesIncludingAndAfter } from '@/db/messages';
+import { buildFinalMessages } from '@/lib/build-prompt';
+import { Tables } from '@/supabase/types';
+import { ChatMessage, ChatPayload, LLMID, ModelProvider } from '@/types';
+import { useRouter } from 'next/navigation';
+import { useContext, useEffect, useRef } from 'react';
+import { LLM_LIST } from '../../../lib/models/llm/llm-list';
 import {
   createTempMessages,
   handleCreateChat,
@@ -20,10 +20,10 @@ import {
   handleRetrieval,
   processResponse,
   validateChatSettings
-} from "../chat-helpers"
+} from '../chat-helpers';
 
 export const useChatHandler = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const {
     userInput,
@@ -67,37 +67,37 @@ export const useChatHandler = () => {
     isPromptPickerOpen,
     isFilePickerOpen,
     isToolPickerOpen
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const chatInputRef = useRef<HTMLTextAreaElement>(null)
+  const chatInputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (!isPromptPickerOpen || !isFilePickerOpen || !isToolPickerOpen) {
-      chatInputRef.current?.focus()
+      chatInputRef.current?.focus();
     }
-  }, [isPromptPickerOpen, isFilePickerOpen, isToolPickerOpen])
+  }, [isPromptPickerOpen, isFilePickerOpen, isToolPickerOpen]);
 
   const handleNewChat = async () => {
-    if (!selectedWorkspace) return
+    if (!selectedWorkspace) return;
 
-    setUserInput("")
-    setChatMessages([])
-    setSelectedChat(null)
-    setChatFileItems([])
+    setUserInput('');
+    setChatMessages([]);
+    setSelectedChat(null);
+    setChatFileItems([]);
 
-    setIsGenerating(false)
-    setFirstTokenReceived(false)
+    setIsGenerating(false);
+    setFirstTokenReceived(false);
 
-    setChatFiles([])
-    setChatImages([])
-    setNewMessageFiles([])
-    setNewMessageImages([])
-    setShowFilesDisplay(false)
-    setIsPromptPickerOpen(false)
-    setIsFilePickerOpen(false)
+    setChatFiles([]);
+    setChatImages([]);
+    setNewMessageFiles([]);
+    setNewMessageImages([]);
+    setShowFilesDisplay(false);
+    setIsPromptPickerOpen(false);
+    setIsFilePickerOpen(false);
 
-    setSelectedTools([])
-    setToolInUse("none")
+    setSelectedTools([]);
+    setToolInUse('none');
 
     if (selectedAssistant) {
       setChatSettings({
@@ -109,30 +109,30 @@ export const useChatHandler = () => {
         includeWorkspaceInstructions:
           selectedAssistant.include_workspace_instructions,
         embeddingsProvider: selectedAssistant.embeddings_provider as
-          | "openai"
-          | "local"
-      })
+          | 'openai'
+          | 'local'
+      });
 
-      let allFiles = []
+      let allFiles = [];
 
       const assistantFiles = (
         await getAssistantFilesByAssistantId(selectedAssistant.id)
-      ).files
-      allFiles = [...assistantFiles]
+      ).files;
+      allFiles = [...assistantFiles];
       const assistantCollections = (
         await getAssistantCollectionsByAssistantId(selectedAssistant.id)
-      ).collections
+      ).collections;
       for (const collection of assistantCollections) {
         const collectionFiles = (
           await getCollectionFilesByCollectionId(collection.id)
-        ).files
-        allFiles = [...allFiles, ...collectionFiles]
+        ).files;
+        allFiles = [...allFiles, ...collectionFiles];
       }
       const assistantTools = (
         await getAssistantToolsByAssistantId(selectedAssistant.id)
-      ).tools
+      ).tools;
 
-      setSelectedTools(assistantTools)
+      setSelectedTools(assistantTools);
       setChatFiles(
         allFiles.map(file => ({
           id: file.id,
@@ -140,9 +140,9 @@ export const useChatHandler = () => {
           type: file.type,
           file: null
         }))
-      )
+      );
 
-      if (allFiles.length > 0) setShowFilesDisplay(true)
+      if (allFiles.length > 0) setShowFilesDisplay(true);
     } else if (selectedPreset) {
       setChatSettings({
         model: selectedPreset.model as LLMID,
@@ -153,9 +153,9 @@ export const useChatHandler = () => {
         includeWorkspaceInstructions:
           selectedPreset.include_workspace_instructions,
         embeddingsProvider: selectedPreset.embeddings_provider as
-          | "openai"
-          | "local"
-      })
+          | 'openai'
+          | 'local'
+      });
     } else if (selectedWorkspace) {
       // setChatSettings({
       //   model: (selectedWorkspace.default_model ||
@@ -175,49 +175,49 @@ export const useChatHandler = () => {
       // })
     }
 
-    return router.push(`/${selectedWorkspace.id}/chat`)
-  }
+    return router.push(`/${selectedWorkspace.id}/chat`);
+  };
 
   const handleFocusChatInput = () => {
-    chatInputRef.current?.focus()
-  }
+    chatInputRef.current?.focus();
+  };
 
   const handleStopMessage = () => {
     if (abortController) {
-      abortController.abort()
+      abortController.abort();
     }
-  }
+  };
 
   const handleSendMessage = async (
     messageContent: string,
     chatMessages: ChatMessage[],
     isRegeneration: boolean
   ) => {
-    const startingInput = messageContent
+    const startingInput = messageContent;
 
     try {
-      setUserInput("")
-      setIsGenerating(true)
-      setIsPromptPickerOpen(false)
-      setIsFilePickerOpen(false)
-      setNewMessageImages([])
+      setUserInput('');
+      setIsGenerating(true);
+      setIsPromptPickerOpen(false);
+      setIsFilePickerOpen(false);
+      setNewMessageImages([]);
 
-      const newAbortController = new AbortController()
-      setAbortController(newAbortController)
+      const newAbortController = new AbortController();
+      setAbortController(newAbortController);
 
       const modelData = [
         ...models.map(model => ({
           modelId: model.model_id as LLMID,
           modelName: model.name,
-          provider: "custom" as ModelProvider,
+          provider: 'custom' as ModelProvider,
           hostedId: model.id,
-          platformLink: "",
+          platformLink: '',
           imageInput: false
         })),
         ...LLM_LIST,
         ...availableLocalModels,
         ...availableOpenRouterModels
-      ].find(llm => llm.modelId === chatSettings?.model)
+      ].find(llm => llm.modelId === chatSettings?.model);
 
       validateChatSettings(
         chatSettings,
@@ -225,19 +225,19 @@ export const useChatHandler = () => {
         profile,
         selectedWorkspace,
         messageContent
-      )
+      );
 
-      let currentChat = selectedChat ? { ...selectedChat } : null
+      let currentChat = selectedChat ? { ...selectedChat } : null;
 
-      const b64Images = newMessageImages.map(image => image.base64)
+      const b64Images = newMessageImages.map(image => image.base64);
 
-      let retrievedFileItems: Tables<"file_items">[] = []
+      let retrievedFileItems: Tables<'file_items'>[] = [];
 
       if (
         (newMessageFiles.length > 0 || chatFiles.length > 0) &&
         useRetrieval
       ) {
-        setToolInUse("retrieval")
+        setToolInUse('retrieval');
 
         retrievedFileItems = await handleRetrieval(
           userInput,
@@ -245,7 +245,7 @@ export const useChatHandler = () => {
           chatFiles,
           chatSettings!.embeddingsProvider,
           sourceCount
-        )
+        );
       }
 
       const { tempUserChatMessage, tempAssistantChatMessage } =
@@ -257,43 +257,43 @@ export const useChatHandler = () => {
           isRegeneration,
           setChatMessages,
           selectedAssistant
-        )
+        );
 
-      let payload: ChatPayload = {
+      const payload: ChatPayload = {
         chatSettings: chatSettings!,
-        workspaceInstructions: selectedWorkspace!.instructions || "",
+        workspaceInstructions: selectedWorkspace!.instructions || '',
         chatMessages: isRegeneration
           ? [...chatMessages]
           : [...chatMessages, tempUserChatMessage],
         assistant: selectedChat?.assistant_id ? selectedAssistant : null,
         messageFileItems: retrievedFileItems,
         chatFileItems: chatFileItems
-      }
+      };
 
-      let generatedText = ""
+      let generatedText = '';
 
       if (selectedTools.length > 0) {
-        setToolInUse("Tools")
+        setToolInUse('Tools');
 
         const formattedMessages = await buildFinalMessages(
           payload,
           profile!,
           chatImages
-        )
+        );
 
-        const response = await fetch("/api/chat/tools", {
-          method: "POST",
+        const response = await fetch('/api/chat/tools', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             chatSettings: payload.chatSettings,
             messages: formattedMessages,
             selectedTools
           })
-        })
+        });
 
-        setToolInUse("none")
+        setToolInUse('none');
 
         generatedText = await processResponse(
           response,
@@ -305,9 +305,9 @@ export const useChatHandler = () => {
           setFirstTokenReceived,
           setChatMessages,
           setToolInUse
-        )
+        );
       } else {
-        if (modelData!.provider === "ollama") {
+        if (modelData!.provider === 'ollama') {
           generatedText = await handleLocalChat(
             payload,
             profile!,
@@ -319,7 +319,7 @@ export const useChatHandler = () => {
             setFirstTokenReceived,
             setChatMessages,
             setToolInUse
-          )
+          );
         } else {
           generatedText = await handleHostedChat(
             payload,
@@ -334,7 +334,7 @@ export const useChatHandler = () => {
             setFirstTokenReceived,
             setChatMessages,
             setToolInUse
-          )
+          );
         }
       }
 
@@ -349,19 +349,19 @@ export const useChatHandler = () => {
           setSelectedChat,
           setChats,
           setChatFiles
-        )
+        );
       } else {
         const updatedChat = await updateChat(currentChat.id, {
           updated_at: new Date().toISOString()
-        })
+        });
 
         setChats(prevChats => {
           const updatedChats = prevChats.map(prevChat =>
             prevChat.id === updatedChat.id ? updatedChat : prevChat
-          )
+          );
 
-          return updatedChats
-        })
+          return updatedChats;
+        });
       }
 
       await handleCreateMessages(
@@ -378,37 +378,37 @@ export const useChatHandler = () => {
         setChatFileItems,
         setChatImages,
         selectedAssistant
-      )
+      );
 
-      setIsGenerating(false)
-      setFirstTokenReceived(false)
+      setIsGenerating(false);
+      setFirstTokenReceived(false);
     } catch (error) {
-      setIsGenerating(false)
-      setFirstTokenReceived(false)
-      setUserInput(startingInput)
+      setIsGenerating(false);
+      setFirstTokenReceived(false);
+      setUserInput(startingInput);
     }
-  }
+  };
 
   const handleSendEdit = async (
     editedContent: string,
     sequenceNumber: number
   ) => {
-    if (!selectedChat) return
+    if (!selectedChat) return;
 
     await deleteMessagesIncludingAndAfter(
       selectedChat.user_id,
       selectedChat.id,
       sequenceNumber
-    )
+    );
 
     const filteredMessages = chatMessages.filter(
       chatMessage => chatMessage.message.sequence_number < sequenceNumber
-    )
+    );
 
-    setChatMessages(filteredMessages)
+    setChatMessages(filteredMessages);
 
-    handleSendMessage(editedContent, filteredMessages, false)
-  }
+    handleSendMessage(editedContent, filteredMessages, false);
+  };
 
   return {
     chatInputRef,
@@ -418,5 +418,5 @@ export const useChatHandler = () => {
     handleFocusChatInput,
     handleStopMessage,
     handleSendEdit
-  }
-}
+  };
+};

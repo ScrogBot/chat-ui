@@ -1,56 +1,56 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { ChatbotUIContext } from "@/context/context"
-import { Tables } from "@/supabase/types"
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { ChatbotUIContext } from '@/context/context';
+import { Tables } from '@/supabase/types';
 import {
   IconBolt,
   IconChevronDown,
   IconCircleCheckFilled
-} from "@tabler/icons-react"
-import { FC, useContext, useEffect, useRef, useState } from "react"
+} from '@tabler/icons-react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 interface AssistantToolSelectProps {
-  selectedAssistantTools: Tables<"tools">[]
-  onAssistantToolsSelect: (tool: Tables<"tools">) => void
+  selectedAssistantTools: Tables<'tools'>[];
+  onAssistantToolsSelect: (tool: Tables<'tools'>) => void;
 }
 
 export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
   selectedAssistantTools,
   onAssistantToolsSelect
 }) => {
-  const { tools } = useContext(ChatbotUIContext)
+  const { tools } = useContext(ChatbotUIContext);
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState("")
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100) // FIX: hacky
+        inputRef.current?.focus();
+      }, 100); // FIX: hacky
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  const handleToolSelect = (tool: Tables<"tools">) => {
-    onAssistantToolsSelect(tool)
-  }
+  const handleToolSelect = (tool: Tables<'tools'>) => {
+    onAssistantToolsSelect(tool);
+  };
 
-  if (!tools) return null
+  if (!tools) return null;
 
   return (
     <DropdownMenu
       open={isOpen}
       onOpenChange={isOpen => {
-        setIsOpen(isOpen)
-        setSearch("")
+        setIsOpen(isOpen);
+        setSearch('');
       }}
     >
       <DropdownMenuTrigger
@@ -122,13 +122,13 @@ export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
           ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
 interface AssistantToolItemProps {
-  tool: Tables<"tools">
-  selected: boolean
-  onSelect: (tool: Tables<"tools">) => void
+  tool: Tables<'tools'>;
+  selected: boolean;
+  onSelect: (tool: Tables<'tools'>) => void;
 }
 
 const AssistantToolItem: FC<AssistantToolItemProps> = ({
@@ -137,8 +137,8 @@ const AssistantToolItem: FC<AssistantToolItemProps> = ({
   onSelect
 }) => {
   const handleSelect = () => {
-    onSelect(tool)
-  }
+    onSelect(tool);
+  };
 
   return (
     <div
@@ -157,5 +157,5 @@ const AssistantToolItem: FC<AssistantToolItemProps> = ({
         <IconCircleCheckFilled size={20} className="min-w-[30px] flex-none" />
       )}
     </div>
-  )
-}
+  );
+};

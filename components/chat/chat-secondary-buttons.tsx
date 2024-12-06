@@ -1,15 +1,15 @@
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
-import { ChatbotUIContext } from "@/context/context"
-import { IconInfoCircle, IconMessagePlus } from "@tabler/icons-react"
-import { FC, useContext } from "react"
-import { WithTooltip } from "../ui/with-tooltip"
+import { useChatHandler } from '@/components/chat/chat-hooks/use-chat-handler';
+import { ChatbotUIContext } from '@/context/context';
+import { IconInfoCircle, IconMessagePlus } from '@tabler/icons-react';
+import { FC, useContext } from 'react';
+import { WithTooltip } from '../ui/with-tooltip';
 
 interface ChatSecondaryButtonsProps {}
 
 export const ChatSecondaryButtons: FC<ChatSecondaryButtonsProps> = ({}) => {
-  const { selectedChat } = useContext(ChatbotUIContext)
+  const { selectedChat } = useContext(ChatbotUIContext);
 
-  const { handleNewChat } = useChatHandler()
+  const { handleNewChat } = useChatHandler();
 
   return (
     <>
@@ -29,17 +29,17 @@ export const ChatSecondaryButtons: FC<ChatSecondaryButtonsProps> = ({}) => {
                   <div>Context Length: {selectedChat.context_length}</div>
 
                   <div>
-                    Profile Context:{" "}
+                    Profile Context:{' '}
                     {selectedChat.include_profile_context
-                      ? "Enabled"
-                      : "Disabled"}
+                      ? 'Enabled'
+                      : 'Disabled'}
                   </div>
                   <div>
-                    {" "}
-                    Workspace Instructions:{" "}
+                    {' '}
+                    Workspace Instructions:{' '}
                     {selectedChat.include_workspace_instructions
-                      ? "Enabled"
-                      : "Disabled"}
+                      ? 'Enabled'
+                      : 'Disabled'}
                   </div>
 
                   <div>
@@ -74,5 +74,5 @@ export const ChatSecondaryButtons: FC<ChatSecondaryButtonsProps> = ({}) => {
         </>
       )}
     </>
-  )
-}
+  );
+};

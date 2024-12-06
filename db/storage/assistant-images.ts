@@ -1,28 +1,28 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { Tables } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { Tables } from '@/supabase/types';
 
 export const uploadAssistantImage = async (
-  assistant: Tables<"assistants">,
+  assistant: Tables<'assistants'>,
   image: File
 ) => {
-  const bucket = "assistant_images"
+  const bucket = 'assistant_images';
 
-  const imageSizeLimit = 6000000 // 6MB
+  const imageSizeLimit = 6000000; // 6MB
 
   if (image.size > imageSizeLimit) {
-    throw new Error(`Image must be less than ${imageSizeLimit / 1000000}MB`)
+    throw new Error(`Image must be less than ${imageSizeLimit / 1000000}MB`);
   }
 
-  const currentPath = assistant.image_path
-  let filePath = `${assistant.user_id}/${assistant.id}/${Date.now()}`
+  const currentPath = assistant.image_path;
+  let filePath = `${assistant.user_id}/${assistant.id}/${Date.now()}`;
 
   if (currentPath.length > 0) {
     const { error: deleteError } = await supabase.storage
       .from(bucket)
-      .remove([currentPath])
+      .remove([currentPath]);
 
     if (deleteError) {
-      throw new Error("Error deleting old image")
+      throw new Error('Error deleting old image');
     }
   }
 
@@ -30,27 +30,27 @@ export const uploadAssistantImage = async (
     .from(bucket)
     .upload(filePath, image, {
       upsert: true
-    })
+    });
 
   if (error) {
-    throw new Error("Error uploading image")
+    throw new Error('Error uploading image');
   }
 
-  return filePath
-}
+  return filePath;
+};
 
 export const getAssistantImageFromStorage = async (filePath: string) => {
   try {
     const { data, error } = await supabase.storage
-      .from("assistant_images")
-      .createSignedUrl(filePath, 60 * 60 * 24) // 24hrs
+      .from('assistant_images')
+      .createSignedUrl(filePath, 60 * 60 * 24); // 24hrs
 
     if (error) {
-      throw new Error("Error downloading assistant image")
+      throw new Error('Error downloading assistant image');
     }
 
-    return data.signedUrl
+    return data.signedUrl;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};

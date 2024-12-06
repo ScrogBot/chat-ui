@@ -1,81 +1,81 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert, TablesUpdate } from '@/supabase/types';
 
 export const getChatById = async (chatId: string) => {
   const { data: chat } = await supabase
-    .from("chats")
-    .select("*")
-    .eq("id", chatId)
-    .maybeSingle()
+    .from('chats')
+    .select('*')
+    .eq('id', chatId)
+    .maybeSingle();
 
-  return chat
-}
+  return chat;
+};
 
 export const getChatsByWorkspaceId = async (workspaceId: string) => {
   const { data: chats, error } = await supabase
-    .from("chats")
-    .select("*")
-    .eq("workspace_id", workspaceId)
-    .order("created_at", { ascending: false })
+    .from('chats')
+    .select('*')
+    .eq('workspace_id', workspaceId)
+    .order('created_at', { ascending: false });
 
   if (!chats) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return chats
-}
+  return chats;
+};
 
-export const createChat = async (chat: TablesInsert<"chats">) => {
+export const createChat = async (chat: TablesInsert<'chats'>) => {
   const { data: createdChat, error } = await supabase
-    .from("chats")
+    .from('chats')
     .insert([chat])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdChat
-}
+  return createdChat;
+};
 
-export const createChats = async (chats: TablesInsert<"chats">[]) => {
+export const createChats = async (chats: TablesInsert<'chats'>[]) => {
   const { data: createdChats, error } = await supabase
-    .from("chats")
+    .from('chats')
     .insert(chats)
-    .select("*")
+    .select('*');
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdChats
-}
+  return createdChats;
+};
 
 export const updateChat = async (
   chatId: string,
-  chat: TablesUpdate<"chats">
+  chat: TablesUpdate<'chats'>
 ) => {
   const { data: updatedChat, error } = await supabase
-    .from("chats")
+    .from('chats')
     .update(chat)
-    .eq("id", chatId)
-    .select("*")
-    .single()
+    .eq('id', chatId)
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return updatedChat
-}
+  return updatedChat;
+};
 
 export const deleteChat = async (chatId: string) => {
-  const { error } = await supabase.from("chats").delete().eq("id", chatId)
+  const { error } = await supabase.from('chats').delete().eq('id', chatId);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return true
-}
+  return true;
+};

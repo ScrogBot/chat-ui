@@ -1,4 +1,4 @@
 export type FileItemChunk = {
-  content: string
-  tokens: number
-}
+  content: string;
+  tokens: number;
+};

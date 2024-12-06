@@ -1,26 +1,26 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   PROFILE_DISPLAY_NAME_MAX,
   PROFILE_USERNAME_MAX,
   PROFILE_USERNAME_MIN
-} from "@/db/limits"
+} from '@/db/limits';
 import {
   IconCircleCheckFilled,
   IconCircleXFilled,
   IconLoader2
-} from "@tabler/icons-react"
-import { FC, useCallback, useState } from "react"
-import { LimitDisplay } from "../ui/limit-display"
-import { toast } from "sonner"
+} from '@tabler/icons-react';
+import { FC, useCallback, useState } from 'react';
+import { LimitDisplay } from '../ui/limit-display';
+import { toast } from 'sonner';
 
 interface ProfileStepProps {
-  username: string
-  usernameAvailable: boolean
-  displayName: string
-  onUsernameAvailableChange: (isAvailable: boolean) => void
-  onUsernameChange: (username: string) => void
-  onDisplayNameChange: (name: string) => void
+  username: string;
+  usernameAvailable: boolean;
+  displayName: string;
+  onUsernameAvailableChange: (isAvailable: boolean) => void;
+  onUsernameChange: (username: string) => void;
+  onDisplayNameChange: (name: string) => void;
 }
 
 export const ProfileStep: FC<ProfileStepProps> = ({
@@ -31,61 +31,61 @@ export const ProfileStep: FC<ProfileStepProps> = ({
   onUsernameChange,
   onDisplayNameChange
 }) => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const debounce = (func: (...args: any[]) => void, wait: number) => {
-    let timeout: NodeJS.Timeout | null
+    let timeout: NodeJS.Timeout | null;
 
     return (...args: any[]) => {
       const later = () => {
-        if (timeout) clearTimeout(timeout)
-        func(...args)
-      }
+        if (timeout) clearTimeout(timeout);
+        func(...args);
+      };
 
-      if (timeout) clearTimeout(timeout)
-      timeout = setTimeout(later, wait)
-    }
-  }
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
 
   const checkUsernameAvailability = useCallback(
     debounce(async (username: string) => {
-      if (!username) return
+      if (!username) return;
 
       if (username.length < PROFILE_USERNAME_MIN) {
-        onUsernameAvailableChange(false)
-        return
+        onUsernameAvailableChange(false);
+        return;
       }
 
       if (username.length > PROFILE_USERNAME_MAX) {
-        onUsernameAvailableChange(false)
-        return
+        onUsernameAvailableChange(false);
+        return;
       }
 
-      const usernameRegex = /^[a-zA-Z0-9_]+$/
+      const usernameRegex = /^[a-zA-Z0-9_]+$/;
       if (!usernameRegex.test(username)) {
-        onUsernameAvailableChange(false)
+        onUsernameAvailableChange(false);
         toast.error(
-          "Username must be letters, numbers, or underscores only - no other characters or spacing allowed."
-        )
-        return
+          'Username must be letters, numbers, or underscores only - no other characters or spacing allowed.'
+        );
+        return;
       }
 
-      setLoading(true)
+      setLoading(true);
 
       const response = await fetch(`/api/username/available`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({ username })
-      })
+      });
 
-      const data = await response.json()
-      const isAvailable = data.isAvailable
+      const data = await response.json();
+      const isAvailable = data.isAvailable;
 
-      onUsernameAvailableChange(isAvailable)
+      onUsernameAvailableChange(isAvailable);
 
-      setLoading(false)
+      setLoading(false);
     }, 500),
     []
-  )
+  );
 
   return (
     <>
@@ -108,8 +108,8 @@ export const ProfileStep: FC<ProfileStepProps> = ({
             placeholder="username"
             value={username}
             onChange={e => {
-              onUsernameChange(e.target.value)
-              checkUsernameAvailability(e.target.value)
+              onUsernameChange(e.target.value);
+              checkUsernameAvailability(e.target.value);
             }}
             minLength={PROFILE_USERNAME_MIN}
             maxLength={PROFILE_USERNAME_MAX}
@@ -145,5 +145,5 @@ export const ProfileStep: FC<ProfileStepProps> = ({
         />
       </div>
     </>
-  )
-}
+  );
+};

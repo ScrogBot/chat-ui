@@ -1,30 +1,30 @@
-"use client"
+'use client';
 
-import { ChatbotUIContext } from "@/context/context"
-import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
-import { ChatSettings } from "@/types"
-import { IconInfoCircle } from "@tabler/icons-react"
-import { FC, useContext } from "react"
-import { ModelSelect } from "../models/model-select"
-import { AdvancedSettings } from "./advanced-settings"
-import { Checkbox } from "./checkbox"
-import { Label } from "./label"
+import { ChatbotUIContext } from '@/context/context';
+import { CHAT_SETTING_LIMITS } from '@/lib/chat-setting-limits';
+import { ChatSettings } from '@/types';
+import { IconInfoCircle } from '@tabler/icons-react';
+import { FC, useContext } from 'react';
+import { ModelSelect } from '../models/model-select';
+import { AdvancedSettings } from './advanced-settings';
+import { Checkbox } from './checkbox';
+import { Label } from './label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "./select"
-import { Slider } from "./slider"
-import { TextareaAutosize } from "./textarea-autosize"
-import { WithTooltip } from "./with-tooltip"
+} from './select';
+import { Slider } from './slider';
+import { TextareaAutosize } from './textarea-autosize';
+import { WithTooltip } from './with-tooltip';
 
 interface ChatSettingsFormProps {
-  chatSettings: ChatSettings
-  onChangeChatSettings: (value: ChatSettings) => void
-  useAdvancedDropdown?: boolean
-  showTooltip?: boolean
+  chatSettings: ChatSettings;
+  onChangeChatSettings: (value: ChatSettings) => void;
+  useAdvancedDropdown?: boolean;
+  showTooltip?: boolean;
 }
 
 export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
@@ -33,9 +33,9 @@ export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
   useAdvancedDropdown = true,
   showTooltip = true
 }) => {
-  const { profile, models } = useContext(ChatbotUIContext)
+  const { profile, models } = useContext(ChatbotUIContext);
 
-  if (!profile) return null
+  if (!profile) return null;
 
   return (
     <div className="space-y-3">
@@ -45,7 +45,7 @@ export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
         <ModelSelect
           selectedModelId={chatSettings.model}
           onSelectModel={model => {
-            onChangeChatSettings({ ...chatSettings, model })
+            onChangeChatSettings({ ...chatSettings, model });
           }}
         />
       </div>
@@ -57,7 +57,7 @@ export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
           className="bg-background border-input border-2"
           placeholder="You are a helpful AI assistant."
           onValueChange={prompt => {
-            onChangeChatSettings({ ...chatSettings, prompt })
+            onChangeChatSettings({ ...chatSettings, prompt });
           }}
           value={chatSettings.prompt}
           minRows={3}
@@ -83,13 +83,13 @@ export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 interface AdvancedContentProps {
-  chatSettings: ChatSettings
-  onChangeChatSettings: (value: ChatSettings) => void
-  showTooltip: boolean
+  chatSettings: ChatSettings;
+  onChangeChatSettings: (value: ChatSettings) => void;
+  showTooltip: boolean;
 }
 
 const AdvancedContent: FC<AdvancedContentProps> = ({
@@ -98,14 +98,14 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
   showTooltip
 }) => {
   const { profile, selectedWorkspace, availableOpenRouterModels, models } =
-    useContext(ChatbotUIContext)
+    useContext(ChatbotUIContext);
 
   const isCustomModel = models.some(
     model => model.model_id === chatSettings.model
-  )
+  );
 
   function findOpenRouterModel(modelId: string) {
-    return availableOpenRouterModels.find(model => model.modelId === modelId)
+    return availableOpenRouterModels.find(model => model.modelId === modelId);
   }
 
   const MODEL_LIMITS = CHAT_SETTING_LIMITS[chatSettings.model] || {
@@ -113,7 +113,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
     MAX_TEMPERATURE: 1,
     MAX_CONTEXT_LENGTH:
       findOpenRouterModel(chatSettings.model)?.maxContext || 4096
-  }
+  };
 
   return (
     <div className="mt-5">
@@ -130,7 +130,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
             onChangeChatSettings({
               ...chatSettings,
               temperature: temperature[0]
-            })
+            });
           }}
           min={MODEL_LIMITS.MIN_TEMPERATURE}
           max={MODEL_LIMITS.MAX_TEMPERATURE}
@@ -151,7 +151,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
             onChangeChatSettings({
               ...chatSettings,
               contextLength: contextLength[0]
-            })
+            });
           }}
           min={0}
           max={
@@ -182,7 +182,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
             delayDuration={0}
             display={
               <div className="w-[400px] p-3">
-                {profile?.profile_context || "No profile context."}
+                {profile?.profile_context || 'No profile context.'}
               </div>
             }
             trigger={
@@ -211,7 +211,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
             display={
               <div className="w-[400px] p-3">
                 {selectedWorkspace?.instructions ||
-                  "No workspace instructions."}
+                  'No workspace instructions.'}
               </div>
             }
             trigger={
@@ -226,11 +226,11 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
 
         <Select
           value={chatSettings.embeddingsProvider}
-          onValueChange={(embeddingsProvider: "openai" | "local") => {
+          onValueChange={(embeddingsProvider: 'openai' | 'local') => {
             onChangeChatSettings({
               ...chatSettings,
               embeddingsProvider
-            })
+            });
           }}
         >
           <SelectTrigger>
@@ -239,15 +239,15 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
 
           <SelectContent>
             <SelectItem value="openai">
-              {profile?.use_azure_openai ? "Azure OpenAI" : "OpenAI"}
+              {profile?.use_azure_openai ? 'Azure OpenAI' : 'OpenAI'}
             </SelectItem>
 
-            {window.location.hostname === "localhost" && (
+            {window.location.hostname === 'localhost' && (
               <SelectItem value="local">Local</SelectItem>
             )}
           </SelectContent>
         </Select>
       </div>
     </div>
-  )
-}
+  );
+};

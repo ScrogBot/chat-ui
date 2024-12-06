@@ -1,36 +1,36 @@
-"use client"
+'use client';
 
-import { supabase } from "@/lib/supabase/browser-client"
-import { useRouter } from "next/navigation"
-import { FC, useState } from "react"
-import { Button } from "../ui/button"
+import { supabase } from '@/lib/supabase/browser-client';
+import { useRouter } from 'next/navigation';
+import { FC, useState } from 'react';
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "../ui/dialog"
-import { Input } from "../ui/input"
-import { toast } from "sonner"
+} from '../ui/dialog';
+import { Input } from '../ui/input';
+import { toast } from 'sonner';
 
 interface ChangePasswordProps {}
 
 export const ChangePassword: FC<ChangePasswordProps> = () => {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleResetPassword = async () => {
-    if (!newPassword) return toast.info("Please enter your new password.")
+    if (!newPassword) return toast.info('Please enter your new password.');
 
-    await supabase.auth.updateUser({ password: newPassword })
+    await supabase.auth.updateUser({ password: newPassword });
 
-    toast.success("Password changed successfully.")
+    toast.success('Password changed successfully.');
 
-    return router.push("/login")
-  }
+    return router.push('/login');
+  };
 
   return (
     <Dialog open={true}>
@@ -60,5 +60,5 @@ export const ChangePassword: FC<ChangePasswordProps> = () => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

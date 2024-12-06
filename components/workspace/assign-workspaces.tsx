@@ -1,53 +1,53 @@
-import { ChatbotUIContext } from "@/context/context"
-import { Tables } from "@/supabase/types"
-import { IconChevronDown, IconCircleCheckFilled } from "@tabler/icons-react"
-import { FC, useContext, useEffect, useRef, useState } from "react"
-import { Button } from "../ui/button"
+import { ChatbotUIContext } from '@/context/context';
+import { Tables } from '@/supabase/types';
+import { IconChevronDown, IconCircleCheckFilled } from '@tabler/icons-react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger
-} from "../ui/dropdown-menu"
-import { Input } from "../ui/input"
-import { toast } from "sonner"
+} from '../ui/dropdown-menu';
+import { Input } from '../ui/input';
+import { toast } from 'sonner';
 
 interface AssignWorkspaces {
-  selectedWorkspaces: Tables<"workspaces">[]
-  onSelectWorkspace: (workspace: Tables<"workspaces">) => void
+  selectedWorkspaces: Tables<'workspaces'>[];
+  onSelectWorkspace: (workspace: Tables<'workspaces'>) => void;
 }
 
 export const AssignWorkspaces: FC<AssignWorkspaces> = ({
   selectedWorkspaces,
   onSelectWorkspace
 }) => {
-  const { workspaces } = useContext(ChatbotUIContext)
+  const { workspaces } = useContext(ChatbotUIContext);
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState("")
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100) // FIX: hacky
+        inputRef.current?.focus();
+      }, 100); // FIX: hacky
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  const handleWorkspaceSelect = (workspace: Tables<"workspaces">) => {
-    onSelectWorkspace(workspace)
-  }
+  const handleWorkspaceSelect = (workspace: Tables<'workspaces'>) => {
+    onSelectWorkspace(workspace);
+  };
 
-  if (!workspaces) return null
+  if (!workspaces) return null;
 
   return (
     <DropdownMenu
       open={isOpen}
       onOpenChange={isOpen => {
-        setIsOpen(isOpen)
-        setSearch("")
+        setIsOpen(isOpen);
+        setSearch('');
       }}
     >
       <DropdownMenuTrigger
@@ -118,14 +118,14 @@ export const AssignWorkspaces: FC<AssignWorkspaces> = ({
           ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
 interface WorkspaceItemProps {
-  selectedWorkspaces: Tables<"workspaces">[]
-  workspace: Tables<"workspaces">
-  selected: boolean
-  onSelect: (workspace: Tables<"workspaces">) => void
+  selectedWorkspaces: Tables<'workspaces'>[];
+  workspace: Tables<'workspaces'>;
+  selected: boolean;
+  onSelect: (workspace: Tables<'workspaces'>) => void;
 }
 
 const WorkspaceItem: FC<WorkspaceItemProps> = ({
@@ -136,12 +136,12 @@ const WorkspaceItem: FC<WorkspaceItemProps> = ({
 }) => {
   const handleSelect = () => {
     if (selected && selectedWorkspaces.length === 1) {
-      toast.info("You must select at least one workspace")
-      return
+      toast.info('You must select at least one workspace');
+      return;
     }
 
-    onSelect(workspace)
-  }
+    onSelect(workspace);
+  };
 
   return (
     <div
@@ -156,5 +156,5 @@ const WorkspaceItem: FC<WorkspaceItemProps> = ({
         <IconCircleCheckFilled size={20} className="min-w-[30px] flex-none" />
       )}
     </div>
-  )
-}
+  );
+};

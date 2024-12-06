@@ -1,4 +1,4 @@
-import { ContentType } from "@/types"
+import { ContentType } from '@/types';
 import {
   IconAdjustmentsHorizontal,
   IconBolt,
@@ -8,17 +8,17 @@ import {
   IconPencil,
   IconRobotFace,
   IconSparkles
-} from "@tabler/icons-react"
-import { FC } from "react"
-import { TabsList } from "../ui/tabs"
-import { WithTooltip } from "../ui/with-tooltip"
-import { ProfileSettings } from "../utility/profile-settings"
-import { SidebarSwitchItem } from "./sidebar-switch-item"
+} from '@tabler/icons-react';
+import { FC } from 'react';
+import { TabsList } from '../ui/tabs';
+import { WithTooltip } from '../ui/with-tooltip';
+import { ProfileSettings } from '../utility/profile-settings';
+import { SidebarSwitchItem } from './sidebar-switch-item';
 
-export const SIDEBAR_ICON_SIZE = 28
+export const SIDEBAR_ICON_SIZE = 28;
 
 interface SidebarSwitcherProps {
-  onContentTypeChange: (contentType: ContentType) => void
+  onContentTypeChange: (contentType: ContentType) => void;
 }
 
 export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
@@ -89,5 +89,5 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
         />
       </div>
     </div>
-  )
-}
+  );
+};

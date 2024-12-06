@@ -1,10 +1,10 @@
 export type ModelProvider =
-  | "openai"
-  | "google"
-  | "anthropic"
-  | "mistral"
-  | "groq"
-  | "perplexity"
-  | "ollama"
-  | "openrouter"
-  | "custom"
+  | 'openai'
+  | 'google'
+  | 'anthropic'
+  | 'mistral'
+  | 'groq'
+  | 'perplexity'
+  | 'ollama'
+  | 'openrouter'
+  | 'custom';

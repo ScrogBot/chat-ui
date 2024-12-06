@@ -1,33 +1,33 @@
-import { ChatbotUIContext } from "@/context/context"
-import { getAssistantCollectionsByAssistantId } from "@/db/assistant-collections"
-import { getAssistantFilesByAssistantId } from "@/db/assistant-files"
-import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
-import { getCollectionFilesByCollectionId } from "@/db/collection-files"
-import useHotkey from "@/lib/hooks/use-hotkey"
-import { LLM_LIST } from "@/lib/models/llm/llm-list"
-import { Tables } from "@/supabase/types"
-import { LLMID } from "@/types"
-import { IconChevronDown, IconRobotFace } from "@tabler/icons-react"
-import Image from "next/image"
-import { FC, useContext, useEffect, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
-import { ModelIcon } from "../models/model-icon"
-import { Button } from "../ui/button"
+import { ChatbotUIContext } from '@/context/context';
+import { getAssistantCollectionsByAssistantId } from '@/db/assistant-collections';
+import { getAssistantFilesByAssistantId } from '@/db/assistant-files';
+import { getAssistantToolsByAssistantId } from '@/db/assistant-tools';
+import { getCollectionFilesByCollectionId } from '@/db/collection-files';
+import useHotkey from '@/lib/hooks/use-hotkey';
+import { LLM_LIST } from '@/lib/models/llm/llm-list';
+import { Tables } from '@/supabase/types';
+import { LLMID } from '@/types';
+import { IconChevronDown, IconRobotFace } from '@tabler/icons-react';
+import Image from 'next/image';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ModelIcon } from '../models/model-icon';
+import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger
-} from "../ui/dropdown-menu"
-import { Input } from "../ui/input"
-import { QuickSettingOption } from "./quick-setting-option"
-import { set } from "date-fns"
+} from '../ui/dropdown-menu';
+import { Input } from '../ui/input';
+import { QuickSettingOption } from './quick-setting-option';
+import { set } from 'date-fns';
 
 interface QuickSettingsProps {}
 
 export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  useHotkey("p", () => setIsOpen(prevState => !prevState))
+  useHotkey('p', () => setIsOpen(prevState => !prevState));
 
   const {
     presets,
@@ -43,46 +43,46 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
     setSelectedTools,
     setShowFilesDisplay,
     selectedWorkspace
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100) // FIX: hacky
+        inputRef.current?.focus();
+      }, 100); // FIX: hacky
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   const handleSelectQuickSetting = async (
-    item: Tables<"presets"> | Tables<"assistants"> | null,
-    contentType: "presets" | "assistants" | "remove"
+    item: Tables<'presets'> | Tables<'assistants'> | null,
+    contentType: 'presets' | 'assistants' | 'remove'
   ) => {
-    console.log({ item, contentType })
-    if (contentType === "assistants" && item) {
-      setSelectedAssistant(item as Tables<"assistants">)
-      setLoading(true)
-      let allFiles = []
+    console.log({ item, contentType });
+    if (contentType === 'assistants' && item) {
+      setSelectedAssistant(item as Tables<'assistants'>);
+      setLoading(true);
+      let allFiles = [];
       const assistantFiles = (await getAssistantFilesByAssistantId(item.id))
-        .files
-      allFiles = [...assistantFiles]
+        .files;
+      allFiles = [...assistantFiles];
       const assistantCollections = (
         await getAssistantCollectionsByAssistantId(item.id)
-      ).collections
+      ).collections;
       for (const collection of assistantCollections) {
         const collectionFiles = (
           await getCollectionFilesByCollectionId(collection.id)
-        ).files
-        allFiles = [...allFiles, ...collectionFiles]
+        ).files;
+        allFiles = [...allFiles, ...collectionFiles];
       }
       const assistantTools = (await getAssistantToolsByAssistantId(item.id))
-        .tools
-      setSelectedTools(assistantTools)
+        .tools;
+      setSelectedTools(assistantTools);
       setChatFiles(
         allFiles.map(file => ({
           id: file.id,
@@ -90,20 +90,20 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
           type: file.type,
           file: null
         }))
-      )
-      if (allFiles.length > 0) setShowFilesDisplay(true)
-      setLoading(false)
-      setSelectedPreset(null)
-    } else if (contentType === "presets" && item) {
-      setSelectedPreset(item as Tables<"presets">)
-      setSelectedAssistant(null)
-      setChatFiles([])
-      setSelectedTools([])
+      );
+      if (allFiles.length > 0) setShowFilesDisplay(true);
+      setLoading(false);
+      setSelectedPreset(null);
+    } else if (contentType === 'presets' && item) {
+      setSelectedPreset(item as Tables<'presets'>);
+      setSelectedAssistant(null);
+      setChatFiles([]);
+      setSelectedTools([]);
     } else {
-      setSelectedPreset(null)
-      setSelectedAssistant(null)
-      setChatFiles([])
-      setSelectedTools([])
+      setSelectedPreset(null);
+      setSelectedAssistant(null);
+      setChatFiles([]);
+      setSelectedTools([]);
       if (selectedWorkspace) {
         setChatSettings({
           model: selectedWorkspace.default_model as LLMID,
@@ -114,11 +114,11 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
           includeWorkspaceInstructions:
             selectedWorkspace.include_workspace_instructions,
           embeddingsProvider: selectedWorkspace.embeddings_provider as
-            | "openai"
-            | "local"
-        })
+            | 'openai'
+            | 'local'
+        });
       }
-      return
+      return;
     }
 
     setChatSettings({
@@ -128,12 +128,12 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
       contextLength: item.context_length,
       includeProfileContext: item.include_profile_context,
       includeWorkspaceInstructions: item.include_workspace_instructions,
-      embeddingsProvider: item.embeddings_provider as "openai" | "local"
-    })
-  }
+      embeddingsProvider: item.embeddings_provider as 'openai' | 'local'
+    });
+  };
 
   const checkIfModified = () => {
-    if (!chatSettings) return false
+    if (!chatSettings) return false;
 
     if (selectedPreset) {
       return (
@@ -145,7 +145,7 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
         selectedPreset.model !== chatSettings.model ||
         selectedPreset.prompt !== chatSettings.prompt ||
         selectedPreset.temperature !== chatSettings.temperature
-      )
+      );
     } else if (selectedAssistant) {
       return (
         selectedAssistant.include_profile_context !==
@@ -156,45 +156,45 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
         selectedAssistant.model !== chatSettings.model ||
         selectedAssistant.prompt !== chatSettings.prompt ||
         selectedAssistant.temperature !== chatSettings.temperature
-      )
+      );
     }
 
-    return false
-  }
+    return false;
+  };
 
-  const isModified = checkIfModified()
+  const isModified = checkIfModified();
 
   const items = [
-    ...presets.map(preset => ({ ...preset, contentType: "presets" })),
+    ...presets.map(preset => ({ ...preset, contentType: 'presets' })),
     ...assistants.map(assistant => ({
       ...assistant,
-      contentType: "assistants"
+      contentType: 'assistants'
     }))
-  ]
+  ];
 
   const selectedAssistantImage = selectedPreset
-    ? ""
+    ? ''
     : assistantImages.find(
         image => image.path === selectedAssistant?.image_path
-      )?.base64 || ""
+      )?.base64 || '';
 
   const modelDetails = LLM_LIST.find(
     model => model.modelId === selectedPreset?.model
-  )
+  );
 
   return (
     <DropdownMenu
       open={isOpen}
       onOpenChange={isOpen => {
-        setIsOpen(isOpen)
-        setSearch("")
+        setIsOpen(isOpen);
+        setSearch('');
       }}
     >
       <DropdownMenuTrigger asChild className="max-w-[400px]" disabled={loading}>
         <Button variant="ghost" className="flex space-x-3 text-lg">
           {selectedPreset && (
             <ModelIcon
-              provider={modelDetails?.provider || "custom"}
+              provider={modelDetails?.provider || 'custom'}
               width={32}
               height={32}
             />
@@ -223,11 +223,11 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
               <div className="overflow-hidden text-ellipsis">
                 {isModified &&
                   (selectedPreset || selectedAssistant) &&
-                  "Modified "}
+                  'Modified '}
 
                 {selectedPreset?.name ||
                   selectedAssistant?.name ||
-                  t("Quick Settings")}
+                  t('Quick Settings')}
               </div>
 
               <IconChevronDown className="ml-1" />
@@ -255,18 +255,18 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
 
             {!!(selectedPreset || selectedAssistant) && (
               <QuickSettingOption
-                contentType={selectedPreset ? "presets" : "assistants"}
+                contentType={selectedPreset ? 'presets' : 'assistants'}
                 isSelected={true}
                 item={
                   selectedPreset ||
                   (selectedAssistant as
-                    | Tables<"presets">
-                    | Tables<"assistants">)
+                    | Tables<'presets'>
+                    | Tables<'assistants'>)
                 }
                 onSelect={() => {
-                  handleSelectQuickSetting(null, "remove")
+                  handleSelectQuickSetting(null, 'remove');
                 }}
-                image={selectedPreset ? "" : selectedAssistantImage}
+                image={selectedPreset ? '' : selectedAssistantImage}
               />
             )}
 
@@ -280,23 +280,23 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
               .map(({ contentType, ...item }) => (
                 <QuickSettingOption
                   key={item.id}
-                  contentType={contentType as "presets" | "assistants"}
+                  contentType={contentType as 'presets' | 'assistants'}
                   isSelected={false}
                   item={item}
                   onSelect={() =>
                     handleSelectQuickSetting(
                       item,
-                      contentType as "presets" | "assistants"
+                      contentType as 'presets' | 'assistants'
                     )
                   }
                   image={
-                    contentType === "assistants"
+                    contentType === 'assistants'
                       ? assistantImages.find(
                           image =>
                             image.path ===
-                            (item as Tables<"assistants">).image_path
-                        )?.base64 || ""
-                      : ""
+                            (item as Tables<'assistants'>).image_path
+                        )?.base64 || ''
+                      : ''
                   }
                 />
               ))}
@@ -304,5 +304,5 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

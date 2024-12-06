@@ -1,63 +1,63 @@
-import { ChatbotUIContext } from "@/context/context"
-import { updateAssistant } from "@/db/assistants"
-import { updateChat } from "@/db/chats"
-import { updateCollection } from "@/db/collections"
-import { updateFile } from "@/db/files"
-import { updateModel } from "@/db/models"
-import { updatePreset } from "@/db/presets"
-import { updatePrompt } from "@/db/prompts"
-import { updateTool } from "@/db/tools"
-import { cn } from "@/lib/utils"
-import { Tables } from "@/supabase/types"
-import { ContentType, DataItemType, DataListType } from "@/types"
-import { FC, useContext, useEffect, useRef, useState } from "react"
-import { Separator } from "../ui/separator"
-import { AssistantItem } from "./items/assistants/assistant-item"
-import { ChatItem } from "./items/chat/chat-item"
-import { CollectionItem } from "./items/collections/collection-item"
-import { FileItem } from "./items/files/file-item"
-import { Folder } from "./items/folders/folder-item"
-import { ModelItem } from "./items/models/model-item"
-import { PresetItem } from "./items/presets/preset-item"
-import { PromptItem } from "./items/prompts/prompt-item"
-import { ToolItem } from "./items/tools/tool-item"
+import { ChatbotUIContext } from '@/context/context';
+import { updateAssistant } from '@/db/assistants';
+import { updateChat } from '@/db/chats';
+import { updateCollection } from '@/db/collections';
+import { updateFile } from '@/db/files';
+import { updateModel } from '@/db/models';
+import { updatePreset } from '@/db/presets';
+import { updatePrompt } from '@/db/prompts';
+import { updateTool } from '@/db/tools';
+import { cn } from '@/lib/utils';
+import { Tables } from '@/supabase/types';
+import { ContentType, DataItemType, DataListType } from '@/types';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { Separator } from '../ui/separator';
+import { AssistantItem } from './items/assistants/assistant-item';
+import { ChatItem } from './items/chat/chat-item';
+import { CollectionItem } from './items/collections/collection-item';
+import { FileItem } from './items/files/file-item';
+import { Folder } from './items/folders/folder-item';
+import { ModelItem } from './items/models/model-item';
+import { PresetItem } from './items/presets/preset-item';
+import { PromptItem } from './items/prompts/prompt-item';
+import { ToolItem } from './items/tools/tool-item';
 
 interface SidebarDataListProps {
-  contentType: ContentType
-  data: DataListType
-  folders: Tables<"folders">[]
+  contentType: ContentType;
+  data: DataListType;
+  folders: Tables<'folders'>[];
 }
 
-const predefinedModels: Tables<"models">[] = [
+const predefinedModels: Tables<'models'>[] = [
   {
-    api_key: "",
-    base_url: "https://pcp-ai.openai.azure.com/openai",
+    api_key: '',
+    base_url: 'https://pcp-ai.openai.azure.com/openai',
     context_length: 4096,
-    created_at: "",
-    description: "jailbreaking model 1",
+    created_at: '',
+    description: 'jailbreaking model 1',
     folder_id: null,
-    id: "",
-    model_id: "jailbreaking-model-1",
-    name: "jailbreaking-model-1",
-    sharing: "",
+    id: '',
+    model_id: 'jailbreaking-model-1',
+    name: 'jailbreaking-model-1',
+    sharing: '',
     updated_at: null,
-    user_id: ""
+    user_id: ''
   },
   {
-    api_key: "",
-    base_url: "https://pcp-ai.openai.azure.com/openai",
+    api_key: '',
+    base_url: 'https://pcp-ai.openai.azure.com/openai',
     context_length: 4096,
-    created_at: "",
-    description: "jailbreaking model 2",
+    created_at: '',
+    description: 'jailbreaking model 2',
     folder_id: null,
-    id: "",
-    model_id: "jailbreaking-model-2",
-    name: "jailbreaking-model-2",
-    sharing: "",
+    id: '',
+    model_id: 'jailbreaking-model-2',
+    name: 'jailbreaking-model-2',
+    sharing: '',
     updated_at: null,
-    user_id: ""
+    user_id: ''
   }
-]
+];
 
 export const SidebarDataList: FC<SidebarDataListProps> = ({
   contentType,
@@ -73,89 +73,89 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     setAssistants,
     setTools,
     setModels
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const divRef = useRef<HTMLDivElement>(null)
+  const divRef = useRef<HTMLDivElement>(null);
 
-  const [isOverflowing, setIsOverflowing] = useState(false)
-  const [isDragOver, setIsDragOver] = useState(false)
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const getDataListComponent = (
     contentType: ContentType,
     item: DataItemType
   ) => {
     switch (contentType) {
-      case "chats":
-        return <ChatItem key={item.id} chat={item as Tables<"chats">} />
+      case 'chats':
+        return <ChatItem key={item.id} chat={item as Tables<'chats'>} />;
 
-      case "presets":
-        return <PresetItem key={item.id} preset={item as Tables<"presets">} />
+      case 'presets':
+        return <PresetItem key={item.id} preset={item as Tables<'presets'>} />;
 
-      case "prompts":
-        return <PromptItem key={item.id} prompt={item as Tables<"prompts">} />
+      case 'prompts':
+        return <PromptItem key={item.id} prompt={item as Tables<'prompts'>} />;
 
-      case "files":
-        return <FileItem key={item.id} file={item as Tables<"files">} />
+      case 'files':
+        return <FileItem key={item.id} file={item as Tables<'files'>} />;
 
-      case "collections":
+      case 'collections':
         return (
           <CollectionItem
             key={item.id}
-            collection={item as Tables<"collections">}
+            collection={item as Tables<'collections'>}
           />
-        )
+        );
 
-      case "assistants":
+      case 'assistants':
         return (
           <AssistantItem
             key={item.id}
-            assistant={item as Tables<"assistants">}
+            assistant={item as Tables<'assistants'>}
           />
-        )
+        );
 
-      case "tools":
-        return <ToolItem key={item.id} tool={item as Tables<"tools">} />
+      case 'tools':
+        return <ToolItem key={item.id} tool={item as Tables<'tools'>} />;
 
-      case "models":
+      case 'models':
         // add predefinedModels here
         return predefinedModels.map(model => (
           <ModelItem key={model.id} model={model} />
-        ))
+        ));
 
       // return <ModelItem key={item.id} model={item as Tables<"models">} />
 
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const getSortedData = (
     data: any,
-    dateCategory: "Today" | "Yesterday" | "Previous Week" | "Older"
+    dateCategory: 'Today' | 'Yesterday' | 'Previous Week' | 'Older'
   ) => {
-    const now = new Date()
-    const todayStart = new Date(now.setHours(0, 0, 0, 0))
+    const now = new Date();
+    const todayStart = new Date(now.setHours(0, 0, 0, 0));
     const yesterdayStart = new Date(
       new Date().setDate(todayStart.getDate() - 1)
-    )
+    );
     const oneWeekAgoStart = new Date(
       new Date().setDate(todayStart.getDate() - 7)
-    )
+    );
 
     return data
       .filter((item: any) => {
-        const itemDate = new Date(item.updated_at || item.created_at)
+        const itemDate = new Date(item.updated_at || item.created_at);
         switch (dateCategory) {
-          case "Today":
-            return itemDate >= todayStart
-          case "Yesterday":
-            return itemDate >= yesterdayStart && itemDate < todayStart
-          case "Previous Week":
-            return itemDate >= oneWeekAgoStart && itemDate < yesterdayStart
-          case "Older":
-            return itemDate < oneWeekAgoStart
+          case 'Today':
+            return itemDate >= todayStart;
+          case 'Yesterday':
+            return itemDate >= yesterdayStart && itemDate < todayStart;
+          case 'Previous Week':
+            return itemDate >= oneWeekAgoStart && itemDate < yesterdayStart;
+          case 'Older':
+            return itemDate < oneWeekAgoStart;
           default:
-            return true
+            return true;
         }
       })
       .sort(
@@ -165,8 +165,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
         ) =>
           new Date(b.updated_at || b.created_at).getTime() -
           new Date(a.updated_at || a.created_at).getTime()
-      )
-  }
+      );
+  };
 
   const updateFunctions = {
     chats: updateChat,
@@ -177,7 +177,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     assistants: updateAssistant,
     tools: updateTool,
     models: updateModel
-  }
+  };
 
   const stateUpdateFunctions = {
     chats: setChats,
@@ -188,70 +188,70 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels
-  }
+  };
 
   const updateFolder = async (itemId: string, folderId: string | null) => {
-    const item: any = data.find(item => item.id === itemId)
+    const item: any = data.find(item => item.id === itemId);
 
-    if (!item) return null
+    if (!item) return null;
 
-    const updateFunction = updateFunctions[contentType]
-    const setStateFunction = stateUpdateFunctions[contentType]
+    const updateFunction = updateFunctions[contentType];
+    const setStateFunction = stateUpdateFunctions[contentType];
 
-    if (!updateFunction || !setStateFunction) return
+    if (!updateFunction || !setStateFunction) return;
 
     const updatedItem = await updateFunction(item.id, {
       folder_id: folderId
-    })
+    });
 
     setStateFunction((items: any) =>
       items.map((item: any) =>
         item.id === updatedItem.id ? updatedItem : item
       )
-    )
-  }
+    );
+  };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragOver(true)
-  }
+    e.preventDefault();
+    setIsDragOver(true);
+  };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragOver(false)
-  }
+    e.preventDefault();
+    setIsDragOver(false);
+  };
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
-    e.dataTransfer.setData("text/plain", id)
-  }
+    e.dataTransfer.setData('text/plain', id);
+  };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-  }
+    e.preventDefault();
+  };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const target = e.target as Element
+    const target = e.target as Element;
 
-    if (!target.closest("#folder")) {
-      const itemId = e.dataTransfer.getData("text/plain")
-      updateFolder(itemId, null)
+    if (!target.closest('#folder')) {
+      const itemId = e.dataTransfer.getData('text/plain');
+      updateFolder(itemId, null);
     }
 
-    setIsDragOver(false)
-  }
+    setIsDragOver(false);
+  };
 
   useEffect(() => {
     if (divRef.current) {
       setIsOverflowing(
         divRef.current.scrollHeight > divRef.current.clientHeight
-      )
+      );
     }
-  }, [data])
+  }, [data]);
 
-  const dataWithFolders = data.filter(item => item.folder_id)
-  const dataWithoutFolders = data.filter(item => item.folder_id === null)
+  const dataWithFolders = data.filter(item => item.folder_id);
+  const dataWithoutFolders = data.filter(item => item.folder_id === null);
 
   return (
     <>
@@ -271,8 +271,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
         {(dataWithFolders.length > 0 || dataWithoutFolders.length > 0) && (
           <div
             className={`h-full ${
-              isOverflowing ? "w-[calc(100%-8px)]" : "w-full"
-            } space-y-2 pt-2 ${isOverflowing ? "mr-2" : ""}`}
+              isOverflowing ? 'w-[calc(100%-8px)]' : 'w-full'
+            } space-y-2 pt-2 ${isOverflowing ? 'mr-2' : ''}`}
           >
             {folders.map(folder => (
               <Folder
@@ -297,18 +297,18 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
             {folders.length > 0 && <Separator />}
 
-            {contentType === "chats" ? (
+            {contentType === 'chats' ? (
               <>
-                {["Today", "Yesterday", "Previous Week", "Older"].map(
+                {['Today', 'Yesterday', 'Previous Week', 'Older'].map(
                   dateCategory => {
                     const sortedData = getSortedData(
                       dataWithoutFolders,
                       dateCategory as
-                        | "Today"
-                        | "Yesterday"
-                        | "Previous Week"
-                        | "Older"
-                    )
+                        | 'Today'
+                        | 'Yesterday'
+                        | 'Previous Week'
+                        | 'Older'
+                    );
 
                     return (
                       sortedData.length > 0 && (
@@ -319,8 +319,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
                           <div
                             className={cn(
-                              "flex grow flex-col",
-                              isDragOver && "bg-accent"
+                              'flex grow flex-col',
+                              isDragOver && 'bg-accent'
                             )}
                             onDrop={handleDrop}
                             onDragEnter={handleDragEnter}
@@ -339,13 +339,13 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
                           </div>
                         </div>
                       )
-                    )
+                    );
                   }
                 )}
               </>
             ) : (
               <div
-                className={cn("flex grow flex-col", isDragOver && "bg-accent")}
+                className={cn('flex grow flex-col', isDragOver && 'bg-accent')}
                 onDrop={handleDrop}
                 onDragEnter={handleDragEnter}
                 onDragLeave={handleDragLeave}
@@ -360,7 +360,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
                     >
                       {getDataListComponent(contentType, item)}
                     </div>
-                  )
+                  );
                 })}
               </div>
             )}
@@ -369,12 +369,12 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       </div>
 
       <div
-        className={cn("flex grow", isDragOver && "bg-accent")}
+        className={cn('flex grow', isDragOver && 'bg-accent')}
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
       />
     </>
-  )
-}
+  );
+};

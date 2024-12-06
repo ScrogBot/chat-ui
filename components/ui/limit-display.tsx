@@ -1,8 +1,8 @@
-import { FC } from "react"
+import { FC } from 'react';
 
 interface LimitDisplayProps {
-  used: number
-  limit: number
+  used: number;
+  limit: number;
 }
 
 export const LimitDisplay: FC<LimitDisplayProps> = ({ used, limit }) => {
@@ -10,5 +10,5 @@ export const LimitDisplay: FC<LimitDisplayProps> = ({ used, limit }) => {
     <div className="text-xs italic">
       {used}/{limit}
     </div>
-  )
-}
+  );
+};

@@ -1,25 +1,25 @@
-import { ChatbotUIContext } from "@/context/context"
-import { createAssistants } from "@/db/assistants"
-import { createChats } from "@/db/chats"
-import { createCollections } from "@/db/collections"
-import { createFiles } from "@/db/files"
-import { createPresets } from "@/db/presets"
-import { createPrompts } from "@/db/prompts"
-import { createTools } from "@/db/tools"
-import { IconUpload, IconX } from "@tabler/icons-react"
-import { FC, useContext, useRef, useState } from "react"
-import { toast } from "sonner"
-import { SIDEBAR_ICON_SIZE } from "../sidebar/sidebar-switcher"
-import { Badge } from "../ui/badge"
-import { Button } from "../ui/button"
+import { ChatbotUIContext } from '@/context/context';
+import { createAssistants } from '@/db/assistants';
+import { createChats } from '@/db/chats';
+import { createCollections } from '@/db/collections';
+import { createFiles } from '@/db/files';
+import { createPresets } from '@/db/presets';
+import { createPrompts } from '@/db/prompts';
+import { createTools } from '@/db/tools';
+import { IconUpload, IconX } from '@tabler/icons-react';
+import { FC, useContext, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { SIDEBAR_ICON_SIZE } from '../sidebar/sidebar-switcher';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader
-} from "../ui/dialog"
-import { Input } from "../ui/input"
+} from '../ui/dialog';
+import { Input } from '../ui/input';
 
 interface ImportProps {}
 
@@ -34,21 +34,21 @@ export const Import: FC<ImportProps> = ({}) => {
     setCollections,
     setAssistants,
     setTools
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [importList, setImportList] = useState<Array<Record<string, any>>>([])
+  const [isOpen, setIsOpen] = useState(false);
+  const [importList, setImportList] = useState<Array<Record<string, any>>>([]);
   const [importCounts, setImportCounts] = useState<{
-    chats: number
-    presets: number
-    prompts: number
-    files: number
-    collections: number
-    assistants: number
-    tools: number
+    chats: number;
+    presets: number;
+    prompts: number;
+    files: number;
+    collections: number;
+    assistants: number;
+    tools: number;
   }>({
     chats: 0,
     presets: 0,
@@ -57,7 +57,7 @@ export const Import: FC<ImportProps> = ({}) => {
     collections: 0,
     assistants: 0,
     tools: 0
-  })
+  });
 
   const stateUpdateFunctions = {
     chats: setChats,
@@ -67,70 +67,70 @@ export const Import: FC<ImportProps> = ({}) => {
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools
-  }
+  };
 
   const handleSelectFiles = async (e: any) => {
     const filePromises = Array.from(e.target.files).map(file => {
       return new Promise((resolve, reject) => {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onload = event => {
           try {
-            const data = JSON.parse(event.target?.result as string)
-            resolve(Array.isArray(data) ? data : [data])
+            const data = JSON.parse(event.target?.result as string);
+            resolve(Array.isArray(data) ? data : [data]);
           } catch (error) {
-            reject(error)
+            reject(error);
           }
-        }
-        reader.readAsText(file as Blob)
-      })
-    })
+        };
+        reader.readAsText(file as Blob);
+      });
+    });
 
     try {
-      const results = await Promise.all(filePromises)
-      const flatResults = results.flat()
-      let uniqueResults: Array<Record<string, any>> = []
+      const results = await Promise.all(filePromises);
+      const flatResults = results.flat();
+      let uniqueResults: Array<Record<string, any>> = [];
       setImportList(prevState => {
-        const newState = [...prevState, ...flatResults]
+        const newState = [...prevState, ...flatResults];
         uniqueResults = Array.from(
           new Set(newState.map(item => JSON.stringify(item)))
-        ).map(item => JSON.parse(item))
-        return uniqueResults
-      })
+        ).map(item => JSON.parse(item));
+        return uniqueResults;
+      });
 
       setImportCounts(prevCounts => {
         const countTypes = [
-          "chats",
-          "presets",
-          "prompts",
-          "files",
-          "collections",
-          "assistants"
-        ]
-        const newCounts: any = { ...prevCounts }
+          'chats',
+          'presets',
+          'prompts',
+          'files',
+          'collections',
+          'assistants'
+        ];
+        const newCounts: any = { ...prevCounts };
         countTypes.forEach(type => {
           newCounts[type] = uniqueResults.filter(
             item => item.contentType === type
-          ).length
-        })
-        return newCounts
-      })
+          ).length;
+        });
+        return newCounts;
+      });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const handleRemoveItem = (item: any) => {
-    setImportList(prev => prev.filter(prevItem => prevItem !== item))
+    setImportList(prev => prev.filter(prevItem => prevItem !== item));
 
     setImportCounts(prev => {
-      const newCounts: any = { ...prev }
-      newCounts[item.contentType] -= 1
-      return newCounts
-    })
-  }
+      const newCounts: any = { ...prev };
+      newCounts[item.contentType] -= 1;
+      return newCounts;
+    });
+  };
 
   const handleCancel = () => {
-    setImportList([])
+    setImportList([]);
     setImportCounts({
       chats: 0,
       presets: 0,
@@ -139,13 +139,13 @@ export const Import: FC<ImportProps> = ({}) => {
       collections: 0,
       assistants: 0,
       tools: 0
-    })
-    setIsOpen(false)
-  }
+    });
+    setIsOpen(false);
+  };
 
   const handleSaveData = async () => {
-    if (!profile) return
-    if (!selectedWorkspace) return
+    if (!profile) return;
+    if (!selectedWorkspace) return;
 
     const saveData: any = {
       chats: [],
@@ -155,14 +155,14 @@ export const Import: FC<ImportProps> = ({}) => {
       collections: [],
       assistants: [],
       tools: []
-    }
+    };
 
     importList.forEach(item => {
-      const { contentType, ...itemWithoutContentType } = item
-      itemWithoutContentType.user_id = profile.user_id
-      itemWithoutContentType.workspace_id = selectedWorkspace.id
-      saveData[contentType].push(itemWithoutContentType)
-    })
+      const { contentType, ...itemWithoutContentType } = item;
+      itemWithoutContentType.user_id = profile.user_id;
+      itemWithoutContentType.workspace_id = selectedWorkspace.id;
+      saveData[contentType].push(itemWithoutContentType);
+    });
 
     const createdItems = {
       chats: await createChats(saveData.chats),
@@ -178,19 +178,19 @@ export const Import: FC<ImportProps> = ({}) => {
         selectedWorkspace.id
       ),
       tools: await createTools(saveData.tools, selectedWorkspace.id)
-    }
+    };
 
     Object.keys(createdItems).forEach(key => {
-      const typedKey = key as keyof typeof stateUpdateFunctions
+      const typedKey = key as keyof typeof stateUpdateFunctions;
       stateUpdateFunctions[typedKey]((prevItems: any) => [
         ...prevItems,
         ...createdItems[typedKey]
-      ])
-    })
+      ]);
+    });
 
-    toast.success("Data imported successfully!")
+    toast.success('Data imported successfully!');
 
-    setImportList([])
+    setImportList([]);
     setImportCounts({
       chats: 0,
       presets: 0,
@@ -199,16 +199,16 @@ export const Import: FC<ImportProps> = ({}) => {
       collections: 0,
       assistants: 0,
       tools: 0
-    })
-    setIsOpen(false)
-  }
+    });
+    setIsOpen(false);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      buttonRef.current?.click()
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      buttonRef.current?.click();
     }
-  }
+  };
 
   return (
     <>
@@ -256,9 +256,9 @@ export const Import: FC<ImportProps> = ({}) => {
 
               {Object.entries(importCounts).map(([key, value]) => {
                 if (value > 0) {
-                  return <div key={key}>{`${key}: ${value}`}</div>
+                  return <div key={key}>{`${key}: ${value}`}</div>;
                 }
-                return null
+                return null;
               })}
 
               <Input
@@ -288,5 +288,5 @@ export const Import: FC<ImportProps> = ({}) => {
         </Dialog>
       )}
     </>
-  )
-}
+  );
+};
