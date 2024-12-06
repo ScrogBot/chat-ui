@@ -50,8 +50,22 @@ export const ModelSelect: FC<ModelSelectProps> = ({
     setIsOpen(false);
   };
   models.push({
-    model_id: 'gpt-3',
-    name: 'GPT-3',
+    model_id: 'test-model-1-id',
+    name: 'test-model-1-name',
+    api_key: '',
+    base_url: '',
+    context_length: 0,
+    created_at: '',
+    description: '',
+    folder_id: '',
+    id: '',
+    sharing: '',
+    updated_at: '',
+    user_id: ''
+  });
+  models.push({
+    model_id: 'test-model-2-id',
+    name: 'test-model-2-name',
     api_key: '',
     base_url: '',
     context_length: 0,
