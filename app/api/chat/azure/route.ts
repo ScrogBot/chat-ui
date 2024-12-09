@@ -141,13 +141,14 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         message:
+          'AZURE' +
           'KEY:' +
           KEY +
           ', BASEURL: ' +
           BASE_URL +
           ', DEPLOYMENT_ID: ' +
           DEPLOYMENT_ID +
-          'error: ' +
+          ', error: ' +
           errorMessage
       }),
       {
