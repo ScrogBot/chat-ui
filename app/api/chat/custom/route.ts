@@ -99,20 +99,34 @@ export async function POST(request: Request) {
       );
     }
 
-    const custom = new OpenAI({
-      apiKey: KEY,
-      baseURL: BASE_URL,
-      defaultQuery: DEFAULT_QUERY,
-      defaultHeaders: { 'api-key': KEY, 'Content-Type': 'application/json' }
+    // const custom = new OpenAI({
+    //   apiKey: KEY,
+    //   baseURL: BASE_URL,
+    //   defaultQuery: DEFAULT_QUERY,
+    //   defaultHeaders: { 'api-key': KEY, 'Content-Type': 'application/json' }
+    // });
+    //
+    // const createCompletion = traceable(
+    //   custom.chat.completions.create.bind(custom.chat.completions),
+    //   { name: 'Jongsoo OpenAI Chat Completion', run_type: 'llm' }
+    // );
+    //
+    // const response = await createCompletion({
+    //   model: DEPLOYMENT_ID,
+    //   messages: messages as ChatCompletionCreateParamsBase['messages'],
+    //   temperature: chatSettings.temperature,
+    //   max_tokens: null,
+    //   stream: true
+    // });
+
+    const openai = new OpenAI({
+      apiKey: profile.openai_api_key || '',
+      organization: profile.openai_organization_id,
+      baseURL: 'http://223.130.135.187:8001/v1'
     });
-
-    const createCompletion = traceable(
-      custom.chat.completions.create.bind(custom.chat.completions),
-      { name: 'Jongsoo OpenAI Chat Completion', run_type: 'llm' }
-    );
-
-    const response = await createCompletion({
-      model: DEPLOYMENT_ID,
+    const response = await openai.chat.completions.create({
+      // model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
+      model: 'llama3.2-ko-3b',
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
       max_tokens: null,
