@@ -96,14 +96,14 @@ export async function POST(request: Request) {
     const azureOpenai = wrapOpenAI(
       new OpenAI({
         apiKey: 'dummy',
-        baseURL: 'http://223.130.135.187:8001/v1'
+        baseURL: 'https://api.openai.com/v1'
         // defaultQuery: DEFAULT_QUERY,
         // defaultHeaders: { 'api-key': KEY }
       })
     );
 
     const response = await azureOpenai.chat.completions.create({
-      model: 'llama3.2-ko-3b',
+      model: 'gpt-4o-mini',
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
       max_tokens: null,
