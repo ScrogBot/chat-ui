@@ -51,11 +51,27 @@ export const ModelSelect: FC<ModelSelectProps> = ({
     setIsOpen(false);
   };
 
+  if (!models.find(model => model.model_id === 'FineTuning_LLM')) {
+    models.push({
+      api_key: '',
+      base_url: 'http://223.130.135.187:8001/v1',
+      context_length: 0,
+      created_at: '',
+      description: '',
+      folder_id: null,
+      id: '',
+      sharing: '',
+      updated_at: null,
+      user_id: '',
+      model_id: 'FineTuning_LLM',
+      name: 'FineTuning_LLM'
+    });
+  }
   // if model_id 'test-model-1-id' and 'test-model-2-id' are not in the models array, push them to models array
   if (!models.find(model => model.model_id === 'jailbreaking-model-1')) {
     models.push({
-      api_key: 'https://pcp-ai.openai.azure.com/openai',
-      base_url: '',
+      api_key: '',
+      base_url: 'https://pcp-ai.openai.azure.com/openai',
       context_length: 0,
       created_at: '',
       description: '',
@@ -70,8 +86,8 @@ export const ModelSelect: FC<ModelSelectProps> = ({
   }
   if (!models.find(model => model.model_id === 'jailbreaking-model-2')) {
     models.push({
-      api_key: 'https://pcp-ai.openai.azure.com/openai',
-      base_url: '',
+      api_key: '',
+      base_url: 'https://pcp-ai.openai.azure.com/openai',
       context_length: 0,
       created_at: '',
       description: '',

@@ -62,7 +62,10 @@ export type PerplexityLLMID =
   | 'sonar-medium-chat' // Sonar Medium Chat
   | 'sonar-medium-online'; // Sonar Medium Online
 
-export type CustomLLMID = 'jailbreaking-model-1' | 'jailbreaking-model-2';
+export type CustomLLMID =
+  | 'FineTuning_LLM'
+  | 'jailbreaking-model-1'
+  | 'jailbreaking-model-2';
 
 export interface LLM {
   modelId: LLMID;
