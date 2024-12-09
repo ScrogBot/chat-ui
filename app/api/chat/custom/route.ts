@@ -101,7 +101,8 @@ export async function POST(request: Request) {
 
     const custom = new OpenAI({
       apiKey: KEY,
-      baseURL: BASE_URL
+      baseURL: BASE_URL,
+      defaultQuery: DEFAULT_QUERY
     });
 
     const createCompletion = traceable(
