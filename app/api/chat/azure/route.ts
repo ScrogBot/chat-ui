@@ -103,7 +103,7 @@ export async function POST(request: Request) {
     );
 
     const response = await azureOpenai.chat.completions.create({
-      model: DEPLOYMENT_ID as ChatCompletionCreateParamsBase['model'],
+      model: DEPLOYMENT_ID,
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
       max_tokens: null,
