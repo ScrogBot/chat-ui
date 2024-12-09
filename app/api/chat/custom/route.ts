@@ -6,6 +6,8 @@ import { ServerRuntime } from 'next';
 import OpenAI from 'openai';
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions.mjs';
 import { getServerProfile } from '@/lib/server/server-chat-helpers';
+import { wrapOpenAI } from 'langsmith/wrappers';
+import { traceable } from 'langsmith/traceable';
 
 export const runtime: ServerRuntime = 'edge';
 
@@ -24,7 +26,7 @@ export async function POST(request: Request) {
 
   try {
     const profile = await getServerProfile();
-    const ENDPOINT = 'https://api.openai.com';
+    const ENDPOINT = 'https://pcp-ai.openai.azure.com';
 
     const KEYWORDS = [
       '노트북',
@@ -91,12 +93,23 @@ export async function POST(request: Request) {
       baseURL: BASE_URL
     });
 
-    const response = await custom.chat.completions.create({
+    const createCompletion = traceable(
+      custom.chat.completions.create.bind(custom.chat.completions),
+      { name: 'Jongsoo OpenAI Chat Completion', run_type: 'llm' }
+    );
+
+    const response = await createCompletion({
       model: DEPLOYMENT_ID,
       messages: messages as ChatCompletionCreateParamsBase['messages'],
-      temperature: chatSettings.temperature,
       stream: true
     });
+
+    // const response = await custom.chat.completions.create({
+    //   model: DEPLOYMENT_ID,
+    //   messages: messages as ChatCompletionCreateParamsBase['messages'],
+    //   temperature: chatSettings.temperature,
+    //   stream: true
+    // });
 
     const stream = OpenAIStream(response);
 
@@ -116,7 +129,6 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         message:
-          'CUSTOM' +
           'KEY:' +
           KEY +
           ', BASEURL: ' +
