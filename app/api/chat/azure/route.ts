@@ -97,9 +97,9 @@ export async function POST(request: Request) {
     const azureOpenai = wrapOpenAI(
       new OpenAI({
         apiKey: KEY,
-        baseURL: BASE_URL
-        // defaultQuery: DEFAULT_QUERY,
-        // defaultHeaders: { 'api-key': KEY }
+        baseURL: BASE_URL,
+        defaultQuery: DEFAULT_QUERY,
+        defaultHeaders: { 'api-key': KEY }
       })
     );
 
