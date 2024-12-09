@@ -45,6 +45,7 @@ export async function POST(request: Request) {
         DEFAULT_QUERY = { 'api-version': '' };
         KEY = 'dummy';
         DEPLOYMENT_ID = 'llama3.2-ko-3b';
+        break;
       case 'jailbreaking-model-1':
         BASE_URL = `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`;
         messages = messages.map(message => {
@@ -95,15 +96,15 @@ export async function POST(request: Request) {
 
     const azureOpenai = wrapOpenAI(
       new OpenAI({
-        apiKey: 'dummy',
-        baseURL: 'https://api.openai.com/v1'
+        apiKey: KEY,
+        baseURL: BASE_URL
         // defaultQuery: DEFAULT_QUERY,
         // defaultHeaders: { 'api-key': KEY }
       })
     );
 
     const response = await azureOpenai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: DEPLOYMENT_ID,
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
       max_tokens: null,
