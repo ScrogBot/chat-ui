@@ -113,6 +113,8 @@ export async function POST(request: Request) {
     const response = await createCompletion({
       model: DEPLOYMENT_ID,
       messages: messages as ChatCompletionCreateParamsBase['messages'],
+      temperature: chatSettings.temperature,
+      max_tokens: null,
       stream: true
     });
 
