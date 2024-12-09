@@ -26,6 +26,8 @@ export async function POST(request: Request) {
 
   try {
     const profile = await getServerProfile();
+    KEY = profile.azure_openai_api_key;
+
     const ENDPOINT = 'https://pcp-ai.openai.azure.com';
 
     const KEYWORDS = [
@@ -86,6 +88,15 @@ export async function POST(request: Request) {
         return new Response(JSON.stringify({ message: 'Model not found' }), {
           status: 400
         });
+    }
+
+    if (!ENDPOINT || !KEY || !DEPLOYMENT_ID) {
+      return new Response(
+        JSON.stringify({ message: 'Azure resources not found' }),
+        {
+          status: 400
+        }
+      );
     }
 
     const custom = new OpenAI({
