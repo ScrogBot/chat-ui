@@ -7,6 +7,7 @@ import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions.mjs';
 import { wrapOpenAI } from 'langsmith/wrappers';
+import { Key } from 'lucide-react';
 
 export const runtime = 'edge';
 
@@ -14,16 +15,18 @@ export async function POST(request: Request) {
   const json = await request.json();
   let { chatSettings, messages } = json as ChatAPIPayload;
 
+  let KEY: string | null = 'dummy';
+  let BASE_URL = '';
+  let DEFAULT_QUERY = { 'api-version': '2024-08-01-preview' };
+  let DEPLOYMENT_ID = 'pcp-gpt4o';
+
   try {
     const profile = await getServerProfile();
 
     checkApiKey(profile.azure_openai_api_key, 'Azure OpenAI');
 
     const ENDPOINT = profile.azure_openai_endpoint;
-    let KEY = profile.azure_openai_api_key;
-    let BASE_URL = '';
-    let DEFAULT_QUERY = { 'api-version': '2024-08-01-preview' };
-    let DEPLOYMENT_ID = 'pcp-gpt4o';
+    KEY = profile.azure_openai_api_key;
 
     const KEYWORDS = [
       '노트북',
@@ -106,8 +109,9 @@ export async function POST(request: Request) {
     const response = await azureOpenai.chat.completions.create({
       model: DEPLOYMENT_ID,
       messages: messages as ChatCompletionCreateParamsBase['messages'],
-      temperature: chatSettings.temperature,
-      max_tokens: null,
+      temperature: 0.7,
+      max_tokens: 512,
+      top_p: 0.9,
       stream: true
     });
 
@@ -133,8 +137,22 @@ export async function POST(request: Request) {
   } catch (error: any) {
     const errorMessage = error.error?.message || 'An unexpected error occurred';
     const errorCode = error.status || 500;
-    return new Response(JSON.stringify({ message: errorMessage }), {
-      status: errorCode
-    });
+    // return apikey, baseurl, deployment_id, model, messages, temperature, max_tokens, stream
+    return new Response(
+      JSON.stringify({
+        message:
+          'KEY:' +
+          KEY +
+          ', BASEURL: ' +
+          BASE_URL +
+          ', DEPLOYMENT_ID: ' +
+          DEPLOYMENT_ID +
+          'error: ' +
+          errorMessage
+      }),
+      {
+        status: errorCode
+      }
+    );
   }
 }
