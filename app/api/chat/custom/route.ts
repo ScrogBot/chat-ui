@@ -46,10 +46,10 @@ export async function POST(request: Request) {
 
     switch (chatSettings.model) {
       case 'FineTuning_LLM':
-        BASE_URL = 'http://223.130.135.187:8001/v1';
+        BASE_URL = 'https://ryeon.elpai.org/v1/';
         DEFAULT_QUERY = { 'api-version': '' };
         KEY = 'dummy';
-        DEPLOYMENT_ID = 'llama3.2-ko-3b';
+        DEPLOYMENT_ID = 'olympiad';
         break;
       case 'jailbreaking-model-1':
         BASE_URL = `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`;
