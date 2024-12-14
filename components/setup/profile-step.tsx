@@ -14,6 +14,8 @@ import { FC, useCallback, useState } from 'react';
 import { LimitDisplay } from '../ui/limit-display';
 import { toast } from 'sonner';
 
+import React, { useState, useCallback } from 'react';
+
 interface ProfileStepProps {
   username: string;
   usernameAvailable: boolean;
@@ -21,6 +23,8 @@ interface ProfileStepProps {
   onUsernameAvailableChange: (isAvailable: boolean) => void;
   onUsernameChange: (username: string) => void;
   onDisplayNameChange: (name: string) => void;
+  setTeam: (team: string | null) => void; // 수정
+  setDepartment: (department: string | null) => void; // 수정
 }
 
 export const ProfileStep: FC<ProfileStepProps> = ({
@@ -29,7 +33,9 @@ export const ProfileStep: FC<ProfileStepProps> = ({
   displayName,
   onUsernameAvailableChange,
   onUsernameChange,
-  onDisplayNameChange
+  onDisplayNameChange,
+  setTeam,
+  setDepartment
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -87,8 +93,11 @@ export const ProfileStep: FC<ProfileStepProps> = ({
     []
   );
 
+  let team = null;
+  let department;
   return (
     <>
+      {/* Username Section */}
       <div className="space-y-1">
         <div className="flex items-center space-x-2">
           <Label>Username</Label>
@@ -129,8 +138,9 @@ export const ProfileStep: FC<ProfileStepProps> = ({
         <LimitDisplay used={username.length} limit={PROFILE_USERNAME_MAX} />
       </div>
 
+      {/* Display Name Section */}
       <div className="space-y-1">
-        <Label>Chat Display Name</Label>
+        <Label>이름</Label>
 
         <Input
           placeholder="Your Name"
@@ -143,6 +153,56 @@ export const ProfileStep: FC<ProfileStepProps> = ({
           used={displayName.length}
           limit={PROFILE_DISPLAY_NAME_MAX}
         />
+      </div>
+
+      {/* Team Section */}
+      <div className="mt-4 space-y-2">
+        <Label>팀</Label>
+        <div className="flex space-x-2">
+          {['Team A', 'Team B', 'Team C'].map(teamOption => (
+            <button
+              key={teamOption}
+              className={`rounded border px-4 py-2 ${
+                team === teamOption
+                  ? 'bg-blue-500 text-white' // 선택된 항목 스타일
+                  : 'bg-gray-100 text-gray-800' // 선택되지 않은 항목 스타일
+              }`}
+              onClick={() => setTeam(teamOption)} // 상태 업데이트
+            >
+              {teamOption}
+            </button>
+          ))}
+        </div>
+        {team && (
+          <p className="text-sm text-gray-500">
+            Selected Team: {team} {/* 선택된 팀 표시 */}
+          </p>
+        )}
+      </div>
+
+      {/* Department Section */}
+      <div className="mt-4 space-y-2">
+        <Label>소속</Label>
+        <div className="flex space-x-2">
+          {['서울대학교', '전북대학교'].map(departmentOption => (
+            <button
+              key={departmentOption}
+              className={`rounded border px-4 py-2 ${
+                department === departmentOption
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-100 text-gray-800'
+              }`}
+              onClick={() => setDepartment(departmentOption)}
+            >
+              {departmentOption}
+            </button>
+          ))}
+        </div>
+        {department && (
+          <p className="text-sm text-gray-500">
+            Selected Department: {department}
+          </p>
+        )}
       </div>
     </>
   );

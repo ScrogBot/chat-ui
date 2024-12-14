@@ -43,6 +43,8 @@ export default function SetupPage() {
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState(profile?.username || '');
   const [usernameAvailable, setUsernameAvailable] = useState(true);
+  const [team, setTeam] = useState<string | null>(null); // 팀 선택 상태
+  const [department, setDepartment] = useState<string | null>(null); // 소속 선택 상태
 
   // API Step
   const [useAzureOpenai, setUseAzureOpenai] = useState(false);
@@ -139,7 +141,9 @@ export default function SetupPage() {
       azure_openai_35_turbo_id: azureOpenai35TurboID,
       azure_openai_45_turbo_id: azureOpenai45TurboID,
       azure_openai_45_vision_id: azureOpenai45VisionID,
-      azure_openai_embeddings_id: azureOpenaiEmbeddingsID
+      azure_openai_embeddings_id: azureOpenaiEmbeddingsID,
+      team: team, // 추가
+      department: department // 추가
     };
 
     const updatedProfile = await updateProfile(
@@ -164,9 +168,9 @@ export default function SetupPage() {
       case 1:
         return (
           <StepContainer
-            stepDescription="Let's create your profile."
+            stepDescription="아래 내용을 입력해주세요."
             stepNum={currentStep}
-            stepTitle="Welcome to Chatbot UI"
+            stepTitle="회원가입"
             onShouldProceed={handleShouldProceed}
             showNextButton={!!(username && usernameAvailable)}
             showBackButton={false}
@@ -178,6 +182,8 @@ export default function SetupPage() {
               onUsernameAvailableChange={setUsernameAvailable}
               onUsernameChange={setUsername}
               onDisplayNameChange={setDisplayName}
+              setTeam={setTeam}
+              setDepartment={setDepartment}
             />
           </StepContainer>
         );

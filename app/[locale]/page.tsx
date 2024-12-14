@@ -17,7 +17,7 @@ export default function HomePage() {
       <div className="mt-2 text-4xl font-bold">
         전북대 올림피아드에 오신것을 환영합니다
       </div>
-      <div className="mt-2 text-4xl">
+      <div className="mt-2 text-xl">
         전북대 올림피아드는 학생들의 과학적 사고력과 창의력을 증진시키기 위한
         경진대회입니다. 수학, 과학 정보 분야에서 여러분의 재능을 마음껏
         펼쳐보세요.
