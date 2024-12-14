@@ -14,8 +14,6 @@ import { FC, useCallback, useState } from 'react';
 import { LimitDisplay } from '../ui/limit-display';
 import { toast } from 'sonner';
 
-import React, { useState, useCallback } from 'react';
-
 interface ProfileStepProps {
   username: string;
   usernameAvailable: boolean;
