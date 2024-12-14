@@ -238,14 +238,14 @@ export default function SetupPage() {
       case 2:
         return (
           <StepContainer
-            stepDescription="You are all set up!"
+            stepDescription="회원가입 완료!"
             stepNum={currentStep}
-            stepTitle="Setup Complete"
+            stepTitle="모든 입력을 완료 하였습니다."
             onShouldProceed={handleShouldProceed}
             showNextButton={true}
             showBackButton={true}
           >
-            <FinishStep displayName={displayName} />
+            {/*<FinishStep displayName={displayName} />*/}
           </StepContainer>
         );
       default:

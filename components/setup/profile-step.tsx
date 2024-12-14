@@ -36,6 +36,20 @@ export const ProfileStep: FC<ProfileStepProps> = ({
   setDepartment
 }) => {
   const [loading, setLoading] = useState(false);
+  const [department, updateDepartment] = useState('서울대학교'); // 초기값 설정
+  const [team, updateTeam] = useState('1'); // team 상태 추가
+
+  // Local updater for department
+  const handleDepartmentChange = (newDepartment: string) => {
+    updateDepartment(newDepartment); // 로컬 상태 업데이트
+    setDepartment(newDepartment); // 상위 컴포넌트 상태 업데이트
+  };
+
+  // Local updater for team
+  const handleTeamChange = (newTeam: string) => {
+    updateTeam(newTeam); // 로컬 상태 업데이트
+    setTeam(newTeam); // 상위 컴포넌트 상태 업데이트
+  };
 
   const debounce = (func: (...args: any[]) => void, wait: number) => {
     let timeout: NodeJS.Timeout | null;
@@ -91,8 +105,6 @@ export const ProfileStep: FC<ProfileStepProps> = ({
     []
   );
 
-  let team = null;
-  let department;
   return (
     <>
       {/* Username Section */}
@@ -153,54 +165,31 @@ export const ProfileStep: FC<ProfileStepProps> = ({
         />
       </div>
 
+      {/* Department Section */}
+      <div className="mt-4 space-y-2">
+        <label>학교</label>
+        <div className="text-xs">
+          <select
+            value={department}
+            // update the department state and the department variable
+            onChange={e => handleDepartmentChange(e.target.value)}
+          >
+            <option value="서울대학교">서울대학교</option>
+            <option value="전북대학교">전북대학교</option>
+          </select>
+        </div>
+      </div>
+
       {/* Team Section */}
       <div className="mt-4 space-y-2">
         <Label>팀</Label>
-        <div className="flex space-x-2">
-          {['Team A', 'Team B', 'Team C'].map(teamOption => (
-            <button
-              key={teamOption}
-              className={`rounded border px-4 py-2 ${
-                team === teamOption
-                  ? 'bg-blue-500 text-white' // 선택된 항목 스타일
-                  : 'bg-gray-100 text-gray-800' // 선택되지 않은 항목 스타일
-              }`}
-              onClick={() => setTeam(teamOption)} // 상태 업데이트
-            >
-              {teamOption}
-            </button>
-          ))}
+        <div className="text-xs">
+          <select value={team} onChange={e => handleTeamChange(e.target.value)}>
+            <option value="1">team 1</option>
+            <option value="2">team 2</option>
+            <option value="3">team 3</option>
+          </select>
         </div>
-        {team && (
-          <p className="text-sm text-gray-500">
-            Selected Team: {team} {/* 선택된 팀 표시 */}
-          </p>
-        )}
-      </div>
-
-      {/* Department Section */}
-      <div className="mt-4 space-y-2">
-        <Label>소속</Label>
-        <div className="flex space-x-2">
-          {['서울대학교', '전북대학교'].map(departmentOption => (
-            <button
-              key={departmentOption}
-              className={`rounded border px-4 py-2 ${
-                department === departmentOption
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-100 text-gray-800'
-              }`}
-              onClick={() => setDepartment(departmentOption)}
-            >
-              {departmentOption}
-            </button>
-          ))}
-        </div>
-        {department && (
-          <p className="text-sm text-gray-500">
-            Selected Department: {department}
-          </p>
-        )}
       </div>
     </>
   );
