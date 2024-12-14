@@ -21,7 +21,7 @@ ALTER TABLE game_results ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow full access to own game results"
     ON game_results
     USING (user_id = auth.uid())
-    WITH CHECK (user_id = auth.uid() OR auth.role() = 'authenticated');
+    WITH CHECK (user_id = auth.uid());
 
 -- TRIGGERS --
 CREATE TRIGGER update_game_results_updated_at
