@@ -23,9 +23,11 @@ export async function POST(request: Request) {
   let DEPLOYMENT_ID = 'gpt-4o-mini';
   let KEY: string | null = 'dummy';
   let ENDPOINT = 'https://api.openai.com/v1';
+  let user_id = '';
   try {
     const profile = await getServerProfile();
     KEY = profile.openai_api_key;
+    user_id = profile.user_id;
 
     ENDPOINT = 'https://api.openai.com/v1';
 
@@ -118,11 +120,10 @@ export async function POST(request: Request) {
     // crete game function implemented in db/games.ts
     const cg = await createGame({
       created_at: new Date().toISOString(),
-      id: '1',
       question_id: 1,
       score: 10,
       updated_at: new Date().toISOString(),
-      user_id: '1'
+      user_id: profile.user_id
     });
 
     const stream = OpenAIStream(response);
@@ -149,6 +150,8 @@ export async function POST(request: Request) {
           ENDPOINT +
           ', DEPLOYMENT_ID: ' +
           DEPLOYMENT_ID +
+          ', user_id: ' +
+          user_id +
           ', error: ' +
           errorMessage
       }),
