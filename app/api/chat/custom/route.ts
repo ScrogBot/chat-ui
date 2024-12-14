@@ -8,6 +8,7 @@ import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completion
 import { getServerProfile } from '@/lib/server/server-chat-helpers';
 import { wrapOpenAI } from 'langsmith/wrappers';
 import { traceable } from 'langsmith/traceable';
+import { createGame } from '@/db/games';
 
 export const runtime: ServerRuntime = 'edge';
 
@@ -19,16 +20,14 @@ export async function POST(request: Request) {
     customModelId: string;
   };
 
+  let DEPLOYMENT_ID = 'gpt-4o-mini';
   let KEY: string | null = 'dummy';
-  let BASE_URL = '';
-  let DEFAULT_QUERY = { 'api-version': '2024-08-01-preview' };
-  let DEPLOYMENT_ID = 'pcp-gpt4o';
-
+  let ENDPOINT = 'https://api.openai.com/v1';
   try {
     const profile = await getServerProfile();
-    KEY = profile.azure_openai_api_key;
+    KEY = profile.openai_api_key;
 
-    const ENDPOINT = 'https://pcp-ai.openai.azure.com';
+    ENDPOINT = 'https://api.openai.com/v1';
 
     const KEYWORDS = [
       '노트북',
@@ -46,13 +45,11 @@ export async function POST(request: Request) {
 
     switch (chatSettings.model) {
       case 'FineTuning_LLM':
-        BASE_URL = 'https://ryeon.elpai.org/v1/';
-        DEFAULT_QUERY = { 'api-version': '' };
+        ENDPOINT = 'https://ryeon.elpai.org/v1/';
         KEY = 'dummy';
         DEPLOYMENT_ID = 'olympiad';
         break;
       case 'jailbreaking-model-1':
-        BASE_URL = `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`;
         messages = messages.map(message => {
           if (message.role === 'system') {
             return {
@@ -69,7 +66,6 @@ export async function POST(request: Request) {
         });
         break;
       case 'jailbreaking-model-2':
-        BASE_URL = `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`;
         messages = messages.map(message => {
           if (message.role === 'system') {
             return {
@@ -101,14 +97,13 @@ export async function POST(request: Request) {
 
     const custom = new OpenAI({
       apiKey: KEY,
-      baseURL: BASE_URL,
-      defaultQuery: DEFAULT_QUERY,
+      baseURL: ENDPOINT,
       defaultHeaders: { 'api-key': KEY, 'Content-Type': 'application/json' }
     });
 
     const createCompletion = traceable(
       custom.chat.completions.create.bind(custom.chat.completions),
-      { name: 'Jongsoo OpenAI Chat Completion', run_type: 'llm' }
+      { name: 'jail-breaking', run_type: 'llm' }
     );
 
     const response = await createCompletion({
@@ -119,12 +114,16 @@ export async function POST(request: Request) {
       stream: true
     });
 
-    // const response = await custom.chat.completions.create({
-    //   model: DEPLOYMENT_ID,
-    //   messages: messages as ChatCompletionCreateParamsBase['messages'],
-    //   temperature: chatSettings.temperature,
-    //   stream: true
-    // });
+    // if response has 'correct' in it, then update game result
+    // crete game function implemented in db/games.ts
+    const cg = await createGame({
+      created_at: new Date().toISOString(),
+      id: '1',
+      question_id: 1,
+      score: 10,
+      updated_at: new Date().toISOString(),
+      user_id: '1'
+    });
 
     const stream = OpenAIStream(response);
 
@@ -146,8 +145,8 @@ export async function POST(request: Request) {
         message:
           'KEY:' +
           KEY +
-          ', BASEURL: ' +
-          BASE_URL +
+          ', ENDPOINT: ' +
+          ENDPOINT +
           ', DEPLOYMENT_ID: ' +
           DEPLOYMENT_ID +
           ', error: ' +

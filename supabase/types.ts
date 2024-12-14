@@ -1019,8 +1019,8 @@ export type Database = {
           use_azure_openai: boolean;
           user_id: string;
           username: string;
-          team: string | null;
-          department: string | null;
+          team?: string | null;
+          department?: string | null;
         };
         Update: {
           anthropic_api_key?: string | null;
@@ -1051,6 +1051,33 @@ export type Database = {
           username?: string;
           team?: string | null;
           department?: string | null;
+        };
+        Relationships: [];
+      };
+      game_results: {
+        Row: {
+          created_at: string;
+          id: string;
+          question_id: number;
+          score: number;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          question_id: number;
+          score?: number;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          question_id?: number;
+          score?: number;
+          updated_at?: string | null;
+          user_id?: string;
         };
         Relationships: [];
       };

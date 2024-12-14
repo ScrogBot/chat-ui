@@ -276,6 +276,33 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
           )}
         </div>
       </div>
+      {/*create dialog button for chat input*/}
+      <div className="mt-2 flex justify-center gap-4">
+        <button
+          onClick={() => {
+            alert(
+              '사용법 : 프롬트트 및 RAG를 구축해서 문제를 풀어주세요 \n' +
+                '아래는 테스트 문제입니다\n' +
+                '1. Few shot에 대해 설명해줘\n' +
+                '2. RAG에 대해서 알려줘\n' +
+                '3. 빅데이터 활용방안 알려줘.\n' +
+                '\n' +
+                '최종 완료 시 Submit을 눌러주세요 채점에는 15분이 소요됩니다.'
+            );
+          }}
+          className="bg-primary text-secondary rounded p-1"
+        >
+          Guide
+        </button>
+        <button
+          onClick={() => {
+            alert('RUN');
+          }}
+          className="bg-primary text-secondary rounded p-1"
+        >
+          Submit
+        </button>
+      </div>
     </>
   );
 };

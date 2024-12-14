@@ -8,6 +8,7 @@ import { ServerRuntime } from 'next';
 import OpenAI from 'openai';
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions.mjs';
 import { wrapOpenAI } from 'langsmith/wrappers';
+import { traceable } from 'langsmith/traceable';
 
 export const runtime: ServerRuntime = 'edge';
 
@@ -23,14 +24,17 @@ export async function POST(request: Request) {
 
     checkApiKey(profile.openai_api_key, 'OpenAI');
 
-    const openai = wrapOpenAI(
-      new OpenAI({
-        apiKey: profile.openai_api_key || '',
-        organization: profile.openai_organization_id
-      })
+    const openai = new OpenAI({
+      apiKey: profile.openai_api_key || '',
+      organization: profile.openai_organization_id
+    });
+
+    const createCompletion = traceable(
+      openai.chat.completions.create.bind(openai.chat.completions),
+      { name: 'fine-tuning', run_type: 'llm' }
     );
 
-    const response = await openai.chat.completions.create({
+    const response = await createCompletion({
       model: chatSettings.model as ChatCompletionCreateParamsBase['model'],
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
