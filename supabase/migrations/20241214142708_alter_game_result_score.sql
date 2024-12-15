@@ -1,0 +1,5 @@
+ALTER TABLE game_results
+    ALTER COLUMN score DROP DEFAULT;
+
+ALTER TABLE game_results
+    ALTER COLUMN score DROP NOT NULL;

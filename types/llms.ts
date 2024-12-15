@@ -65,7 +65,15 @@ export type PerplexityLLMID =
 export type CustomLLMID =
   | 'FineTuning_LLM'
   | 'jailbreaking-model-1'
-  | 'jailbreaking-model-2';
+  | 'jailbreaking-model-2'
+  | 'jailbreaking-model-3'
+  | 'jailbreaking-model-4'
+  | 'jailbreaking-model-5'
+  | 'jailbreaking-model-6'
+  | 'jailbreaking-model-7'
+  | 'jailbreaking-model-8'
+  | 'jailbreaking-model-9'
+  | 'jailbreaking-model-10';
 
 export interface LLM {
   modelId: LLMID;

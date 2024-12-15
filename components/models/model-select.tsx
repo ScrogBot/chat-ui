@@ -67,38 +67,36 @@ export const ModelSelect: FC<ModelSelectProps> = ({
       name: 'FineTuning_LLM'
     });
   }
-  // if model_id 'test-model-1-id' and 'test-model-2-id' are not in the models array, push them to models array
-  if (!models.find(model => model.model_id === 'jailbreaking-model-1')) {
-    models.push({
-      api_key: '',
-      base_url: 'https://pcp-ai.openai.azure.com/openai',
-      context_length: 0,
-      created_at: '',
-      description: '',
-      folder_id: null,
-      id: '',
-      sharing: '',
-      updated_at: null,
-      user_id: '',
-      model_id: 'jailbreaking-model-1',
-      name: 'jailbreaking-model-1'
-    });
-  }
-  if (!models.find(model => model.model_id === 'jailbreaking-model-2')) {
-    models.push({
-      api_key: '',
-      base_url: 'https://pcp-ai.openai.azure.com/openai',
-      context_length: 0,
-      created_at: '',
-      description: '',
-      folder_id: null,
-      id: '',
-      sharing: '',
-      updated_at: null,
-      user_id: '',
-      model_id: 'jailbreaking-model-2',
-      name: 'jailbreaking-model-2'
-    });
+
+  const modelIds = [
+    'jailbreaking-model-1',
+    'jailbreaking-model-2',
+    'jailbreaking-model-3',
+    'jailbreaking-model-4',
+    'jailbreaking-model-5',
+    'jailbreaking-model-6',
+    'jailbreaking-model-7',
+    'jailbreaking-model-8',
+    'jailbreaking-model-9',
+    'jailbreaking-model-10'
+  ];
+  for (const modelId of modelIds) {
+    if (!models.find(model => model.model_id === modelId)) {
+      models.push({
+        api_key: '',
+        base_url: 'https://pcp-ai.openai.azure.com/openai',
+        context_length: 0,
+        created_at: '',
+        description: '',
+        folder_id: null,
+        id: '',
+        sharing: '',
+        updated_at: null,
+        user_id: '',
+        model_id: modelId,
+        name: modelId
+      });
+    }
   }
 
   const allModels = [

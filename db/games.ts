@@ -2,13 +2,27 @@ import { supabase } from '@/lib/supabase/browser-client';
 import { TablesInsert, TablesUpdate } from '@/supabase/types';
 
 export const getGameResultByUserID = async (userId: string) => {
-  const { data: chat } = await supabase
+  const { data: game } = await supabase
     .from('game_results')
     .select('*')
     .eq('id', userId)
     .maybeSingle();
 
-  return chat;
+  return game;
+};
+
+export const getGameResultByUserIDAndGameId = async (
+  userId: string,
+  questionId: number
+) => {
+  const { data: game } = await supabase
+    .from('game_results')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('question_id', questionId)
+    .maybeSingle();
+
+  return game;
 };
 
 export const createGame = async (game: TablesInsert<'game_results'>) => {
@@ -25,13 +39,10 @@ export const createGame = async (game: TablesInsert<'game_results'>) => {
   return createdGame;
 };
 
-export const updateGame = async (
-  gameId: string,
-  game: TablesUpdate<'game_results'>
-) => {
+export const updateGameScore = async (gameId: string, score: number) => {
   const { data: updatedGame, error } = await supabase
     .from('game_results')
-    .update(game)
+    .update({ score: score })
     .eq('id', gameId)
     .select('*')
     .single();
@@ -43,12 +54,20 @@ export const updateGame = async (
   return updatedGame;
 };
 
-export const deleteChat = async (chatId: string) => {
-  const { error } = await supabase.from('chats').delete().eq('id', chatId);
+export const updateGameQuestionCount = async (
+  gameId: string,
+  questionCount: number
+) => {
+  const { data: updatedGame, error } = await supabase
+    .from('game_results')
+    .update({ question_count: questionCount })
+    .eq('id', gameId)
+    .select('*')
+    .single();
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return true;
+  return updatedGame;
 };
