@@ -270,6 +270,12 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!game.id) {
+      return new Response(JSON.stringify({ message: 'Game ID not found' }), {
+        status: 400
+      });
+    }
+
     if (matchKeyword(questionId, latestUserMessage.content)) {
       console.log('correct answer');
       await updateGameScore(game.id, 100 - game.question_count);
