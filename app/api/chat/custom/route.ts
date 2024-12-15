@@ -270,7 +270,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!game.id) {
+    if (!game.id || game.question_count === undefined) {
       return new Response(JSON.stringify({ message: 'Game ID not found' }), {
         status: 400
       });
