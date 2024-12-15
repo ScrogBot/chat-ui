@@ -232,7 +232,7 @@ export async function POST(request: Request) {
     let game = (await getGameResultByUserIDAndGameId(
       profile.user_id,
       questionId
-    )) as Database['game_results'];
+    )) as Database['public']['tables']['game_results']['Row'];
     console.log('game', game);
 
     // Create a new game if it doesn't exist
@@ -245,7 +245,7 @@ export async function POST(request: Request) {
         score: null,
         updated_at: new Date().toISOString(),
         user_id: profile.user_id
-      } as Database['game_results']);
+      } as Database['public']['tables']['game_results']['Row']);
       console.log('createGame done:', game);
     } else if (game?.score != null) {
       // Check if the game has already been completed
