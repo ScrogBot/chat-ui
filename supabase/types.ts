@@ -1060,7 +1060,7 @@ export type Database = {
           id: string;
           question_id: number;
           question_count: number;
-          score: number;
+          score: number | null;
           updated_at: string | null;
           user_id: string;
         };
@@ -1069,7 +1069,7 @@ export type Database = {
           id?: string;
           question_id: number;
           question_count: number;
-          score?: number;
+          score?: number | null;
           updated_at?: string | null;
           user_id: string;
         };
@@ -1078,7 +1078,7 @@ export type Database = {
           id?: string;
           question_id?: number;
           question_count?: number;
-          score?: number;
+          score?: number | null;
           updated_at?: string | null;
           user_id?: string;
         };
