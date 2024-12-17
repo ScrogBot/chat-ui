@@ -39,11 +39,11 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
         {/*  onContentTypeChange={onContentTypeChange}*/}
         {/*/>*/}
 
-        {/*<SidebarSwitchItem*/}
-        {/*  icon={<IconPencil size={SIDEBAR_ICON_SIZE} />}*/}
-        {/*  contentType="prompts"*/}
-        {/*  onContentTypeChange={onContentTypeChange}*/}
-        {/*/>*/}
+        <SidebarSwitchItem
+          icon={<IconPencil size={SIDEBAR_ICON_SIZE} />}
+          contentType="prompts"
+          onContentTypeChange={onContentTypeChange}
+        />
 
         {/*<SidebarSwitchItem*/}
         {/*  icon={<IconSparkles size={SIDEBAR_ICON_SIZE} />}*/}
