@@ -20,4 +20,4 @@ export type DataItemType =
   | Tables<'assistants'>
   | Tables<'tools'>
   | Tables<'models'>
-  | Tables<'game_results'>[];
+  | Tables<'game_results'>;
