@@ -96,8 +96,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       case 'models':
         return <ModelItem key={item.id} model={item as Tables<'models'>} />;
 
-      case 'board':
-        console.log('Board item:', item);
+      case 'game_results':
+        console.log('game_results item:', item);
         return (
           <GameResultItem
             key={item.id}
@@ -157,7 +157,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     assistants: updateAssistant,
     tools: updateTool,
     models: updateModel,
-    board: updateGameResult
+    game_results: updateGameResult
   };
 
   const stateUpdateFunctions = {
@@ -169,7 +169,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    board: setGameResults
+    game_results: setGameResults
   };
 
   const updateFolder = async (itemId: string, folderId: string | null) => {

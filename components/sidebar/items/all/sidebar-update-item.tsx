@@ -199,7 +199,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     },
     tools: null,
     models: null,
-    board: null
+    game_results: null
   };
 
   const fetchDataFunctions = {
@@ -230,7 +230,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     },
     tools: null,
     models: null,
-    board: null
+    game_results: null
   };
 
   const fetchWorkpaceFunctions = {
@@ -263,7 +263,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
       const item = await getModelWorkspacesByModelId(modelId);
       return item.workspaces;
     },
-    board: async (gameId: string) => {
+    game_results: async (gameId: string) => {
       const item = await getGameResultWorkspacesByGameId(gameId);
       return item.workspaces;
     }
@@ -577,7 +577,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
 
       return updatedModel;
     },
-    board: null
+    game_results: null
   };
 
   const stateUpdateFunctions = {
@@ -589,7 +589,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    board: setGameResults
+    game_results: setGameResults
   };
 
   const handleUpdate = async () => {

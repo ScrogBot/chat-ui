@@ -20,16 +20,9 @@ export const SidebarContent: FC<SidebarContentProps> = ({
 
   console.log('data', data);
 
-  let filteredData: any;
-  if (contentType == 'board') {
-    filteredData = data.filter(item =>
-      item.id.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  } else {
-    filteredData = data.filter(item =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
+  const filteredData: any = data.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   console.log('filteredData', filteredData);
 

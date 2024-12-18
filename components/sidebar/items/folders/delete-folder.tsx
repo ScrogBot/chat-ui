@@ -52,7 +52,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    board: setGameResults
+    game_results: setGameResults
   };
 
   const handleDeleteFolderOnly = async () => {

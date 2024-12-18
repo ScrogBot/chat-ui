@@ -77,7 +77,7 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     models: async (model: Tables<'models'>) => {
       await deleteModel(model.id);
     },
-    board: async (gameResult: Tables<'game_results'>) => {
+    game_results: async (gameResult: Tables<'game_results'>) => {
       await deleteGameResult(gameResult.id);
     }
   };
@@ -91,7 +91,7 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    board: setGameResults
+    game_results: setGameResults
   };
 
   const handleDelete = async () => {

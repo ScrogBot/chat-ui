@@ -104,8 +104,8 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             case 'models':
               return renderSidebarContent('models', models, modelFolders);
 
-            case 'board':
-              return renderSidebarContent('board', gameResult, []);
+            case 'game_results':
+              return renderSidebarContent('game_results', gameResult, []);
             default:
               return null;
           }

@@ -173,7 +173,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     },
     tools: createTool,
     models: createModel,
-    board: createGame
+    game_results: createGame
   };
 
   const stateUpdateFunctions = {
@@ -185,7 +185,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    board: setGameResults
+    game_results: setGameResults
   };
 
   const handleCreate = async () => {
