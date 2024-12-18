@@ -21,6 +21,7 @@ import { deleteTool } from '@/db/tools';
 import { Tables } from '@/supabase/types';
 import { ContentType, DataItemType } from '@/types';
 import { FC, useContext, useRef, useState } from 'react';
+import { deleteGameResult } from '@/db/games';
 
 interface SidebarDeleteItemProps {
   item: DataItemType;
@@ -39,7 +40,8 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     setCollections,
     setAssistants,
     setTools,
-    setModels
+    setModels,
+    setGameResults
   } = useContext(ChatbotUIContext);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -74,6 +76,9 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     },
     models: async (model: Tables<'models'>) => {
       await deleteModel(model.id);
+    },
+    board: async (gameResult: Tables<'game_results'>) => {
+      await deleteGameResult(gameResult.id);
     }
   };
 
@@ -85,7 +90,8 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
-    models: setModels
+    models: setModels,
+    board: setGameResults
   };
 
   const handleDelete = async () => {

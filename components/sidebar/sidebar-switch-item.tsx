@@ -14,22 +14,6 @@ export const SidebarSwitchItem: FC<SidebarSwitchItemProps> = ({
   icon,
   onContentTypeChange
 }) => {
-  if (contentType == 'prompts') {
-    return (
-      <WithTooltip
-        display={<div>Board</div>}
-        trigger={
-          <TabsTrigger
-            className="hover:opacity-50"
-            value={contentType}
-            onClick={() => onContentTypeChange(contentType as ContentType)}
-          >
-            {icon}
-          </TabsTrigger>
-        }
-      />
-    );
-  }
   return (
     <WithTooltip
       display={

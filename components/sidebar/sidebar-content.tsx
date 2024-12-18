@@ -18,9 +18,20 @@ export const SidebarContent: FC<SidebarContentProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredData: any = data.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  console.log('data', data);
+
+  let filteredData: any;
+  if (contentType == 'board') {
+    filteredData = data.filter(item =>
+      item.id.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  } else {
+    filteredData = data.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  console.log('filteredData', filteredData);
 
   return (
     // Subtract 50px for the height of the workspace settings

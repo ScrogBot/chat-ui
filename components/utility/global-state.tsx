@@ -129,6 +129,9 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [selectedTools, setSelectedTools] = useState<Tables<'tools'>[]>([]);
   const [toolInUse, setToolInUse] = useState<string>('none');
 
+  // GAME STORE
+  const [gameResult, setGameResults] = useState<Tables<'game_results'>[]>([]);
+
   useEffect(() => {
     (async () => {
       const profile = await fetchStartingData();
@@ -328,7 +331,11 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         selectedTools,
         setSelectedTools,
         toolInUse,
-        setToolInUse
+        setToolInUse,
+
+        // GAME STORE
+        gameResult,
+        setGameResults
       }}
     >
       {children}

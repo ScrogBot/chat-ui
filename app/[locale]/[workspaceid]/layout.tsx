@@ -19,6 +19,7 @@ import { LLMID } from '@/types';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ReactNode, useContext, useEffect, useState } from 'react';
 import Loading from '../loading';
+import { getGameResultByUserID, getGameResults } from '@/db/games';
 
 interface WorkspaceLayoutProps {
   children: ReactNode;
@@ -54,7 +55,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setChatImages,
     setNewMessageFiles,
     setNewMessageImages,
-    setShowFilesDisplay
+    setShowFilesDisplay,
+    setGameResults
   } = useContext(ChatbotUIContext);
 
   const [loading, setLoading] = useState(true);
@@ -153,9 +155,14 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
     const toolData = await getToolWorkspacesByWorkspaceId(workspaceId);
     setTools(toolData.tools);
-
+    console.log('setModels', setModels);
     const modelData = await getModelWorkspacesByWorkspaceId(workspaceId);
     setModels(modelData.models);
+
+    const gameResult = await getGameResults();
+    console.log('gameResult', gameResult);
+    console.log('setGameResult', setGameResults);
+    setGameResults(gameResult);
 
     setChatSettings({
       model: (searchParams.get('model') ||

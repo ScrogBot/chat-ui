@@ -23,7 +23,8 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
     collections,
     assistants,
     tools,
-    models
+    models,
+    gameResult
   } = useContext(ChatbotUIContext);
 
   const chatFolders = folders.filter(folder => folder.type === 'chats');
@@ -38,6 +39,8 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
   );
   const toolFolders = folders.filter(folder => folder.type === 'tools');
   const modelFolders = folders.filter(folder => folder.type === 'models');
+
+  console.log('sidebar content type', contentType);
 
   const renderSidebarContent = (
     contentType: ContentType,
@@ -101,6 +104,8 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             case 'models':
               return renderSidebarContent('models', models, modelFolders);
 
+            case 'board':
+              return renderSidebarContent('board', gameResult, []);
             default:
               return null;
           }

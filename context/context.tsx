@@ -11,7 +11,6 @@ import {
 import { AssistantImage } from '@/types/images/assistant-image';
 import { VALID_ENV_KEYS } from '@/types/valid-keys';
 import { Dispatch, SetStateAction, createContext } from 'react';
-import { undefined } from 'zod';
 
 interface ChatbotUIContext {
   // PROFILE STORE
@@ -139,10 +138,8 @@ interface ChatbotUIContext {
   setToolInUse: Dispatch<SetStateAction<string>>;
 
   // GAME RESULT STORE
-  selectedGameResult: Tables<'game_results'> | null;
-  setSelectedGameResult: Dispatch<
-    SetStateAction<Tables<'game_results'> | null>
-  >;
+  gameResult: Tables<'game_results'>[];
+  setGameResults: Dispatch<SetStateAction<Tables<'game_results'>[]>>;
 }
 
 export const ChatbotUIContext = createContext<ChatbotUIContext>({
@@ -270,6 +267,6 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   toolInUse: 'none',
   setToolInUse: () => {},
 
-  selectedGameResult: null,
-  setSelectedGameResult: () => {}
+  gameResult: [],
+  setGameResults: () => {}
 });

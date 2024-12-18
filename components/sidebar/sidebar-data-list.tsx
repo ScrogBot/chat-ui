@@ -21,6 +21,7 @@ import { ModelItem } from './items/models/model-item';
 import { PresetItem } from './items/presets/preset-item';
 import { PromptItem } from './items/prompts/prompt-item';
 import { ToolItem } from './items/tools/tool-item';
+import { updateGameResult } from '@/db/games';
 
 interface SidebarDataListProps {
   contentType: ContentType;
@@ -41,7 +42,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     setCollections,
     setAssistants,
     setTools,
-    setModels
+    setModels,
+    setGameResults
   } = useContext(ChatbotUIContext);
 
   const divRef = useRef<HTMLDivElement>(null);
@@ -49,10 +51,15 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
+  console.log('data', data);
+
   const getDataListComponent = (
     contentType: ContentType,
     item: DataItemType
   ) => {
+    console.log('contentType', contentType);
+    console.log('item', item);
+
     switch (contentType) {
       case 'chats':
         return <ChatItem key={item.id} chat={item as Tables<'chats'>} />;
@@ -88,6 +95,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       case 'models':
         return <ModelItem key={item.id} model={item as Tables<'models'>} />;
 
+      case 'board':
+        console.log('Board item:', item);
+        return <ChatItem key={item.id} chat={item as Tables<'chats'>} />;
       default:
         return null;
     }
@@ -140,7 +150,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     collections: updateCollection,
     assistants: updateAssistant,
     tools: updateTool,
-    models: updateModel
+    models: updateModel,
+    board: updateGameResult
   };
 
   const stateUpdateFunctions = {
@@ -151,7 +162,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
-    models: setModels
+    models: setModels,
+    board: setGameResults
   };
 
   const updateFolder = async (itemId: string, folderId: string | null) => {
@@ -216,6 +228,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
   const dataWithFolders = data.filter(item => item.folder_id);
   const dataWithoutFolders = data.filter(item => item.folder_id === null);
+
+  console.log('dataWithFolders', dataWithFolders);
+  console.log('dataWithoutFolders', dataWithoutFolders);
 
   return (
     <>

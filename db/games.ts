@@ -1,6 +1,17 @@
 import { supabase } from '@/lib/supabase/browser-client';
 import { TablesInsert, TablesUpdate } from '@/supabase/types';
 
+export const getGameResults = async () => {
+  const { data: games, error } = await supabase
+    .from('game_results')
+    .select('*');
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return games;
+};
 export const getGameResultByUserID = async (userId: string) => {
   const { data: game } = await supabase
     .from('game_results')
@@ -70,4 +81,35 @@ export const updateGameQuestionCount = async (
   }
 
   return updatedGame;
+};
+
+export const deleteGameResult = async (gameId: string) => {
+  const { error } = await supabase
+    .from('game_results')
+    .delete()
+    .eq('id', gameId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return true;
+};
+
+export const updateGameResult = async (
+  gameId: string,
+  gameResult: TablesUpdate<'game_results'>
+) => {
+  const { data: updatedGameResult, error } = await supabase
+    .from('game_results')
+    .update(gameResult)
+    .eq('id', gameId)
+    .select('*')
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return updatedGameResult;
 };

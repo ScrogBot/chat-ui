@@ -8,7 +8,8 @@ export type DataListType =
   | Tables<'files'>[]
   | Tables<'assistants'>[]
   | Tables<'tools'>[]
-  | Tables<'models'>[];
+  | Tables<'models'>[]
+  | Tables<'game_results'>[];
 
 export type DataItemType =
   | Tables<'collections'>
@@ -18,4 +19,5 @@ export type DataItemType =
   | Tables<'files'>
   | Tables<'assistants'>
   | Tables<'tools'>
-  | Tables<'models'>;
+  | Tables<'models'>
+  | Tables<'game_results'>[];
