@@ -243,6 +243,7 @@ export async function POST(request: Request) {
     if (game == null) {
       console.log('createGame start');
       await createGame({
+        name: chatSettings.model,
         created_at: new Date().toISOString(),
         question_id: questionId,
         question_count: 0,

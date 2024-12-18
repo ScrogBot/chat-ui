@@ -10,11 +10,11 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { FC, useContext, useRef } from 'react';
 
-interface ChatItemProps {
+interface GameResultItemProps {
   gameResult: Tables<'game_results'>;
 }
 
-export const GameResultItem: FC<ChatItemProps> = ({ gameResult }) => {
+export const GameResultItem: FC<GameResultItemProps> = ({ gameResult }) => {
   const {
     selectedWorkspace,
     selectedChat,
@@ -32,7 +32,7 @@ export const GameResultItem: FC<ChatItemProps> = ({ gameResult }) => {
 
   const handleClick = () => {
     if (!selectedWorkspace) return;
-    return router.push(`/${selectedWorkspace.id}/chat/${gameResult.id}`);
+    return router.push(`/${selectedWorkspace.id}/game`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

@@ -22,6 +22,7 @@ import { PresetItem } from './items/presets/preset-item';
 import { PromptItem } from './items/prompts/prompt-item';
 import { ToolItem } from './items/tools/tool-item';
 import { updateGameResult } from '@/db/games';
+import { GameResultItem } from '@/components/sidebar/items/gameResult/gameResult-item';
 
 interface SidebarDataListProps {
   contentType: ContentType;
@@ -97,7 +98,12 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
       case 'board':
         console.log('Board item:', item);
-        return <ChatItem key={item.id} chat={item as Tables<'chats'>} />;
+        return (
+          <GameResultItem
+            key={item.id}
+            gameResult={item as Tables<'game_results'>}
+          />
+        );
       default:
         return null;
     }

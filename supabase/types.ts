@@ -1058,6 +1058,7 @@ export type Database = {
         Row: {
           created_at: string;
           id: string;
+          name: string;
           question_id: number;
           question_count: number;
           score: number | null;
@@ -1067,6 +1068,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           id?: string;
+          name: string;
           question_id: number;
           question_count: number;
           score?: number | null;
@@ -1076,6 +1078,7 @@ export type Database = {
         Update: {
           created_at?: string;
           id?: string;
+          name?: string;
           question_id?: number;
           question_count?: number;
           score?: number | null;
