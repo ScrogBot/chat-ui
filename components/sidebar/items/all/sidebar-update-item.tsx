@@ -114,7 +114,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     setAssistants,
     setTools,
     setModels,
-    setAssistantImages
+    setAssistantImages,
+    setGameResults
   } = useContext(ChatbotUIContext);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -197,7 +198,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
       setSelectedAssistantTools
     },
     tools: null,
-    models: null
+    models: null,
+    board: null
   };
 
   const fetchDataFunctions = {
@@ -574,7 +576,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
       );
 
       return updatedModel;
-    }
+    },
+    board: null
   };
 
   const stateUpdateFunctions = {
@@ -585,7 +588,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
-    models: setModels
+    models: setModels,
+    board: setGameResults
   };
 
   const handleUpdate = async () => {
