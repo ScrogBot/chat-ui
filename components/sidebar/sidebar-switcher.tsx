@@ -77,7 +77,7 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
 
         <SidebarSwitchItem
           icon={<IconBooks size={SIDEBAR_ICON_SIZE} />}
-          contentType="board"
+          contentType="game_results"
           onContentTypeChange={onContentTypeChange}
         />
       </TabsList>
