@@ -226,7 +226,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
       setSelectedAssistantTools([]);
     },
     tools: null,
-    models: null
+    models: null,
+    board: null
   };
 
   const fetchWorkpaceFunctions = {
