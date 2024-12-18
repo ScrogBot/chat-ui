@@ -84,6 +84,7 @@ import { FC, useContext, useEffect, useRef, useState } from 'react';
 import profile from 'react-syntax-highlighter/dist/esm/languages/hljs/profile';
 import { toast } from 'sonner';
 import { SidebarDeleteItem } from './sidebar-delete-item';
+import { getGameResultWorkspacesByGameId } from '@/db/games';
 
 interface SidebarUpdateItemProps {
   isTyping: boolean;
@@ -258,6 +259,10 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     },
     models: async (modelId: string) => {
       const item = await getModelWorkspacesByModelId(modelId);
+      return item.workspaces;
+    },
+    board: async (gameId: string) => {
+      const item = await getGameResultWorkspacesByGameId(gameId);
       return item.workspaces;
     }
   };

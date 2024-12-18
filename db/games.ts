@@ -12,6 +12,26 @@ export const getGameResults = async () => {
 
   return games;
 };
+
+export const getGameResultWorkspacesByGameId = async (gameId: string) => {
+  const { data: game, error } = await supabase
+    .from('game_results')
+    .select(
+      `
+        id,
+        name,
+        workspaces (*)
+        `
+    )
+    .eq('id', gameId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return game;
+};
 export const getGameResultByUserID = async (userId: string) => {
   const { data: game } = await supabase
     .from('game_results')
