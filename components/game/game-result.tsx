@@ -46,9 +46,7 @@ export const GameResult: FC<GameResultProps> = ({}) => {
           const user_id: string = gameResult.user_id.toString().trim();
           console.log('user_id:', user_id);
 
-          const profile = (await getProfileByUserId(
-            user_id
-          )) as Table<'profile'>;
+          const profile: Tables<'profile'> = await getProfileByUserId(user_id);
 
           // if id is not found in userResults, add it to userResults
           // if score is null, do not add it to userResults
