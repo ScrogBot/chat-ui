@@ -21,7 +21,6 @@ export const GameResult: FC<GameResultProps> = ({}) => {
   const params = useParams();
   const questionId = params.gameId;
 
-  const [gameResults, setGameResults] = useState<Table<'game_results'>[]>();
   const [userResults, setUserResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +38,6 @@ export const GameResult: FC<GameResultProps> = ({}) => {
       setLoading(true);
       try {
         const gameResults = await getGameResultByQuestionId(questionIdNumber);
-        setGameResults(gameResults);
 
         const updatedUserResults: any[] = [];
         for (const gameResult of gameResults) {
