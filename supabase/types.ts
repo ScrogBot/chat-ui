@@ -1059,6 +1059,7 @@ export type Database = {
           created_at: string;
           id: string;
           name: string;
+          folder_id: string | null;
           question_id: number;
           question_count: number;
           score: number | null;
@@ -1069,6 +1070,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           name: string;
+          folder_id?: string | null;
           question_id: number;
           question_count: number;
           score?: number | null;
@@ -1079,6 +1081,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           name?: string;
+          folder_id?: string | null;
           question_id?: number;
           question_count?: number;
           score?: number | null;
