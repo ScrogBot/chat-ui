@@ -28,9 +28,6 @@ export const GameResultItem: FC<GameResultItemProps> = ({ gameResult }) => {
   const isActive =
     params.chatid === gameResult.id || selectedChat?.id === gameResult.id;
 
-  console.log('params.chatid:', params.chatid);
-  console.log('selectedChat?.id:', selectedChat?.id);
-
   const itemRef = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {

@@ -46,8 +46,6 @@ export const updateProfile = async (
   profileId: string,
   profile: TablesUpdate<'profiles'>
 ) => {
-  console.log('profile', profile);
-
   const { data: updatedProfile, error } = await supabase
     .from('profiles')
     .update(profile)

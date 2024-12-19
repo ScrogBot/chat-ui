@@ -40,7 +40,10 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
   const toolFolders = folders.filter(folder => folder.type === 'tools');
   const modelFolders = folders.filter(folder => folder.type === 'models');
 
-  console.log('sidebar content type', contentType);
+  // delete row which has duplicate name in gameResult
+  const uniqueGameResult = gameResult.filter(
+    (v, i, a) => a.findIndex(t => t.name === v.name) === i
+  );
 
   const renderSidebarContent = (
     contentType: ContentType,
@@ -105,7 +108,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
               return renderSidebarContent('models', models, modelFolders);
 
             case 'game_results':
-              return renderSidebarContent('game_results', gameResult, []);
+              return renderSidebarContent('game_results', uniqueGameResult, []);
             default:
               return null;
           }

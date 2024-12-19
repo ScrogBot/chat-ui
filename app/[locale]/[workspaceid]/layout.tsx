@@ -155,13 +155,11 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
     const toolData = await getToolWorkspacesByWorkspaceId(workspaceId);
     setTools(toolData.tools);
-    console.log('setModels', setModels);
+
     const modelData = await getModelWorkspacesByWorkspaceId(workspaceId);
     setModels(modelData.models);
 
     const gameResult = await getGameResults();
-    console.log('gameResult', gameResult);
-    console.log('setGameResult', setGameResults);
     setGameResults(gameResult);
 
     setChatSettings({

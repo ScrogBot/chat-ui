@@ -52,15 +52,10 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
-  console.log('data', data);
-
   const getDataListComponent = (
     contentType: ContentType,
     item: DataItemType
   ) => {
-    console.log('contentType', contentType);
-    console.log('item', item);
-
     switch (contentType) {
       case 'chats':
         return <ChatItem key={item.id} chat={item as Tables<'chats'>} />;
@@ -97,7 +92,6 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
         return <ModelItem key={item.id} model={item as Tables<'models'>} />;
 
       case 'game_results':
-        console.log('game_results item:', item);
         return (
           <GameResultItem
             key={item.id}
@@ -234,9 +228,6 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
   const dataWithFolders = data.filter(item => item.folder_id);
   const dataWithoutFolders = data.filter(item => item.folder_id === null);
-
-  console.log('dataWithFolders', dataWithFolders);
-  console.log('dataWithoutFolders', dataWithoutFolders);
 
   return (
     <>

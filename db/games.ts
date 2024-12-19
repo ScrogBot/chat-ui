@@ -17,8 +17,7 @@ export const getGameResultByQuestionId = async (questionId: number) => {
   const { data: game, error } = await supabase
     .from('game_results')
     .select('*')
-    .eq('question_id', questionId)
-    .single();
+    .eq('question_id', questionId);
 
   if (error) {
     throw new Error(error.message);

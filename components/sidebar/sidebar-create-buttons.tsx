@@ -95,6 +95,8 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
     }
   };
 
+  if (contentType === 'game_results') return null;
+
   return (
     <div className="flex w-full space-x-2">
       <Button className="flex h-[36px] grow" onClick={getCreateFunction()}>

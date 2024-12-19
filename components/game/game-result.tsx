@@ -13,25 +13,21 @@ import { useParams } from 'next/navigation';
 import { Tables } from '@/supabase/types';
 import { FC, useContext, useEffect, useState } from 'react';
 import { getGameResultByQuestionId } from '@/db/games';
+import { getProfileByUserId } from '@/db/profile';
 
 interface GameResultProps {}
 
 export const GameResult: FC<GameResultProps> = ({}) => {
   const params = useParams();
-
-  // Extract questionId from params
   const questionId = params.gameId;
-  const [gameResults, setGameResults] = useState<Tables<'game_results'>>();
-  const [loading, setLoading] = useState(true);
 
-  console.log('params:', params);
-  console.log('questionId:', questionId);
+  const [gameResults, setGameResults] = useState<Table<'game_results'>[]>();
+  const [userResults, setUserResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Convert questionId to number
   const questionIdNumber =
     typeof questionId === 'string' ? parseInt(questionId) : -1;
-
-  console.log('questionIdNumber:', questionIdNumber);
 
   // Fetch game results
   useEffect(() => {
@@ -42,9 +38,38 @@ export const GameResult: FC<GameResultProps> = ({}) => {
 
       setLoading(true);
       try {
-        const results = await getGameResultByQuestionId(questionIdNumber);
-        console.log('results:', results);
-        setGameResults(results);
+        const gameResults = await getGameResultByQuestionId(questionIdNumber);
+        setGameResults(gameResults);
+
+        const updatedUserResults: any[] = [];
+        for (const gameResult of gameResults) {
+          // Fetch user profile by user_id
+          // Convert user_id to string and delete spaces
+          const user_id: string = gameResult.user_id.toString().trim();
+          console.log('user_id:', user_id);
+
+          const profile = (await getProfileByUserId(
+            user_id
+          )) as Table<'profile'>;
+
+          // if id is not found in userResults, add it to userResults
+          // if score is null, do not add it to userResults
+          if (!updatedUserResults.find(user => user.id === profile.id)) {
+            updatedUserResults.push({
+              id: profile.id,
+              name: profile.display_name,
+              team: profile.team,
+              department: profile.department,
+              user_id: gameResult.user_id,
+              score: gameResult.score,
+              question_count: gameResult.question_count
+            });
+          }
+        }
+
+        // sort userResults by score
+        updatedUserResults.sort((a, b) => b.score - a.score);
+        setUserResults(updatedUserResults); // Update state
       } catch (error) {
         console.error('Failed to fetch game results:', error);
       } finally {
@@ -54,8 +79,6 @@ export const GameResult: FC<GameResultProps> = ({}) => {
 
     fetchGameResult();
   }, []);
-
-  console.log('gameResults:', gameResults);
 
   return (
     <div className="container mx-auto p-4">
@@ -67,26 +90,29 @@ export const GameResult: FC<GameResultProps> = ({}) => {
           <TableCaption>Top Players</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Rank</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead className="text-right">Score</TableHead>
+              <TableHead className="w-[100px]">순위</TableHead>
+              <TableHead>이름</TableHead>
+              <TableHead>팀</TableHead>
+              <TableHead>소속</TableHead>
+              <TableHead className="text-right">점수</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {gameResults ? (
-              <TableRow>
-                <TableCell className="font-medium">{gameResults.id}</TableCell>
-                <TableCell>{gameResults.name}</TableCell>
-                <TableCell className="text-right">
-                  {gameResults.score ?? 'N/A'}
-                </TableCell>
-                <TableCell>{gameResults.folder_id ?? 'No Folder'}</TableCell>
-                <TableCell>{gameResults.question_count}</TableCell>
-                <TableCell>{gameResults.user_id}</TableCell>
-              </TableRow>
+            {userResults.length > 0 ? (
+              userResults.map((user, index) => (
+                <TableRow key={user.id}>
+                  <TableCell className="font-medium">{index + 1}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.team}</TableCell>
+                  <TableCell>{user.department}</TableCell>
+                  <TableCell className="text-right">
+                    {user.score ?? 'N/A'}
+                  </TableCell>
+                </TableRow>
+              ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="text-center">
+                <TableCell colSpan={3} className="text-center">
                   No data available
                 </TableCell>
               </TableRow>

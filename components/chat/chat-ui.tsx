@@ -25,7 +25,6 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
   useHotkey('o', () => handleNewChat());
 
   const params = useParams();
-  console.log('params:', params);
 
   const {
     setChatMessages,
