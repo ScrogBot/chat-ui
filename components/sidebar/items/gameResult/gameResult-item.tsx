@@ -28,11 +28,16 @@ export const GameResultItem: FC<GameResultItemProps> = ({ gameResult }) => {
   const isActive =
     params.chatid === gameResult.id || selectedChat?.id === gameResult.id;
 
+  console.log('params.chatid:', params.chatid);
+  console.log('selectedChat?.id:', selectedChat?.id);
+
   const itemRef = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
     if (!selectedWorkspace) return;
-    return router.push(`/${selectedWorkspace.id}/game`);
+    return router.push(
+      `/${selectedWorkspace.id}/game/${gameResult.question_id}`
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

@@ -1,3 +1,4 @@
+import Loading from '@/app/[locale]/loading';
 import {
   Table,
   TableBody,
@@ -23,18 +24,26 @@ export const GameResult: FC<GameResultProps> = ({}) => {
   const [gameResults, setGameResults] = useState<Tables<'game_results'>>();
   const [loading, setLoading] = useState(true);
 
+  console.log('params:', params);
+  console.log('questionId:', questionId);
+
   // Convert questionId to number
   const questionIdNumber =
     typeof questionId === 'string' ? parseInt(questionId) : -1;
 
+  console.log('questionIdNumber:', questionIdNumber);
+
   // Fetch game results
   useEffect(() => {
-    if (!questionIdNumber) return;
+    console.log('useEffect');
 
     const fetchGameResult = async () => {
+      console.log('Fetching game results...');
+
       setLoading(true);
       try {
         const results = await getGameResultByQuestionId(questionIdNumber);
+        console.log('results:', results);
         setGameResults(results);
       } catch (error) {
         console.error('Failed to fetch game results:', error);
@@ -44,7 +53,7 @@ export const GameResult: FC<GameResultProps> = ({}) => {
     };
 
     fetchGameResult();
-  }, [questionIdNumber]);
+  }, []);
 
   console.log('gameResults:', gameResults);
 
@@ -52,7 +61,7 @@ export const GameResult: FC<GameResultProps> = ({}) => {
     <div className="container mx-auto p-4">
       <h1 className="mb-4 text-2xl font-bold">Leaderboard</h1>
       {loading ? (
-        <p>Loading...</p>
+        <Loading />
       ) : (
         <Table>
           <TableCaption>Top Players</TableCaption>

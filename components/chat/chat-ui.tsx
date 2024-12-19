@@ -25,6 +25,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
   useHotkey('o', () => handleNewChat());
 
   const params = useParams();
+  console.log('params:', params);
 
   const {
     setChatMessages,
@@ -66,6 +67,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
       setIsAtBottom(true);
     };
 
+    console.log('params.chatid', params.chatid);
     if (params.chatid) {
       fetchData().then(() => {
         handleFocusChatInput();
