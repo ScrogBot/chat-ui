@@ -11,6 +11,7 @@ import { ChatbotUIContext } from '@/context/context';
 import useHotkey from '@/lib/hooks/use-hotkey';
 import { useTheme } from 'next-themes';
 import { useContext } from 'react';
+import GameResultPage from '@/app/[locale]/[workspaceid]/game/[gameId]/page';
 
 export default function ChatPage() {
   useHotkey('o', () => handleNewChat());
@@ -26,7 +27,7 @@ export default function ChatPage() {
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center">
-      HI
+      <GameResultPage />
     </div>
   );
 }
