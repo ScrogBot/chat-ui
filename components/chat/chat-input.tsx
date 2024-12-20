@@ -5,8 +5,11 @@ import { cn } from '@/lib/utils';
 import {
   IconBolt,
   IconCirclePlus,
+  IconFile,
   IconPlayerStopFilled,
-  IconSend
+  IconQuestionMark,
+  IconSend,
+  IconServer
 } from '@tabler/icons-react';
 import Image from 'next/image';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
@@ -20,6 +23,7 @@ import { useChatHandler } from './chat-hooks/use-chat-handler';
 import { useChatHistoryHandler } from './chat-hooks/use-chat-history';
 import { usePromptAndCommand } from './chat-hooks/use-prompt-and-command';
 import { useSelectFileHandler } from './chat-hooks/use-select-file-handler';
+import IconWithTooltip, { InfoIconWithTooltip } from 'icon-with-tooltip';
 
 interface ChatInputProps {}
 
@@ -61,7 +65,8 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     chatInputRef,
     handleSendMessage,
     handleStopMessage,
-    handleFocusChatInput
+    handleFocusChatInput,
+    handleSubmitMessage
   } = useChatHandler();
 
   const { handleInputChange } = usePromptAndCommand();
@@ -253,7 +258,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
           onCompositionEnd={() => setIsTyping(false)}
         />
 
-        <div className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50">
+        <div className="absolute bottom-[14px] right-20 cursor-pointer hover:opacity-50">
           {isGenerating ? (
             <IconPlayerStopFilled
               className="hover:bg-background animate-pulse rounded bg-transparent p-1"
@@ -275,33 +280,32 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             />
           )}
         </div>
-      </div>
-      {/*create dialog button for chat input*/}
-      <div className="mt-2 flex justify-center gap-4">
-        <button
-          onClick={() => {
-            alert(
-              '사용법 : 프롬트트 및 RAG를 구축해서 문제를 풀어주세요 \n' +
-                '아래는 테스트 문제입니다\n' +
-                '1. Few shot에 대해 설명해줘\n' +
-                '2. RAG에 대해서 알려줘\n' +
-                '3. 빅데이터 활용방안 알려줘.\n' +
-                '\n' +
-                '최종 완료 시 Submit을 눌러주세요 채점에는 15분이 소요됩니다.'
-            );
-          }}
-          className="bg-primary text-secondary rounded p-1"
-        >
-          Guide
-        </button>
-        <button
-          onClick={() => {
-            alert('RUN');
-          }}
-          className="bg-primary text-secondary rounded p-1"
-        >
-          Submit
-        </button>
+        <div className="absolute bottom-[14px] right-11 cursor-pointer hover:opacity-50">
+          <IconQuestionMark
+            className="bg-primary text-secondary rounded p-1"
+            onClick={() => {
+              alert(
+                '사용법 : Prompt 및 RAG를 구축해서 문제를 풀어주세요. \n' +
+                  '아래는 테스트 문제입니다.\n' +
+                  '1. Few shot에 대해 설명해줘\n' +
+                  '2. RAG에 대해서 알려줘\n' +
+                  '3. 빅데이터 활용방안 알려줘.\n' +
+                  '\n' +
+                  '최종 완료 시 오른쪽 Submit을 눌러주세요. 채점에는 약 15분이 소요됩니다.'
+              );
+            }}
+            size={30}
+          />
+        </div>
+        <div className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50">
+          <IconFile
+            className="bg-primary text-secondary rounded p-1"
+            onClick={() => {
+              handleSubmitMessage(userInput, chatMessages, false);
+            }}
+            size={30}
+          />
+        </div>
       </div>
     </>
   );
