@@ -1065,6 +1065,7 @@ export type Database = {
           score: number | null;
           updated_at: string | null;
           user_id: string;
+          sharing: string;
         };
         Insert: {
           created_at?: string;
@@ -1076,6 +1077,7 @@ export type Database = {
           score?: number | null;
           updated_at?: string | null;
           user_id: string;
+          sharing?: string;
         };
         Update: {
           created_at?: string;
@@ -1087,6 +1089,7 @@ export type Database = {
           score?: number | null;
           updated_at?: string | null;
           user_id?: string;
+          sharing?: string;
         };
         Relationships: [];
       };

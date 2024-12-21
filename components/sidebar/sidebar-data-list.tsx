@@ -102,7 +102,6 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
         );
       case 'share':
         if (item.sharing === 'public') {
-          console.log('item', item);
           return (
             <ChatItemShare
               key={item.id}
