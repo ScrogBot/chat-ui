@@ -97,6 +97,7 @@ export async function POST(request: Request) {
     await updateGameScore(game.id, score);
 
     return new Response(
+      //@ts-ignore
       JSON.stringify(response.response + '\n이유:' + response.reasoning),
       {
         headers: {
