@@ -302,23 +302,31 @@ export async function POST(request: Request) {
       })
     );
 
-    const response = await openai.chat.completions.create({
-      model: DEPLOYMENT_ID,
-      messages: messages as ChatCompletionCreateParamsBase['messages'],
-      temperature: chatSettings.temperature,
-      max_tokens: null,
-      stream: responseStream
-    });
-
     await updateGameQuestionCount(game.id, game.question_count + 1);
 
     if (!responseStream) {
+      const response = await openai.chat.completions.create({
+        model: DEPLOYMENT_ID,
+        messages: messages as ChatCompletionCreateParamsBase['messages'],
+        temperature: chatSettings.temperature,
+        max_tokens: null,
+        stream: false
+      });
+
       return new Response(JSON.stringify(response.choices[0].message.content), {
         headers: {
           'Content-Type': 'application/json'
         }
       });
     }
+
+    const response = await openai.chat.completions.create({
+      model: DEPLOYMENT_ID,
+      messages: messages as ChatCompletionCreateParamsBase['messages'],
+      temperature: chatSettings.temperature,
+      max_tokens: null,
+      stream: true
+    });
 
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
