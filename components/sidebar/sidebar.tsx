@@ -24,7 +24,8 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
     assistants,
     tools,
     models,
-    gameResult
+    gameResult,
+    sharedChats
   } = useContext(ChatbotUIContext);
 
   const chatFolders = folders.filter(folder => folder.type === 'chats');
@@ -109,6 +110,9 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
 
             case 'game_results':
               return renderSidebarContent('game_results', uniqueGameResult, []);
+
+            case 'share':
+              return renderSidebarContent('share', sharedChats, []);
             default:
               return null;
           }

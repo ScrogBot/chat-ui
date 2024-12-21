@@ -95,7 +95,7 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
     }
   };
 
-  if (contentType === 'game_results') return null;
+  if (contentType === 'game_results' || contentType === 'share') return null;
 
   return (
     <div className="flex w-full space-x-2">

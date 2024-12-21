@@ -5,6 +5,7 @@ import {
   IconBooks,
   IconFile,
   IconMessage,
+  IconMessages,
   IconPencil,
   IconRobotFace,
   IconSparkles
@@ -30,6 +31,12 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
         <SidebarSwitchItem
           icon={<IconMessage size={SIDEBAR_ICON_SIZE} />}
           contentType="chats"
+          onContentTypeChange={onContentTypeChange}
+        />
+
+        <SidebarSwitchItem
+          icon={<IconMessages size={SIDEBAR_ICON_SIZE} />}
+          contentType="share"
           onContentTypeChange={onContentTypeChange}
         />
 

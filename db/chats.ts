@@ -79,3 +79,50 @@ export const deleteChat = async (chatId: string) => {
 
   return true;
 };
+
+export const getSharedChats = async () => {
+  const { data: chats, error } = await supabase
+    .from('chats')
+    .select('*')
+    .eq('sharing', 'public')
+    .order('created_at', { ascending: false });
+
+  if (!chats) {
+    throw new Error(error.message);
+  }
+
+  return chats;
+};
+
+export const updateChatShare = async (
+  chatId: string,
+  chat: TablesUpdate<'chats'>
+) => {
+  const { data: updatedChat, error } = await supabase
+    .from('chats')
+    .update(chat)
+    .eq('id', chatId)
+    .eq('sharing', 'public')
+    .select('*')
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return updateChatShare;
+};
+
+export const getChatSharing = async (chatId: string) => {
+  const { data: sharing, error } = await supabase
+    .from('chats')
+    .select('sharing')
+    .eq('id', chatId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return sharing;
+};

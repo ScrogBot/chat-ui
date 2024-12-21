@@ -27,6 +27,7 @@ import { AssistantImage } from '@/types/images/assistant-image';
 import { VALID_ENV_KEYS } from '@/types/valid-keys';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
+import { getSharedChats } from '@/db/chats';
 
 interface GlobalStateProps {
   children: React.ReactNode;
@@ -49,6 +50,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [prompts, setPrompts] = useState<Tables<'prompts'>[]>([]);
   const [tools, setTools] = useState<Tables<'tools'>[]>([]);
   const [workspaces, setWorkspaces] = useState<Tables<'workspaces'>[]>([]);
+  const [sharedChats, setSharedChats] = useState<Tables<'chats'>[]>([]);
 
   // MODELS STORE
   const [envKeyMap, setEnvKeyMap] = useState<Record<string, VALID_ENV_KEYS>>(
@@ -176,6 +178,10 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
 
       const workspaces = await getWorkspacesByUserId(user.id);
       setWorkspaces(workspaces);
+
+      // Fetch starting data
+      const sharedChats = await getSharedChats();
+      setSharedChats(sharedChats);
 
       for (const workspace of workspaces) {
         let workspaceImageUrl = '';
@@ -335,7 +341,9 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
 
         // GAME STORE
         gameResult,
-        setGameResults
+        setGameResults,
+        sharedChats,
+        setSharedChats
       }}
     >
       {children}

@@ -23,6 +23,7 @@ import { PromptItem } from './items/prompts/prompt-item';
 import { ToolItem } from './items/tools/tool-item';
 import { updateGameResult } from '@/db/games';
 import { GameResultItem } from '@/components/sidebar/items/gameResult/gameResult-item';
+import { ChatItemShare } from '@/components/sidebar/items/chat/chat-item-share';
 
 interface SidebarDataListProps {
   contentType: ContentType;
@@ -98,6 +99,17 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
             gameResult={item as Tables<'game_results'>}
           />
         );
+      case 'share':
+        if (item.sharing === 'public') {
+          console.log('item', item);
+          return (
+            <ChatItemShare
+              key={item.id}
+              chat={item as Tables<'chats'> & { sharing: 'public' }}
+            />
+          );
+        }
+
       default:
         return null;
     }

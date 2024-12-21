@@ -140,6 +140,10 @@ interface ChatbotUIContext {
   // GAME RESULT STORE
   gameResult: Tables<'game_results'>[];
   setGameResults: Dispatch<SetStateAction<Tables<'game_results'>[]>>;
+
+  // Shared CHAT STORE
+  sharedChats: Tables<'chats'>[];
+  setSharedChats: Dispatch<SetStateAction<Tables<'chats'>[]>>;
 }
 
 export const ChatbotUIContext = createContext<ChatbotUIContext>({
@@ -268,5 +272,8 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setToolInUse: () => {},
 
   gameResult: [],
-  setGameResults: () => {}
+  setGameResults: () => {},
+
+  sharedChats: [],
+  setSharedChats: () => {}
 });

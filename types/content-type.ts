@@ -7,4 +7,5 @@ export type ContentType =
   | 'assistants'
   | 'tools'
   | 'models'
-  | 'game_results';
+  | 'game_results'
+  | 'share';

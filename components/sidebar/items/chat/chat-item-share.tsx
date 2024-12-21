@@ -9,15 +9,14 @@ import { IconRobotFace } from '@tabler/icons-react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { FC, useContext, useRef } from 'react';
-import { DeleteChat } from './delete-chat';
-import { UpdateChat } from './update-chat';
-import { ShareChat } from '@/components/sidebar/items/chat/share-chat';
+import React, { useState } from 'react';
+import { DownloadChat } from './download-chat';
 
 interface ChatItemProps {
   chat: Tables<'chats'>;
 }
 
-export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
+export const ChatItemShare: FC<ChatItemProps> = ({ chat }) => {
   const {
     selectedWorkspace,
     selectedChat,
@@ -34,7 +33,9 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
 
   const handleClick = () => {
     if (!selectedWorkspace) return;
-    return router.push(`/${selectedWorkspace.id}/chat/${chat.id}`);
+    return router.push(
+      `/${selectedWorkspace.id}/chat/${chat.id}?sharing=public`
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -53,7 +54,6 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
   const assistantImage = assistantImages.find(
     image => image.assistantId === chat.assistant_id
   )?.base64;
-
   return (
     <div
       ref={itemRef}
@@ -100,11 +100,9 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           e.stopPropagation();
           e.preventDefault();
         }}
-        className={`ml-2 flex space-x-2 ${!isActive && 'w-11 opacity-0 group-hover:opacity-100'}`}
+        className={`ml-2 flex space-x-2 ${!isActive && 'opacity-0 group-hover:opacity-100'}`}
       >
-        <UpdateChat chat={chat} />
-        <ShareChat chat={chat} />
-        <DeleteChat chat={chat} />
+        <DownloadChat chat={chat} />
       </div>
     </div>
   );
