@@ -313,7 +313,7 @@ export async function POST(request: Request) {
         stream: false
       });
 
-      return new Response(JSON.stringify(response.choices[0].message.content), {
+      return new Response(response.choices[0].message.content, {
         headers: {
           'Content-Type': 'application/json'
         }
