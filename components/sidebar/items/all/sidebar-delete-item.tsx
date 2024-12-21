@@ -41,7 +41,8 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     setAssistants,
     setTools,
     setModels,
-    setGameResults
+    setGameResults,
+    setSharedChats
   } = useContext(ChatbotUIContext);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -79,7 +80,8 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     },
     game_results: async (gameResult: Tables<'game_results'>) => {
       await deleteGameResult(gameResult.id);
-    }
+    },
+    share: null
   };
 
   const stateUpdateFunctions = {
@@ -91,7 +93,8 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    game_results: setGameResults
+    game_results: setGameResults,
+    share: setSharedChats
   };
 
   const handleDelete = async () => {

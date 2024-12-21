@@ -58,7 +58,8 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     setAssistantImages,
     setTools,
     setModels,
-    setGameResults
+    setGameResults,
+    setSharedChats
   } = useContext(ChatbotUIContext);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -173,7 +174,8 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     },
     tools: createTool,
     models: createModel,
-    game_results: createGame
+    game_results: createGame,
+    share: () => {}
   };
 
   const stateUpdateFunctions = {
@@ -185,7 +187,8 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    game_results: setGameResults
+    game_results: setGameResults,
+    share: setSharedChats
   };
 
   const handleCreate = async () => {

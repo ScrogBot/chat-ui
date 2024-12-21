@@ -45,7 +45,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     setAssistants,
     setTools,
     setModels,
-    setGameResults
+    setGameResults,
+    setSharedChats
   } = useContext(ChatbotUIContext);
 
   const divRef = useRef<HTMLDivElement>(null);
@@ -163,7 +164,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     assistants: updateAssistant,
     tools: updateTool,
     models: updateModel,
-    game_results: updateGameResult
+    game_results: updateGameResult,
+    share: setSharedChats
   };
 
   const stateUpdateFunctions = {
@@ -175,7 +177,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    game_results: setGameResults
+    game_results: setGameResults,
+    share: setSharedChats
   };
 
   const updateFolder = async (itemId: string, folderId: string | null) => {

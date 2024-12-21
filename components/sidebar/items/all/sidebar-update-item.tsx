@@ -115,7 +115,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     setTools,
     setModels,
     setAssistantImages,
-    setGameResults
+    setGameResults,
+    setSharedChats
   } = useContext(ChatbotUIContext);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -199,7 +200,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     },
     tools: null,
     models: null,
-    game_results: null
+    game_results: null,
+    share: null
   };
 
   const fetchDataFunctions = {
@@ -230,7 +232,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     },
     tools: null,
     models: null,
-    game_results: null
+    game_results: null,
+    share: null
   };
 
   const fetchWorkpaceFunctions = {
@@ -266,7 +269,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     game_results: async (gameId: string) => {
       const item = await getGameResultWorkspacesByGameId(gameId);
       return item.workspaces;
-    }
+    },
+    share: null
   };
 
   const fetchSelectedWorkspaces = async () => {
@@ -577,7 +581,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
 
       return updatedModel;
     },
-    game_results: null
+    game_results: null,
+    share: null
   };
 
   const stateUpdateFunctions = {
@@ -589,7 +594,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     assistants: setAssistants,
     tools: setTools,
     models: setModels,
-    game_results: setGameResults
+    game_results: setGameResults,
+    share: setSharedChats
   };
 
   const handleUpdate = async () => {
