@@ -1,6 +1,6 @@
 import { ChatbotUIContext } from '@/context/context';
 import { updateAssistant } from '@/db/assistants';
-import { updateChat } from '@/db/chats';
+import { updateChat, updateChatShare } from '@/db/chats';
 import { updateCollection } from '@/db/collections';
 import { updateFile } from '@/db/files';
 import { updateModel } from '@/db/models';
@@ -164,7 +164,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     tools: updateTool,
     models: updateModel,
     game_results: updateGameResult,
-    share: setSharedChats
+    share: updateChatShare
   };
 
   const stateUpdateFunctions = {
@@ -184,6 +184,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     const item: any = data.find(item => item.id === itemId);
 
     if (!item) return null;
+    if (contentType === 'share') return;
 
     const updateFunction = updateFunctions[contentType];
     const setStateFunction = stateUpdateFunctions[contentType];
