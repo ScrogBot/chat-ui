@@ -86,6 +86,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     const setStateFunction = stateUpdateFunctions[contentType];
 
     if (!setStateFunction) return;
+    if (contentType === 'share') return;
 
     const { error } = await supabase
       .from(contentType)
