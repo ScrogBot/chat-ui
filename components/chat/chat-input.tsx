@@ -69,6 +69,9 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     handleSubmitMessage
   } = useChatHandler();
 
+  const [showSubmitTooltip, setShowSubmitTooltip] = useState(false);
+  const [showQuestionTooltip, setShowQuestionTooltip] = useState(false);
+
   const { handleInputChange } = usePromptAndCommand();
 
   const { filesToAccept, handleSelectDeviceFile } = useSelectFileHandler();
@@ -166,6 +169,8 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
       }
     }
   };
+
+  const isFinetuning = chatSettings?.model === 'FineTuning_LLM';
 
   return (
     <>
@@ -280,31 +285,62 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             />
           )}
         </div>
-        <div className="absolute bottom-[14px] right-11 cursor-pointer hover:opacity-50">
-          <IconQuestionMark
-            className="bg-primary text-secondary rounded p-1"
-            onClick={() => {
-              alert(
-                '사용법 : Prompt 및 RAG를 구축해서 문제를 풀어주세요. \n' +
-                  '아래는 테스트 문제입니다.\n' +
-                  '1. Few shot에 대해 설명해줘\n' +
-                  '2. RAG에 대해서 알려줘\n' +
-                  '3. 빅데이터 활용방안 알려줘.\n' +
-                  '\n' +
-                  '최종 완료 시 오른쪽 Submit을 눌러주세요. 채점에는 약 15분이 소요됩니다.'
-              );
-            }}
-            size={30}
-          />
+        <div>
+          <div
+            className="absolute bottom-[14px] right-11 cursor-pointer hover:opacity-50"
+            onMouseEnter={() => setShowQuestionTooltip(true)}
+            onMouseLeave={() => setShowQuestionTooltip(false)}
+          >
+            <IconQuestionMark
+              className={cn(
+                'bg-primary text-secondary rounded p-1',
+                !isFinetuning && 'cursor-not-allowed opacity-50'
+              )}
+              onClick={() => {
+                if (!isFinetuning) return;
+                alert(
+                  '사용법 : Prompt 및 RAG를 구축해서 문제를 풀어주세요. \n' +
+                    '아래는 테스트 문제입니다.\n' +
+                    '1. Few shot에 대해 설명해줘\n' +
+                    '2. RAG에 대해서 알려줘\n' +
+                    '3. 빅데이터 활용방안 알려줘.\n' +
+                    '\n' +
+                    '최종 완료 시 오른쪽 Submit을 눌러주세요. 채점에는 약 15분이 소요됩니다.'
+                );
+              }}
+              size={30}
+            />
+            {showQuestionTooltip && (
+              <div className="absolute bottom-[50px] right-3 rounded bg-gray-700 p-2 text-sm text-white shadow-lg">
+                도움말
+              </div>
+            )}
+          </div>
         </div>
-        <div className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50">
-          <IconFile
-            className="bg-primary text-secondary rounded p-1"
-            onClick={() => {
-              handleSubmitMessage(userInput, chatMessages, false);
-            }}
-            size={30}
-          />
+        <div>
+          <div
+            className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50"
+            onMouseEnter={() => setShowSubmitTooltip(true)}
+            onMouseLeave={() => setShowSubmitTooltip(false)}
+          >
+            <IconFile
+              className={cn(
+                'bg-primary text-secondary rounded p-1',
+                !isFinetuning && 'cursor-not-allowed opacity-50'
+              )}
+              onClick={() => {
+                if (!isFinetuning) return;
+                handleSubmitMessage(userInput, chatMessages, false);
+              }}
+              size={30}
+            />
+
+            {showSubmitTooltip && (
+              <div className="absolute bottom-[50px] right-3 rounded bg-gray-700 p-2 text-sm text-white shadow-lg">
+                제출
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

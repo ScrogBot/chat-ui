@@ -15,7 +15,6 @@ import {
   updateGameQuestionCount,
   updateGameScore
 } from '@/db/games';
-import { TableContent } from 'mdast';
 
 export const runtime: ServerRuntime = 'edge';
 
@@ -83,7 +82,7 @@ export async function POST(request: Request) {
   let KEY: string | null = 'dummy';
   let ENDPOINT = 'https://api.openai.com/v1';
   let questionId = 0;
-
+  let responseStream = true;
   try {
     const profile = await getServerProfile();
     KEY = profile.openai_api_key;
@@ -95,6 +94,7 @@ export async function POST(request: Request) {
       .filter(message => message.role === 'user')
       .pop();
     console.log('latestUserMessage', latestUserMessage.content);
+    console.log('--------END--------');
 
     switch (chatSettings.model) {
       case 'FineTuning_LLM':
@@ -102,6 +102,7 @@ export async function POST(request: Request) {
         KEY = 'dummy';
         DEPLOYMENT_ID = 'olympiad';
         questionId = 0;
+        responseStream = false;
         break;
       case 'jailbreaking-model-1':
         questionId = 1;
@@ -256,7 +257,7 @@ export async function POST(request: Request) {
         profile.user_id,
         questionId
       )) as TablesUpdate<'game_results'>;
-    } else if (game?.score != null) {
+    } else if (game?.score != null && questionId !== 0) {
       // Check if the game has already been completed
       return new Response(
         JSON.stringify({
@@ -306,13 +307,20 @@ export async function POST(request: Request) {
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
       max_tokens: null,
-      stream: true
+      stream: responseStream
     });
 
     await updateGameQuestionCount(game.id, game.question_count + 1);
 
-    const stream = OpenAIStream(response);
+    if (!responseStream) {
+      return new Response(JSON.stringify(response.choices[0].message.content), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
 
+    const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error: any) {
     let errorMessage = error.message || 'An unexpected error occurred';

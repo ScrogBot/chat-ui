@@ -397,10 +397,10 @@ export const useChatHandler = () => {
     const startingInput = messageContent;
 
     try {
-      // setUserInput('');
-      // setIsGenerating(true);
-      // setIsPromptPickerOpen(false);
-      // setIsFilePickerOpen(false);
+      setUserInput('');
+      setIsGenerating(true);
+      setIsPromptPickerOpen(false);
+      setIsFilePickerOpen(false);
       setNewMessageImages([]);
 
       const newAbortController = new AbortController();

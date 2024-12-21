@@ -88,14 +88,22 @@ export async function POST(request: Request) {
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
       max_tokens: null,
-      stream: true
+      stream: false
     });
 
-    await updateGameQuestionCount(game.id, game.question_count + 1);
+    // convert string to number
+    const score = parseFloat(response.score);
 
-    const stream = OpenAIStream(response);
+    await updateGameScore(game.id, score);
 
-    return new StreamingTextResponse(stream);
+    return new Response(
+      JSON.stringify(response.response + '\n이유:' + response.reasoning),
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
   } catch (error: any) {
     let errorMessage = error.message || 'An unexpected error occurred';
     const errorCode = error.status || 500;
