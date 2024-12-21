@@ -54,7 +54,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     tools: setTools,
     models: setModels,
     game_results: setGameResults,
-    share: setSharedChats
+    share: null
   };
 
   const handleDeleteFolderOnly = async () => {
