@@ -91,7 +91,7 @@ export async function POST(request: Request) {
       stream: false
     });
 
-    // convert string to number
+    //@ts-ignore
     const score = parseFloat(response.score);
 
     await updateGameScore(game.id, score);
