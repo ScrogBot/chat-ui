@@ -59,57 +59,6 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
 
   const [loading, setLoading] = useState(true);
 
-  // update models
-  if (!models.find(model => model.model_id === 'FineTuning_LLM')) {
-    models.push({
-      api_key: '',
-      base_url: 'http://223.130.135.187:8001/v1',
-      context_length: 0,
-      created_at: '',
-      description: '',
-      folder_id: null,
-      id: '',
-      sharing: '',
-      updated_at: null,
-      user_id: '',
-      model_id: 'FineTuning_LLM',
-      name: 'FineTuning_LLM'
-    });
-    setModels(models);
-  }
-
-  const modelIds = [
-    'jailbreaking-model-1',
-    'jailbreaking-model-2',
-    'jailbreaking-model-3',
-    'jailbreaking-model-4',
-    'jailbreaking-model-5',
-    'jailbreaking-model-6',
-    'jailbreaking-model-7',
-    'jailbreaking-model-8',
-    'jailbreaking-model-9',
-    'jailbreaking-model-10'
-  ];
-  for (const modelId of modelIds) {
-    if (!models.find(model => model.model_id === modelId)) {
-      models.push({
-        api_key: '',
-        base_url: 'https://pcp-ai.openai.azure.com/openai',
-        context_length: 0,
-        created_at: '',
-        description: '',
-        folder_id: null,
-        id: '',
-        sharing: '',
-        updated_at: null,
-        user_id: '',
-        model_id: modelId,
-        name: modelId
-      });
-    }
-    setModels(models);
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       await fetchMessages();
