@@ -177,17 +177,17 @@ export const ProfileStep: FC<ProfileStepProps> = ({
             // update the department state and the department variable
             onChange={e => handleDepartmentChange(e.target.value)}
           >
-            <option value="서울대학교">경기과학기술대</option>
-            <option value="서울대학교">경상국립대</option>
+            <option value="경기과학기술대">경기과학기술대</option>
+            <option value="경상국립대">경상국립대</option>
             <option value="서울대학교">서울대학교</option>
-            <option value="서울대학교">서울시립대</option>
-            <option value="서울대학교">숙명여자대</option>
-            <option value="서울대학교">숭실대</option>
-            <option value="전북대학교">전남대</option>
-            <option value="전북대학교">전주대</option>
-            <option value="전북대학교">전북대</option>
-            <option value="전북대학교">충남대</option>
-            <option value="전북대학교">한동대</option>
+            <option value="서울시립대">서울시립대</option>
+            <option value="숙명여자대">숙명여자대</option>
+            <option value="숭실대">숭실대</option>
+            <option value="전남대">전남대</option>
+            <option value="전주대">전주대</option>
+            <option value="전북대">전북대</option>
+            <option value="충남대">충남대</option>
+            <option value="한동대">한동대</option>
           </select>
         </div>
       </div>
