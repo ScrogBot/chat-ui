@@ -325,7 +325,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             <IconFile
               className={cn(
                 'bg-primary text-secondary rounded p-1',
-                !isFinetuning && 'cursor-not-allowed opacity-50'
+                (!userInput || !isFinetuning) && 'cursor-not-allowed opacity-50'
               )}
               onClick={() => {
                 if (!isFinetuning) return;
