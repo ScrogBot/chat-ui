@@ -36,7 +36,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
   setDepartment
 }) => {
   const [loading, setLoading] = useState(false);
-  const [department, updateDepartment] = useState('서울대학교'); // 초기값 설정
+  const [department, updateDepartment] = useState('경기과학기술대'); // 초기값 설정
   const [team, updateTeam] = useState('1'); // team 상태 추가
 
   setDepartment(department); // 부모 컴포넌트로 상태 전달
