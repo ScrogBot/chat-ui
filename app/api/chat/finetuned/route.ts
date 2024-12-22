@@ -80,7 +80,16 @@ export async function POST(request: Request) {
       new OpenAI({
         baseURL: url,
         defaultHeaders: { 'Content-Type': 'application/json' }
-      })
+      }),
+      {
+        name: chatSettings.model,
+        tags: [
+          profile.display_name,
+          profile.user_id,
+          profile.team ? profile.team : 'unknown team',
+          profile.department ? profile.department : 'unknown department'
+        ]
+      }
     );
 
     const response = await openai.chat.completions.create({

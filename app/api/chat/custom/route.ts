@@ -299,7 +299,16 @@ export async function POST(request: Request) {
         apiKey: KEY,
         baseURL: ENDPOINT,
         defaultHeaders: { 'api-key': KEY, 'Content-Type': 'application/json' }
-      })
+      }),
+      {
+        name: chatSettings.model,
+        tags: [
+          profile.display_name,
+          profile.user_id,
+          profile.team ? profile.team : 'unknown team',
+          profile.department ? profile.department : 'unknown department'
+        ]
+      }
     );
 
     await updateGameQuestionCount(game.id, game.question_count + 1);
