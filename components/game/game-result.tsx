@@ -14,6 +14,7 @@ import { Tables } from '@/supabase/types';
 import { FC, useContext, useEffect, useState } from 'react';
 import { getGameResultByQuestionId } from '@/db/games';
 import { getProfileByUserId } from '@/db/profile';
+import { ChatbotUIContext } from '@/context/context';
 
 interface GameResultProps {}
 
@@ -24,6 +25,8 @@ export const GameResult: FC<GameResultProps> = ({}) => {
   const [userResults, setUserResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { profile } = useContext(ChatbotUIContext);
+
   // Convert questionId to number
   const questionIdNumber =
     typeof questionId === 'string' ? parseInt(questionId) : -1;
@@ -33,8 +36,6 @@ export const GameResult: FC<GameResultProps> = ({}) => {
     console.log('useEffect');
 
     const fetchGameResult = async () => {
-      console.log('Fetching game results...');
-
       setLoading(true);
       try {
         const gameResults = await getGameResultByQuestionId(questionIdNumber);
@@ -96,7 +97,10 @@ export const GameResult: FC<GameResultProps> = ({}) => {
           <TableBody>
             {userResults.length > 0 ? (
               userResults.map((user, index) => (
-                <TableRow key={user.id}>
+                <TableRow
+                  key={user.id}
+                  className={user.id === profile?.id ? 'bg-blue-700' : ''} // 조건부 배경색
+                >
                   <TableCell className="font-medium">{index + 1}</TableCell>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.team}</TableCell>
