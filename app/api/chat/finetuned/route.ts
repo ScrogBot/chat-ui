@@ -11,7 +11,7 @@ import { traceable } from 'langsmith/traceable';
 import {
   createGame,
   getGameResultByUserID,
-  getGameResultByUserIDAndGameId,
+  getGameResultByUserIDAndGameIdAndType,
   updateGameQuestionCount,
   updateGameScore
 } from '@/db/games';
@@ -28,6 +28,10 @@ export async function POST(request: Request) {
     customModelId: string;
   };
 
+  console.log('customModelId', customModelId);
+  // convert customModelId to int
+  const customModelIdInt = parseInt(customModelId);
+
   try {
     const profile = await getServerProfile();
 
@@ -35,19 +39,16 @@ export async function POST(request: Request) {
       .filter(message => message.role === 'user')
       .pop();
 
-    console.log('latestUserMessage', latestUserMessage.content);
+    // console.log('latestUserMessage', latestUserMessage.content);
 
     const url = 'https://ryeon.elpai.org/submit/v1';
     const model = 'olympiad';
-    const questionId = 0;
 
-    let game = (await getGameResultByUserIDAndGameId(
+    let game = (await getGameResultByUserIDAndGameIdAndType(
       profile.user_id,
-      questionId
+      customModelIdInt,
+      'finetuning'
     )) as TablesUpdate<'game_results'>;
-    if (game) {
-      console.log('game', game);
-    }
 
     // Create a new game if it doesn't exist
     if (game == null) {
@@ -55,16 +56,18 @@ export async function POST(request: Request) {
       await createGame({
         name: chatSettings.model,
         created_at: new Date().toISOString(),
-        question_id: questionId,
+        question_id: customModelIdInt,
         question_count: 0,
+        game_type: 'finetuning',
         score: null,
         updated_at: new Date().toISOString(),
         user_id: profile.user_id
       } as TablesInsert<'game_results'>);
 
-      game = (await getGameResultByUserIDAndGameId(
+      game = (await getGameResultByUserIDAndGameIdAndType(
         profile.user_id,
-        questionId
+        customModelIdInt,
+        'finetuning'
       )) as TablesUpdate<'game_results'>;
     }
 
@@ -74,12 +77,13 @@ export async function POST(request: Request) {
       });
     }
 
-    console.log('chatSettings', chatSettings);
-    console.log('custom OpenAI');
     const openai = wrapOpenAI(
       new OpenAI({
         baseURL: url,
-        defaultHeaders: { 'Content-Type': 'application/json' }
+        defaultHeaders: {
+          'Content-Type': 'application/json',
+          'Question-ID': customModelIdInt.toString()
+        }
       }),
       {
         name: chatSettings.model,
@@ -99,6 +103,7 @@ export async function POST(request: Request) {
       max_tokens: null,
       stream: false
     });
+    // console.log('response', response);
 
     //@ts-ignore
     const score = parseFloat(response.score);

@@ -322,18 +322,26 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             onMouseEnter={() => setShowSubmitTooltip(true)}
             onMouseLeave={() => setShowSubmitTooltip(false)}
           >
-            <IconFile
-              className={cn(
-                'bg-primary text-secondary rounded p-1',
-                (!userInput || !isFinetuning) && 'cursor-not-allowed opacity-50'
-              )}
-              onClick={() => {
-                if (!isFinetuning) return;
-                handleSubmitMessage(userInput, chatMessages, false);
-              }}
-              size={30}
-            />
-
+            {isGenerating ? (
+              <IconPlayerStopFilled
+                className="hover:bg-background animate-pulse rounded bg-transparent p-1"
+                onClick={handleStopMessage}
+                size={30}
+              />
+            ) : (
+              <IconFile
+                className={cn(
+                  'bg-primary text-secondary rounded p-1',
+                  (userInput || !isFinetuning) &&
+                    'cursor-not-allowed opacity-50'
+                )}
+                onClick={() => {
+                  if (!isFinetuning) return;
+                  handleSubmitMessage(userInput, chatMessages, false);
+                }}
+                size={30}
+              />
+            )}
             {showSubmitTooltip && (
               <div className="absolute bottom-[50px] right-3 rounded bg-gray-700 p-2 text-sm text-white shadow-lg">
                 제출

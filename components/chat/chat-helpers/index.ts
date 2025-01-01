@@ -222,11 +222,20 @@ export const handleHostedChat = async (
   const apiEndpoint =
     provider === 'custom' ? '/api/chat/custom' : `/api/chat/${provider}`;
 
+  console.log('payload: ', payload);
+  console.log('draftMessages: ', draftMessages);
+  console.log('formattedMessages: ', formattedMessages);
+
   const requestBody = {
     chatSettings: payload.chatSettings,
     messages: formattedMessages,
     customModelId: provider === 'custom' ? modelData.hostedId : ''
   };
+
+  // for send question id
+  if (payload.workspaceInstructions !== '') {
+    requestBody.customModelId = payload.workspaceInstructions;
+  }
 
   const response = await fetchChatResponse(
     apiEndpoint,
@@ -236,6 +245,8 @@ export const handleHostedChat = async (
     setIsGenerating,
     setChatMessages
   );
+
+  console.log('response: ', response);
 
   return await processResponse(
     response,
@@ -320,23 +331,25 @@ export const processResponse = async (
           console.error('Error parsing JSON:', error);
         }
 
-        setChatMessages(prev =>
-          prev.map(chatMessage => {
-            if (chatMessage.message.id === lastChatMessage.message.id) {
-              const updatedChatMessage: ChatMessage = {
-                message: {
-                  ...chatMessage.message,
-                  content: fullText
-                },
-                fileItems: chatMessage.fileItems
-              };
+        if (setChatMessages) {
+          setChatMessages(prev =>
+            prev.map(chatMessage => {
+              if (chatMessage.message.id === lastChatMessage.message.id) {
+                const updatedChatMessage: ChatMessage = {
+                  message: {
+                    ...chatMessage.message,
+                    content: fullText
+                  },
+                  fileItems: chatMessage.fileItems
+                };
 
-              return updatedChatMessage;
-            }
+                return updatedChatMessage;
+              }
 
-            return chatMessage;
-          })
-        );
+              return chatMessage;
+            })
+          );
+        }
       },
       controller.signal
     );

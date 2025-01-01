@@ -32,9 +32,7 @@ export const GameResultItem: FC<GameResultItemProps> = ({ gameResult }) => {
 
   const handleClick = () => {
     if (!selectedWorkspace) return;
-    return router.push(
-      `/${selectedWorkspace.id}/game/${gameResult.question_id}`
-    );
+    return router.push(`/${selectedWorkspace.id}/game/${gameResult.game_type}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -56,7 +54,7 @@ export const GameResultItem: FC<GameResultItemProps> = ({ gameResult }) => {
       onClick={handleClick}
     >
       <div className="ml-3 flex-1 truncate text-sm font-semibold">
-        {gameResult.name}
+        {gameResult.game_type}
       </div>
 
       <div

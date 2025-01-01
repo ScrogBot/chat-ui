@@ -11,7 +11,7 @@ import { ChatbotUIContext } from '@/context/context';
 import useHotkey from '@/lib/hooks/use-hotkey';
 import { useTheme } from 'next-themes';
 import { useContext } from 'react';
-import GameResultPage from '@/app/[locale]/[workspaceid]/game/[gameId]/page';
+import GameResultPage from '@/app/[locale]/[workspaceid]/game/[gametype]/page';
 
 export default function ChatPage() {
   useHotkey('o', () => handleNewChat());

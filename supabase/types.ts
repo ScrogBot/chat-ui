@@ -1062,6 +1062,8 @@ export type Database = {
           folder_id: string | null;
           question_id: number;
           question_count: number;
+          keyword: string;
+          game_type: string;
           score: number | null;
           updated_at: string | null;
           user_id: string;
@@ -1074,6 +1076,8 @@ export type Database = {
           folder_id?: string | null;
           question_id: number;
           question_count: number;
+          keyword: string | null;
+          game_type: string | null;
           score?: number | null;
           updated_at?: string | null;
           user_id: string;
@@ -1086,6 +1090,8 @@ export type Database = {
           folder_id?: string | null;
           question_id?: number;
           question_count?: number;
+          keyword?: string;
+          game_type?: string;
           score?: number | null;
           updated_at?: string | null;
           user_id?: string;

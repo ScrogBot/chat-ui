@@ -39,18 +39,7 @@ export default function ChatPage() {
     setModels(models);
   }
 
-  const modelIds = [
-    'jailbreaking-model-1',
-    'jailbreaking-model-2',
-    'jailbreaking-model-3',
-    'jailbreaking-model-4',
-    'jailbreaking-model-5',
-    'jailbreaking-model-6',
-    'jailbreaking-model-7',
-    'jailbreaking-model-8',
-    'jailbreaking-model-9',
-    'jailbreaking-model-10'
-  ];
+  const modelIds = ['jailbreaking-model-1'];
   for (const modelId of modelIds) {
     if (!models.find(model => model.model_id === modelId)) {
       models.push({
@@ -70,8 +59,6 @@ export default function ChatPage() {
     }
     setModels(models);
   }
-
-  console.log('models', models);
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler();
 

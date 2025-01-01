@@ -26,6 +26,19 @@ export const getGameResultByQuestionId = async (questionId: number) => {
   return game;
 };
 
+export const getGameResultByGameType = async (gameType: string) => {
+  const { data: game, error } = await supabase
+    .from('game_results')
+    .select('*')
+    .eq('game_type', gameType);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return game;
+};
+
 export const getGameResultWorkspacesByGameId = async (gameId: string) => {
   const { data: game, error } = await supabase
     .from('game_results')
@@ -55,15 +68,17 @@ export const getGameResultByUserID = async (userId: string) => {
   return game;
 };
 
-export const getGameResultByUserIDAndGameId = async (
+export const getGameResultByUserIDAndGameIdAndType = async (
   userId: string,
-  questionId: number
+  questionId: number,
+  gameType: string
 ) => {
   const { data: game } = await supabase
     .from('game_results')
     .select('*')
     .eq('user_id', userId)
     .eq('question_id', questionId)
+    .eq('game_type', gameType)
     .maybeSingle();
 
   return game;

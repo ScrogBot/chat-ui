@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { useParams } from 'next/navigation';
 import { Tables } from '@/supabase/types';
 import { FC, useContext, useEffect, useState } from 'react';
-import { getGameResultByQuestionId } from '@/db/games';
+import { getGameResultByGameType, getGameResultByQuestionId } from '@/db/games';
 import { getProfileByUserId } from '@/db/profile';
 import { ChatbotUIContext } from '@/context/context';
 
@@ -20,16 +20,17 @@ interface GameResultProps {}
 
 export const GameResult: FC<GameResultProps> = ({}) => {
   const params = useParams();
-  const questionId = params.gameId;
+  const gameType = params.gametype;
+  console.log('gameType:', gameType);
 
   const [userResults, setUserResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { profile } = useContext(ChatbotUIContext);
 
-  // Convert questionId to number
-  const questionIdNumber =
-    typeof questionId === 'string' ? parseInt(questionId) : -1;
+  // convert gameType to gameTypeString
+  let gameTypeString = gameType as string;
+  console.log('gameTypeString:', gameTypeString);
 
   // Fetch game results
   useEffect(() => {
@@ -38,7 +39,8 @@ export const GameResult: FC<GameResultProps> = ({}) => {
     const fetchGameResult = async () => {
       setLoading(true);
       try {
-        const gameResults = await getGameResultByQuestionId(questionIdNumber);
+        const gameResults = await getGameResultByGameType(gameTypeString);
+        console.log('gameResults:', gameResults);
 
         const updatedUserResults: any[] = [];
         for (const gameResult of gameResults) {
@@ -50,7 +52,7 @@ export const GameResult: FC<GameResultProps> = ({}) => {
           const profile = await getProfileByUserId(user_id);
 
           // if id is not found in userResults, add it to userResults
-          // if score is null, do not add it to userResults
+          // if same id is found, add score to existing userResults
           if (!updatedUserResults.find(user => user.id === profile.id)) {
             updatedUserResults.push({
               id: profile.id,
@@ -61,6 +63,14 @@ export const GameResult: FC<GameResultProps> = ({}) => {
               score: gameResult.score,
               question_count: gameResult.question_count
             });
+          } else {
+            const user = updatedUserResults.find(
+              user => user.id === profile.id
+            );
+            if (user) {
+              user.score += gameResult.score;
+              user.question_count += gameResult.question_count;
+            }
           }
         }
 
