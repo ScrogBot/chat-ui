@@ -118,6 +118,46 @@ export async function POST(request: Request) {
   let responseStream = true;
   try {
     const profile = await getServerProfile();
+
+    if (chatSettings.model === 'FineTuning_LLM') {
+      ENDPOINT = 'https://ryeon.elpai.org/v1/';
+      KEY = 'dummy';
+      DEPLOYMENT_ID = 'olympiad';
+      questionId = 0;
+      responseStream = false;
+
+      const openai = wrapOpenAI(
+        new OpenAI({
+          apiKey: KEY,
+          baseURL: ENDPOINT,
+          defaultHeaders: { 'api-key': KEY, 'Content-Type': 'application/json' }
+        }),
+        {
+          name: chatSettings.model,
+          tags: [
+            profile.display_name,
+            profile.user_id,
+            profile.team ? profile.team : 'unknown team',
+            profile.department ? profile.department : 'unknown department'
+          ]
+        }
+      );
+
+      const response = await openai.chat.completions.create({
+        model: DEPLOYMENT_ID,
+        messages: messages as ChatCompletionCreateParamsBase['messages'],
+        temperature: chatSettings.temperature,
+        max_tokens: null,
+        stream: false
+      });
+
+      return new Response(response.choices[0].message.content, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
     KEY = profile.openai_api_key;
 
     ENDPOINT = 'https://api.openai.com/v1';
@@ -139,15 +179,6 @@ export async function POST(request: Request) {
     console.log('--------END--------');
 
     switch (chatSettings.model) {
-      case 'FineTuning_LLM':
-        ENDPOINT = 'https://ryeon.elpai.org/v1/';
-        KEY = 'dummy';
-        DEPLOYMENT_ID = 'olympiad';
-        questionId = 0;
-        responseStream = false;
-        game_type = 'finetuning';
-        keyword = '';
-        break;
       case 'jailbreaking-model-1':
         questionId = 1;
         break;
@@ -218,17 +249,15 @@ export async function POST(request: Request) {
 
     keyword = game.keyword;
 
-    if (chatSettings.model != 'FineTuning_LLM') {
-      messages = messages.map(message => {
-        if (message.role === 'system') {
-          return {
-            ...message,
-            content: getSystemMessage(keyword, questionId)
-          };
-        }
-        return message;
-      });
-    }
+    messages = messages.map(message => {
+      if (message.role === 'system') {
+        return {
+          ...message,
+          content: getSystemMessage(keyword, questionId)
+        };
+      }
+      return message;
+    });
 
     console.log('messages', messages);
 
@@ -296,22 +325,6 @@ export async function POST(request: Request) {
     );
 
     await updateGameQuestionCount(game.id, game.question_count + 1);
-
-    if (!responseStream) {
-      const response = await openai.chat.completions.create({
-        model: DEPLOYMENT_ID,
-        messages: messages as ChatCompletionCreateParamsBase['messages'],
-        temperature: chatSettings.temperature,
-        max_tokens: null,
-        stream: false
-      });
-
-      return new Response(response.choices[0].message.content, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-    }
 
     const response = await openai.chat.completions.create({
       model: DEPLOYMENT_ID,

@@ -196,9 +196,9 @@ export const handleHostedChat = async (
   newAbortController: AbortController,
   newMessageImages: MessageImage[],
   chatImages: MessageImage[],
-  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>> | null,
   setFirstTokenReceived: React.Dispatch<React.SetStateAction<boolean>>,
-  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>> | null,
   setToolInUse: React.Dispatch<React.SetStateAction<string>>
 ) => {
   const provider =
@@ -222,14 +222,18 @@ export const handleHostedChat = async (
   const apiEndpoint =
     provider === 'custom' ? '/api/chat/custom' : `/api/chat/${provider}`;
 
-  console.log('payload: ', payload);
-  console.log('draftMessages: ', draftMessages);
-  console.log('formattedMessages: ', formattedMessages);
+  // console.log('payload: ', payload);
+  // console.log('draftMessages: ', draftMessages);
+  // console.log('formattedMessages: ', formattedMessages);
 
   const requestBody = {
     chatSettings: payload.chatSettings,
     messages: formattedMessages,
-    customModelId: provider === 'custom' ? modelData.hostedId : ''
+    customModelId: provider === 'custom' ? modelData.hostedId : '',
+    question: payload.chatMessages[0].message.content,
+    prompt: payload.chatSettings.prompt,
+    context: payload.messageFileItems[0]?.content || '',
+    file: payload.messageFileItems[0]?.file_id || ''
   };
 
   // for send question id
@@ -266,8 +270,8 @@ export const fetchChatResponse = async (
   body: object,
   isHosted: boolean,
   controller: AbortController,
-  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>,
-  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
+  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>> | null,
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>> | null
 ) => {
   const response = await fetch(url, {
     method: 'POST',
@@ -286,8 +290,12 @@ export const fetchChatResponse = async (
 
     toast.error(errorData.message);
 
-    setIsGenerating(false);
-    setChatMessages(prevMessages => prevMessages.slice(0, -2));
+    if (setIsGenerating) {
+      setIsGenerating(false);
+    }
+    if (setChatMessages) {
+      setChatMessages(prevMessages => prevMessages.slice(0, -2));
+    }
   }
 
   return response;
@@ -299,7 +307,7 @@ export const processResponse = async (
   isHosted: boolean,
   controller: AbortController,
   setFirstTokenReceived: React.Dispatch<React.SetStateAction<boolean>>,
-  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>> | null,
   setToolInUse: React.Dispatch<React.SetStateAction<string>>
 ) => {
   let fullText = '';

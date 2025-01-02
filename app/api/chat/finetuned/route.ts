@@ -1,45 +1,52 @@
-import { Database, Tables, TablesInsert, TablesUpdate } from '@/supabase/types';
+import { TablesInsert, TablesUpdate } from '@/supabase/types';
 import { ChatSettings } from '@/types';
-import { createClient } from '@supabase/supabase-js';
-import { CreateMessage, OpenAIStream, StreamingTextResponse } from 'ai';
 import { ServerRuntime } from 'next';
 import OpenAI from 'openai';
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions.mjs';
 import { getServerProfile } from '@/lib/server/server-chat-helpers';
 import { wrapOpenAI } from 'langsmith/wrappers';
-import { traceable } from 'langsmith/traceable';
 import {
   createGame,
-  getGameResultByUserID,
   getGameResultByUserIDAndGameIdAndType,
-  updateGameQuestionCount,
-  updateGameScore
+  updateGameResult
 } from '@/db/games';
-import { TableContent } from 'mdast';
-
-export const runtime: ServerRuntime = 'edge';
+import { getFileById } from '@/db/files';
+export const runtime = 'nodejs';
+// export const runtime: ServerRuntime = 'edge';
 
 export async function POST(request: Request) {
   const json = await request.json();
 
-  let { chatSettings, messages, customModelId } = json as {
+  let {
+    chatSettings,
+    messages,
+    customModelId,
+    question,
+    prompt,
+    context,
+    file
+  } = json as {
     chatSettings: ChatSettings;
     messages: any[];
     customModelId: string;
+    question: string;
+    prompt: string;
+    context: string;
+    file: string;
   };
 
-  console.log('customModelId', customModelId);
+  if (prompt.length > 5000) {
+    prompt = prompt.substring(0, 4900) + '...';
+  }
+  if (context.length > 5000) {
+    context = context.substring(0, 4900) + '...';
+  }
+
   // convert customModelId to int
   const customModelIdInt = parseInt(customModelId);
 
   try {
     const profile = await getServerProfile();
-
-    const latestUserMessage = messages
-      .filter(message => message.role === 'user')
-      .pop();
-
-    // console.log('latestUserMessage', latestUserMessage.content);
 
     const url = 'https://ryeon.elpai.org/submit/v1';
     const model = 'olympiad';
@@ -50,6 +57,15 @@ export async function POST(request: Request) {
       'finetuning'
     )) as TablesUpdate<'game_results'>;
 
+    let fileName = file;
+    if (file !== '') {
+      file = file.trim();
+      const fileDB = (await getFileById(file)) as TablesUpdate<'files'>;
+      if (fileDB) {
+        //@ts-ignore
+        fileName = fileDB.name;
+      }
+    }
     // Create a new game if it doesn't exist
     if (game == null) {
       console.log('createGame start');
@@ -59,6 +75,10 @@ export async function POST(request: Request) {
         question_id: customModelIdInt,
         question_count: 0,
         game_type: 'finetuning',
+        question: question,
+        prompt: prompt,
+        context: context,
+        file: fileName,
         score: null,
         updated_at: new Date().toISOString(),
         user_id: profile.user_id
@@ -96,6 +116,7 @@ export async function POST(request: Request) {
       }
     );
 
+    // console.log('messages:', messages);
     const response = await openai.chat.completions.create({
       model: model,
       messages: messages as ChatCompletionCreateParamsBase['messages'],
@@ -103,16 +124,33 @@ export async function POST(request: Request) {
       max_tokens: null,
       stream: false
     });
-    // console.log('response', response);
 
     //@ts-ignore
-    const score = parseFloat(response.score);
+    let response_response = response.response;
+    if (response_response.length > 5000) {
+      response_response = response_response.substring(0, 4900) + '...';
+    }
 
-    await updateGameScore(game.id, score);
+    //@ts-ignore
+    let response_reasoning = response.reasoning;
+    if (response_reasoning.length > 5000) {
+      response_reasoning = response_reasoning.substring(0, 4900) + '...';
+    }
+
+    game.context = context;
+    game.file = fileName;
+    //@ts-ignore
+    game.response = response_response;
+    //@ts-ignore
+    game.reason = response_reasoning;
+    //@ts-ignore
+    game.score = parseFloat(response.score);
+
+    await updateGameResult(game.id, game);
 
     return new Response(
       //@ts-ignore
-      JSON.stringify(response.response + '\n이유:' + response.reasoning),
+      JSON.stringify('채점완료.'),
       {
         headers: {
           'Content-Type': 'application/json'

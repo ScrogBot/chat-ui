@@ -1064,6 +1064,12 @@ export type Database = {
           question_count: number;
           keyword: string;
           game_type: string;
+          question: string | null;
+          prompt: string | null;
+          context: string | null;
+          file: string | null;
+          response: string | null;
+          reason: string | null;
           score: number | null;
           updated_at: string | null;
           user_id: string;
@@ -1078,6 +1084,12 @@ export type Database = {
           question_count: number;
           keyword: string | null;
           game_type: string | null;
+          question: string | null;
+          prompt: string | null;
+          context: string | null;
+          file: string | null;
+          response: string | null;
+          reason: string | null;
           score?: number | null;
           updated_at?: string | null;
           user_id: string;
@@ -1092,6 +1104,12 @@ export type Database = {
           question_count?: number;
           keyword?: string;
           game_type?: string;
+          question?: string | null;
+          prompt?: string | null;
+          context?: string | null;
+          file?: string | null;
+          response?: string | null;
+          reason?: string | null;
           score?: number | null;
           updated_at?: string | null;
           user_id?: string;
