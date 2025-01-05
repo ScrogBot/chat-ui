@@ -122,7 +122,6 @@ export async function POST(request: Request) {
       temperature: chatSettings.temperature,
       max_tokens: null,
       stream: false,
-      question_id: customModelIdInt,
     });
 
     //@ts-ignore
