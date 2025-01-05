@@ -179,34 +179,34 @@ export async function POST(request: Request) {
     console.log('--------END--------');
 
     switch (chatSettings.model) {
-      case 'jailbreaking-model-1':
+      case 'jailbreaking-level-1':
         questionId = 1;
         break;
-      case 'jailbreaking-model-2':
+      case 'jailbreaking-level-2':
         questionId = 2;
         break;
-      case 'jailbreaking-model-3':
+      case 'jailbreaking-level-3':
         questionId = 3;
         break;
-      case 'jailbreaking-model-4':
+      case 'jailbreaking-level-4':
         questionId = 4;
         break;
-      case 'jailbreaking-model-5':
+      case 'jailbreaking-level-5':
         questionId = 5;
         break;
-      case 'jailbreaking-model-6':
+      case 'jailbreaking-level-6':
         questionId = 6;
         break;
-      case 'jailbreaking-model-7':
+      case 'jailbreaking-level-7':
         questionId = 7;
         break;
-      case 'jailbreaking-model-8':
+      case 'jailbreaking-level-8':
         questionId = 8;
         break;
-      case 'jailbreaking-model-9':
+      case 'jailbreaking-level-9':
         questionId = 9;
         break;
-      case 'jailbreaking-model-10':
+      case 'jailbreaking-level-10':
         questionId = 10;
         break;
       default:

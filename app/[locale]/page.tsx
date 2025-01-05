@@ -74,7 +74,7 @@ export default function HomePage() {
       </Link>
 
       <footer className="mt-10 text-center text-sm text-gray-500">
-        2023 전북대학교 올림피아드. All rights reserved.
+        2025 전북대학교 올림피아드. All rights reserved.
       </footer>
     </div>
   );

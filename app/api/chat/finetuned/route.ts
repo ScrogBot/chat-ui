@@ -44,7 +44,6 @@ export async function POST(request: Request) {
 
   // convert customModelId to int
   const customModelIdInt = parseInt(customModelId);
-
   try {
     const profile = await getServerProfile();
 
@@ -122,29 +121,31 @@ export async function POST(request: Request) {
       messages: messages as ChatCompletionCreateParamsBase['messages'],
       temperature: chatSettings.temperature,
       max_tokens: null,
-      stream: false
+      stream: false,
+      question_id: customModelIdInt,
     });
 
     //@ts-ignore
-    let response_response = response.response;
-    if (response_response.length > 5000) {
-      response_response = response_response.substring(0, 4900) + '...';
-    }
+    // 서버에서 처리
+    // let response_response = response.response;
+    // if (response_response.length > 5000) {
+    //   response_response = response_response.substring(0, 4900) + '...';
+    // }
 
     //@ts-ignore
-    let response_reasoning = response.reasoning;
-    if (response_reasoning.length > 5000) {
-      response_reasoning = response_reasoning.substring(0, 4900) + '...';
-    }
+    // let response_reasoning = response.reasoning;
+    // if (response_reasoning.length > 5000) {
+    //   response_reasoning = response_reasoning.substring(0, 4900) + '...';
+    // }
 
-    game.context = context;
+    game.context = response.result.context;
     game.file = fileName;
     //@ts-ignore
-    game.response = response_response;
+    game.response = response.result.response;
     //@ts-ignore
-    game.reason = response_reasoning;
+    game.reason = response.result.reasoning;
     //@ts-ignore
-    game.score = parseFloat(response.score);
+    game.score = parseFloat(response.result.score);
 
     await updateGameResult(game.id, game);
 

@@ -40,16 +40,16 @@ export default function ChatPage() {
   }
 
   const modelIds = [
-    'jailbreaking-model-1',
-    'jailbreaking-model-2',
-    'jailbreaking-model-3',
-    'jailbreaking-model-4',
-    'jailbreaking-model-5',
-    'jailbreaking-model-6',
-    'jailbreaking-model-7',
-    'jailbreaking-model-8',
-    'jailbreaking-model-9',
-    'jailbreaking-model-10'
+    'jailbreaking-level-1',
+    'jailbreaking-level-2',
+    'jailbreaking-level-3',
+    'jailbreaking-level-4',
+    'jailbreaking-level-5',
+    'jailbreaking-level-6',
+    'jailbreaking-level-7',
+    'jailbreaking-level-8',
+    'jailbreaking-level-9',
+    'jailbreaking-level-10'
   ];
 
   for (const modelId of modelIds) {

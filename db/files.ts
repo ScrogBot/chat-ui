@@ -92,8 +92,6 @@ export const createFile = async (
   embeddingsProvider: 'openai' | 'local'
 ) => {
   let validFilename = fileRecord.name
-    .replace(/[^a-z0-9.]/gi, '_')
-    .toLowerCase();
   const extension = file.name.split('.').pop();
   const extensionIndex = validFilename.lastIndexOf('.');
   const baseName = validFilename.substring(
@@ -319,4 +317,18 @@ export const deleteFileWorkspace = async (
   if (error) throw new Error(error.message);
 
   return true;
+};
+
+
+export const getFilePathByNameAndUserId = async (fileName: string, userId: string) => {
+  const { data: filePath, error } = await supabase
+      .from('files')
+      .select('file_path')
+      .eq('name', fileName)
+      .eq('user_id', userId)
+      .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return filePath;
 };
