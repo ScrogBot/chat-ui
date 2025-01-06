@@ -1,28 +1,28 @@
-import { SidebarCreateItem } from "@/components/sidebar/items/all/sidebar-create-item"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { TextareaAutosize } from "@/components/ui/textarea-autosize"
-import { ChatbotUIContext } from "@/context/context"
-import { PROMPT_NAME_MAX } from "@/db/limits"
-import { TablesInsert } from "@/supabase/types"
-import { FC, useContext, useState } from "react"
+import { SidebarCreateItem } from '@/components/sidebar/items/all/sidebar-create-item';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { TextareaAutosize } from '@/components/ui/textarea-autosize';
+import { ChatbotUIContext } from '@/context/context';
+import { PROMPT_NAME_MAX } from '@/db/limits';
+import { TablesInsert } from '@/supabase/types';
+import { FC, useContext, useState } from 'react';
 
 interface CreatePromptProps {
-  isOpen: boolean
-  onOpenChange: (isOpen: boolean) => void
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 }
 
 export const CreatePrompt: FC<CreatePromptProps> = ({
   isOpen,
   onOpenChange
 }) => {
-  const { profile, selectedWorkspace } = useContext(ChatbotUIContext)
-  const [isTyping, setIsTyping] = useState(false)
-  const [name, setName] = useState("")
-  const [content, setContent] = useState("")
+  const { profile, selectedWorkspace } = useContext(ChatbotUIContext);
+  const [isTyping, setIsTyping] = useState(false);
+  const [name, setName] = useState('');
+  const [content, setContent] = useState('');
 
-  if (!profile) return null
-  if (!selectedWorkspace) return null
+  if (!profile) return null;
+  if (!selectedWorkspace) return null;
 
   return (
     <SidebarCreateItem
@@ -35,7 +35,7 @@ export const CreatePrompt: FC<CreatePromptProps> = ({
           user_id: profile.user_id,
           name,
           content
-        } as TablesInsert<"prompts">
+        } as TablesInsert<'prompts'>
       }
       renderInputs={() => (
         <>
@@ -68,5 +68,5 @@ export const CreatePrompt: FC<CreatePromptProps> = ({
         </>
       )}
     />
-  )
-}
+  );
+};

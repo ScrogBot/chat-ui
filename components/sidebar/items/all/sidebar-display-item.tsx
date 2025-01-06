@@ -1,19 +1,19 @@
-import { ChatbotUIContext } from "@/context/context"
-import { createChat } from "@/db/chats"
-import { cn } from "@/lib/utils"
-import { Tables } from "@/supabase/types"
-import { ContentType, DataItemType } from "@/types"
-import { useRouter } from "next/navigation"
-import { FC, useContext, useRef, useState } from "react"
-import { SidebarUpdateItem } from "./sidebar-update-item"
+import { ChatbotUIContext } from '@/context/context';
+import { createChat } from '@/db/chats';
+import { cn } from '@/lib/utils';
+import { Tables } from '@/supabase/types';
+import { ContentType, DataItemType } from '@/types';
+import { useRouter } from 'next/navigation';
+import { FC, useContext, useRef, useState } from 'react';
+import { SidebarUpdateItem } from './sidebar-update-item';
 
 interface SidebarItemProps {
-  item: DataItemType
-  isTyping: boolean
-  contentType: ContentType
-  icon: React.ReactNode
-  updateState: any
-  renderInputs: (renderState: any) => JSX.Element
+  item: DataItemType;
+  isTyping: boolean;
+  contentType: ContentType;
+  icon: React.ReactNode;
+  updateState: any;
+  renderInputs: (renderState: any) => JSX.Element;
 }
 
 export const SidebarItem: FC<SidebarItemProps> = ({
@@ -25,13 +25,13 @@ export const SidebarItem: FC<SidebarItemProps> = ({
   isTyping
 }) => {
   const { selectedWorkspace, setChats, setSelectedAssistant } =
-    useContext(ChatbotUIContext)
+    useContext(ChatbotUIContext);
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const itemRef = useRef<HTMLDivElement>(null)
+  const itemRef = useRef<HTMLDivElement>(null);
 
-  const [isHovering, setIsHovering] = useState(false)
+  const [isHovering, setIsHovering] = useState(false);
 
   const actionMap = {
     chats: async (item: any) => {},
@@ -39,8 +39,8 @@ export const SidebarItem: FC<SidebarItemProps> = ({
     prompts: async (item: any) => {},
     files: async (item: any) => {},
     collections: async (item: any) => {},
-    assistants: async (assistant: Tables<"assistants">) => {
-      if (!selectedWorkspace) return
+    assistants: async (assistant: Tables<'assistants'>) => {
+      if (!selectedWorkspace) return;
 
       const createdChat = await createChat({
         user_id: assistant.user_id,
@@ -55,23 +55,23 @@ export const SidebarItem: FC<SidebarItemProps> = ({
         prompt: assistant.prompt,
         temperature: assistant.temperature,
         embeddings_provider: assistant.embeddings_provider
-      })
+      });
 
-      setChats(prevState => [createdChat, ...prevState])
-      setSelectedAssistant(assistant)
+      setChats(prevState => [createdChat, ...prevState]);
+      setSelectedAssistant(assistant);
 
-      return router.push(`/${selectedWorkspace.id}/chat/${createdChat.id}`)
+      return router.push(`/${selectedWorkspace.id}/chat/${createdChat.id}`);
     },
     tools: async (item: any) => {},
     models: async (item: any) => {}
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      e.stopPropagation()
-      itemRef.current?.click()
+    if (e.key === 'Enter') {
+      e.stopPropagation();
+      itemRef.current?.click();
     }
-  }
+  };
 
   // const handleClickAction = async (
   //   e: React.MouseEvent<SVGSVGElement, MouseEvent>
@@ -94,7 +94,7 @@ export const SidebarItem: FC<SidebarItemProps> = ({
       <div
         ref={itemRef}
         className={cn(
-          "hover:bg-accent flex w-full cursor-pointer items-center rounded p-2 hover:opacity-50 focus:outline-none"
+          'hover:bg-accent flex w-full cursor-pointer items-center rounded p-2 hover:opacity-50 focus:outline-none'
         )}
         tabIndex={0}
         onKeyDown={handleKeyDown}
@@ -123,5 +123,5 @@ export const SidebarItem: FC<SidebarItemProps> = ({
         )} */}
       </div>
     </SidebarUpdateItem>
-  )
-}
+  );
+};

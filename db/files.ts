@@ -1,26 +1,26 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
-import mammoth from "mammoth"
-import { toast } from "sonner"
-import { uploadFile } from "./storage/files"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert, TablesUpdate } from '@/supabase/types';
+import mammoth from 'mammoth';
+import { toast } from 'sonner';
+import { uploadFile } from './storage/files';
 
 export const getFileById = async (fileId: string) => {
   const { data: file, error } = await supabase
-    .from("files")
-    .select("*")
-    .eq("id", fileId)
-    .single()
+    .from('files')
+    .select('*')
+    .eq('id', fileId)
+    .single();
 
   if (!file) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return file
-}
+  return file;
+};
 
 export const getFileWorkspacesByWorkspaceId = async (workspaceId: string) => {
   const { data: workspace, error } = await supabase
-    .from("workspaces")
+    .from('workspaces')
     .select(
       `
       id,
@@ -28,19 +28,19 @@ export const getFileWorkspacesByWorkspaceId = async (workspaceId: string) => {
       files (*)
     `
     )
-    .eq("id", workspaceId)
-    .single()
+    .eq('id', workspaceId)
+    .single();
 
   if (!workspace) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return workspace
-}
+  return workspace;
+};
 
 export const getFileWorkspacesByFileId = async (fileId: string) => {
   const { data: file, error } = await supabase
-    .from("files")
+    .from('files')
     .select(
       `
       id, 
@@ -48,29 +48,29 @@ export const getFileWorkspacesByFileId = async (fileId: string) => {
       workspaces (*)
     `
     )
-    .eq("id", fileId)
-    .single()
+    .eq('id', fileId)
+    .single();
 
   if (!file) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return file
-}
+  return file;
+};
 
 export const createFileBasedOnExtension = async (
   file: File,
-  fileRecord: TablesInsert<"files">,
+  fileRecord: TablesInsert<'files'>,
   workspace_id: string,
-  embeddingsProvider: "openai" | "local"
+  embeddingsProvider: 'openai' | 'local'
 ) => {
-  const fileExtension = file.name.split(".").pop()
+  const fileExtension = file.name.split('.').pop();
 
-  if (fileExtension === "docx") {
-    const arrayBuffer = await file.arrayBuffer()
+  if (fileExtension === 'docx') {
+    const arrayBuffer = await file.arrayBuffer();
     const result = await mammoth.extractRawText({
       arrayBuffer
-    })
+    });
 
     return createDocXFile(
       result.value,
@@ -78,156 +78,160 @@ export const createFileBasedOnExtension = async (
       fileRecord,
       workspace_id,
       embeddingsProvider
-    )
+    );
   } else {
-    return createFile(file, fileRecord, workspace_id, embeddingsProvider)
+    return createFile(file, fileRecord, workspace_id, embeddingsProvider);
   }
-}
+};
 
 // For non-docx files
 export const createFile = async (
   file: File,
-  fileRecord: TablesInsert<"files">,
+  fileRecord: TablesInsert<'files'>,
   workspace_id: string,
-  embeddingsProvider: "openai" | "local"
+  embeddingsProvider: 'openai' | 'local'
 ) => {
-  let validFilename = fileRecord.name.replace(/[^a-z0-9.]/gi, "_").toLowerCase()
-  const extension = file.name.split(".").pop()
-  const extensionIndex = validFilename.lastIndexOf(".")
-  const baseName = validFilename.substring(0, (extensionIndex < 0) ? undefined : extensionIndex)
-  const maxBaseNameLength = 100 - (extension?.length || 0) - 1
+  let validFilename = fileRecord.name
+  const extension = file.name.split('.').pop();
+  const extensionIndex = validFilename.lastIndexOf('.');
+  const baseName = validFilename.substring(
+    0,
+    extensionIndex < 0 ? undefined : extensionIndex
+  );
+  const maxBaseNameLength = 100 - (extension?.length || 0) - 1;
   if (baseName.length > maxBaseNameLength) {
-    fileRecord.name = baseName.substring(0, maxBaseNameLength) + "." + extension
+    fileRecord.name =
+      baseName.substring(0, maxBaseNameLength) + '.' + extension;
   } else {
-    fileRecord.name = baseName + "." + extension
+    fileRecord.name = baseName + '.' + extension;
   }
   const { data: createdFile, error } = await supabase
-    .from("files")
+    .from('files')
     .insert([fileRecord])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createFileWorkspace({
     user_id: createdFile.user_id,
     file_id: createdFile.id,
     workspace_id
-  })
+  });
 
   const filePath = await uploadFile(file, {
     name: createdFile.name,
     user_id: createdFile.user_id,
     file_id: createdFile.name
-  })
+  });
 
   await updateFile(createdFile.id, {
     file_path: filePath
-  })
+  });
 
-  const formData = new FormData()
-  formData.append("file_id", createdFile.id)
-  formData.append("embeddingsProvider", embeddingsProvider)
+  const formData = new FormData();
+  formData.append('file_id', createdFile.id);
+  formData.append('embeddingsProvider', embeddingsProvider);
 
-  const response = await fetch("/api/retrieval/process", {
-    method: "POST",
+  const response = await fetch('/api/retrieval/process', {
+    method: 'POST',
     body: formData
-  })
+  });
 
   if (!response.ok) {
-    const jsonText = await response.text()
-    const json = JSON.parse(jsonText)
+    const jsonText = await response.text();
+    const json = JSON.parse(jsonText);
     console.error(
       `Error processing file:${createdFile.id}, status:${response.status}, response:${json.message}`
-    )
-    toast.error("Failed to process file. Reason:" + json.message, {
+    );
+    toast.error('Failed to process file. Reason:' + json.message, {
       duration: 10000
-    })
-    await deleteFile(createdFile.id)
+    });
+    await deleteFile(createdFile.id);
   }
 
-  const fetchedFile = await getFileById(createdFile.id)
+  const fetchedFile = await getFileById(createdFile.id);
 
-  return fetchedFile
-}
+  return fetchedFile;
+};
 
 // // Handle docx files
 export const createDocXFile = async (
   text: string,
   file: File,
-  fileRecord: TablesInsert<"files">,
+  fileRecord: TablesInsert<'files'>,
   workspace_id: string,
-  embeddingsProvider: "openai" | "local"
+  embeddingsProvider: 'openai' | 'local'
 ) => {
   const { data: createdFile, error } = await supabase
-    .from("files")
+    .from('files')
     .insert([fileRecord])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createFileWorkspace({
     user_id: createdFile.user_id,
     file_id: createdFile.id,
     workspace_id
-  })
+  });
 
   const filePath = await uploadFile(file, {
     name: createdFile.name,
     user_id: createdFile.user_id,
     file_id: createdFile.name
-  })
+  });
 
   await updateFile(createdFile.id, {
     file_path: filePath
-  })
+  });
 
-  const response = await fetch("/api/retrieval/process/docx", {
-    method: "POST",
+  const response = await fetch('/api/retrieval/process/docx', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       text: text,
       fileId: createdFile.id,
       embeddingsProvider,
-      fileExtension: "docx"
+      fileExtension: 'docx'
     })
-  })
+  });
 
   if (!response.ok) {
-    const jsonText = await response.text()
-    const json = JSON.parse(jsonText)
+    const jsonText = await response.text();
+    const json = JSON.parse(jsonText);
     console.error(
       `Error processing file:${createdFile.id}, status:${response.status}, response:${json.message}`
-    )
-    toast.error("Failed to process file. Reason:" + json.message, {
+    );
+    toast.error('Failed to process file. Reason:' + json.message, {
       duration: 10000
-    })
-    await deleteFile(createdFile.id)
+    });
+    await deleteFile(createdFile.id);
   }
 
-  const fetchedFile = await getFileById(createdFile.id)
+  const fetchedFile = await getFileById(createdFile.id);
 
-  return fetchedFile
-}
+  return fetchedFile;
+};
 
 export const createFiles = async (
-  files: TablesInsert<"files">[],
+  files: TablesInsert<'files'>[],
   workspace_id: string
 ) => {
   const { data: createdFiles, error } = await supabase
-    .from("files")
+    .from('files')
     .insert(files)
-    .select("*")
+    .select('*');
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createFileWorkspaces(
@@ -236,81 +240,95 @@ export const createFiles = async (
       file_id: file.id,
       workspace_id
     }))
-  )
+  );
 
-  return createdFiles
-}
+  return createdFiles;
+};
 
 export const createFileWorkspace = async (item: {
-  user_id: string
-  file_id: string
-  workspace_id: string
+  user_id: string;
+  file_id: string;
+  workspace_id: string;
 }) => {
   const { data: createdFileWorkspace, error } = await supabase
-    .from("file_workspaces")
+    .from('file_workspaces')
     .insert([item])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdFileWorkspace
-}
+  return createdFileWorkspace;
+};
 
 export const createFileWorkspaces = async (
   items: { user_id: string; file_id: string; workspace_id: string }[]
 ) => {
   const { data: createdFileWorkspaces, error } = await supabase
-    .from("file_workspaces")
+    .from('file_workspaces')
     .insert(items)
-    .select("*")
+    .select('*');
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return createdFileWorkspaces
-}
+  return createdFileWorkspaces;
+};
 
 export const updateFile = async (
   fileId: string,
-  file: TablesUpdate<"files">
+  file: TablesUpdate<'files'>
 ) => {
   const { data: updatedFile, error } = await supabase
-    .from("files")
+    .from('files')
     .update(file)
-    .eq("id", fileId)
-    .select("*")
-    .single()
+    .eq('id', fileId)
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return updatedFile
-}
+  return updatedFile;
+};
 
 export const deleteFile = async (fileId: string) => {
-  const { error } = await supabase.from("files").delete().eq("id", fileId)
+  const { error } = await supabase.from('files').delete().eq('id', fileId);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return true
-}
+  return true;
+};
 
 export const deleteFileWorkspace = async (
   fileId: string,
   workspaceId: string
 ) => {
   const { error } = await supabase
-    .from("file_workspaces")
+    .from('file_workspaces')
     .delete()
-    .eq("file_id", fileId)
-    .eq("workspace_id", workspaceId)
+    .eq('file_id', fileId)
+    .eq('workspace_id', workspaceId);
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return true
-}
+  return true;
+};
+
+
+export const getFilePathByNameAndUserId = async (fileName: string, userId: string) => {
+  const { data: filePath, error } = await supabase
+      .from('files')
+      .select('file_path')
+      .eq('name', fileName)
+      .eq('user_id', userId)
+      .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return filePath;
+};

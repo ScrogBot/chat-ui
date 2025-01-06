@@ -1,12 +1,12 @@
-import { LLM } from "@/types"
-import { FC } from "react"
-import { ModelIcon } from "./model-icon"
-import { IconInfoCircle } from "@tabler/icons-react"
-import { WithTooltip } from "../ui/with-tooltip"
+import { LLM } from '@/types';
+import { FC } from 'react';
+import { ModelIcon } from './model-icon';
+import { IconInfoCircle } from '@tabler/icons-react';
+import { WithTooltip } from '../ui/with-tooltip';
 
 interface ModelOptionProps {
-  model: LLM
-  onSelect: () => void
+  model: LLM;
+  onSelect: () => void;
 }
 
 export const ModelOption: FC<ModelOptionProps> = ({ model, onSelect }) => {
@@ -14,17 +14,17 @@ export const ModelOption: FC<ModelOptionProps> = ({ model, onSelect }) => {
     <WithTooltip
       display={
         <div>
-          {model.provider !== "ollama" && model.pricing && (
+          {model.provider !== 'ollama' && model.pricing && (
             <div className="space-y-1 text-sm">
               <div>
-                <span className="font-semibold">Input Cost:</span>{" "}
-                {model.pricing.inputCost} {model.pricing.currency} per{" "}
+                <span className="font-semibold">Input Cost:</span>{' '}
+                {model.pricing.inputCost} {model.pricing.currency} per{' '}
                 {model.pricing.unit}
               </div>
               {model.pricing.outputCost && (
                 <div>
-                  <span className="font-semibold">Output Cost:</span>{" "}
-                  {model.pricing.outputCost} {model.pricing.currency} per{" "}
+                  <span className="font-semibold">Output Cost:</span>{' '}
+                  {model.pricing.outputCost} {model.pricing.currency} per{' '}
                   {model.pricing.unit}
                 </div>
               )}
@@ -45,5 +45,5 @@ export const ModelOption: FC<ModelOptionProps> = ({ model, onSelect }) => {
         </div>
       }
     />
-  )
-}
+  );
+};

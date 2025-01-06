@@ -1,9 +1,9 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert } from '@/supabase/types';
 
 export const getChatFilesByChatId = async (chatId: string) => {
   const { data: chatFiles, error } = await supabase
-    .from("chats")
+    .from('chats')
     .select(
       `
       id, 
@@ -11,40 +11,40 @@ export const getChatFilesByChatId = async (chatId: string) => {
       files (*)
     `
     )
-    .eq("id", chatId)
-    .single()
+    .eq('id', chatId)
+    .single();
 
   if (!chatFiles) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return chatFiles
-}
+  return chatFiles;
+};
 
-export const createChatFile = async (chatFile: TablesInsert<"chat_files">) => {
+export const createChatFile = async (chatFile: TablesInsert<'chat_files'>) => {
   const { data: createdChatFile, error } = await supabase
-    .from("chat_files")
+    .from('chat_files')
     .insert(chatFile)
-    .select("*")
+    .select('*');
 
   if (!createdChatFile) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdChatFile
-}
+  return createdChatFile;
+};
 
 export const createChatFiles = async (
-  chatFiles: TablesInsert<"chat_files">[]
+  chatFiles: TablesInsert<'chat_files'>[]
 ) => {
   const { data: createdChatFiles, error } = await supabase
-    .from("chat_files")
+    .from('chat_files')
     .insert(chatFiles)
-    .select("*")
+    .select('*');
 
   if (!createdChatFiles) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdChatFiles
-}
+  return createdChatFiles;
+};

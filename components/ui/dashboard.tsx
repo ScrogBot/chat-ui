@@ -1,71 +1,71 @@
-"use client"
+'use client';
 
-import { Sidebar } from "@/components/sidebar/sidebar"
-import { SidebarSwitcher } from "@/components/sidebar/sidebar-switcher"
-import { Button } from "@/components/ui/button"
-import { Tabs } from "@/components/ui/tabs"
-import useHotkey from "@/lib/hooks/use-hotkey"
-import { cn } from "@/lib/utils"
-import { ContentType } from "@/types"
-import { IconChevronCompactRight } from "@tabler/icons-react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { FC, useState } from "react"
-import { useSelectFileHandler } from "../chat/chat-hooks/use-select-file-handler"
-import { CommandK } from "../utility/command-k"
+import { Sidebar } from '@/components/sidebar/sidebar';
+import { SidebarSwitcher } from '@/components/sidebar/sidebar-switcher';
+import { Button } from '@/components/ui/button';
+import { Tabs } from '@/components/ui/tabs';
+import useHotkey from '@/lib/hooks/use-hotkey';
+import { cn } from '@/lib/utils';
+import { ContentType } from '@/types';
+import { IconChevronCompactRight } from '@tabler/icons-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { FC, useState } from 'react';
+import { useSelectFileHandler } from '../chat/chat-hooks/use-select-file-handler';
+import { CommandK } from '../utility/command-k';
 
-export const SIDEBAR_WIDTH = 350
+export const SIDEBAR_WIDTH = 350;
 
 interface DashboardProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const Dashboard: FC<DashboardProps> = ({ children }) => {
-  useHotkey("s", () => setShowSidebar(prevState => !prevState))
+  useHotkey('s', () => setShowSidebar(prevState => !prevState));
 
-  const pathname = usePathname()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const tabValue = searchParams.get("tab") || "chats"
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tabValue = searchParams.get('tab') || 'chats';
 
-  const { handleSelectDeviceFile } = useSelectFileHandler()
+  const { handleSelectDeviceFile } = useSelectFileHandler();
 
   const [contentType, setContentType] = useState<ContentType>(
     tabValue as ContentType
-  )
+  );
   const [showSidebar, setShowSidebar] = useState(
-    localStorage.getItem("showSidebar") === "true"
-  )
-  const [isDragging, setIsDragging] = useState(false)
+    localStorage.getItem('showSidebar') === 'true'
+  );
+  const [isDragging, setIsDragging] = useState(false);
 
   const onFileDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const files = event.dataTransfer.files
-    const file = files[0]
+    const files = event.dataTransfer.files;
+    const file = files[0];
 
-    handleSelectDeviceFile(file)
+    handleSelectDeviceFile(file);
 
-    setIsDragging(false)
-  }
+    setIsDragging(false);
+  };
 
   const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    setIsDragging(true)
-  }
+    event.preventDefault();
+    setIsDragging(true);
+  };
 
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    setIsDragging(false)
-  }
+    event.preventDefault();
+    setIsDragging(false);
+  };
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   const handleToggleSidebar = () => {
-    setShowSidebar(prevState => !prevState)
-    localStorage.setItem("showSidebar", String(!showSidebar))
-  }
+    setShowSidebar(prevState => !prevState);
+    localStorage.setItem('showSidebar', String(!showSidebar));
+  };
 
   return (
     <div className="flex size-full">
@@ -73,13 +73,13 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
 
       <div
         className={cn(
-          "duration-200 dark:border-none " + (showSidebar ? "border-r-2" : "")
+          'duration-200 dark:border-none ' + (showSidebar ? 'border-r-2' : '')
         )}
         style={{
           // Sidebar
-          minWidth: showSidebar ? `${SIDEBAR_WIDTH}px` : "0px",
-          maxWidth: showSidebar ? `${SIDEBAR_WIDTH}px` : "0px",
-          width: showSidebar ? `${SIDEBAR_WIDTH}px` : "0px"
+          minWidth: showSidebar ? `${SIDEBAR_WIDTH}px` : '0px',
+          maxWidth: showSidebar ? `${SIDEBAR_WIDTH}px` : '0px',
+          width: showSidebar ? `${SIDEBAR_WIDTH}px` : '0px'
         }}
       >
         {showSidebar && (
@@ -87,8 +87,8 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
             className="flex h-full"
             value={contentType}
             onValueChange={tabValue => {
-              setContentType(tabValue as ContentType)
-              router.replace(`${pathname}?tab=${tabValue}`)
+              setContentType(tabValue as ContentType);
+              router.replace(`${pathname}?tab=${tabValue}`);
             }}
           >
             <SidebarSwitcher onContentTypeChange={setContentType} />
@@ -115,11 +115,11 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
 
         <Button
           className={cn(
-            "absolute left-[4px] top-[50%] z-10 size-[32px] cursor-pointer"
+            'absolute left-[4px] top-[50%] z-10 size-[32px] cursor-pointer'
           )}
           style={{
             // marginLeft: showSidebar ? `${SIDEBAR_WIDTH}px` : "0px",
-            transform: showSidebar ? "rotate(180deg)" : "rotate(0deg)"
+            transform: showSidebar ? 'rotate(180deg)' : 'rotate(0deg)'
           }}
           variant="ghost"
           size="icon"
@@ -129,5 +129,5 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};

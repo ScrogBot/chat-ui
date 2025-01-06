@@ -1,9 +1,9 @@
-import { FC } from "react"
+import { FC } from 'react';
 
 interface AnthropicSVGProps {
-  height?: number
-  width?: number
-  className?: string
+  height?: number;
+  width?: number;
+  className?: string;
 }
 
 export const AnthropicSVG: FC<AnthropicSVGProps> = ({
@@ -21,8 +21,8 @@ export const AnthropicSVG: FC<AnthropicSVGProps> = ({
     >
       <g
         style={{
-          transform: "translateX(13px) rotateZ(0deg)",
-          transformOrigin: "4.775px 7.73501px"
+          transform: 'translateX(13px) rotateZ(0deg)',
+          transformOrigin: '4.775px 7.73501px'
         }}
       >
         <path
@@ -31,7 +31,7 @@ export const AnthropicSVG: FC<AnthropicSVGProps> = ({
         ></path>
       </g>
       <g
-        style={{ transform: "none", transformOrigin: "7.935px 7.73501px" }}
+        style={{ transform: 'none', transformOrigin: '7.935px 7.73501px' }}
         opacity="1"
       >
         <path
@@ -40,5 +40,5 @@ export const AnthropicSVG: FC<AnthropicSVGProps> = ({
         ></path>
       </g>
     </svg>
-  )
-}
+  );
+};

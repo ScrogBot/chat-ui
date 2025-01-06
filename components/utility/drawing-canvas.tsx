@@ -1,93 +1,93 @@
-import { ChatbotUIContext } from "@/context/context"
-import { MessageImage } from "@/types"
-import { FC, MouseEvent, useContext, useEffect, useRef, useState } from "react"
+import { ChatbotUIContext } from '@/context/context';
+import { MessageImage } from '@/types';
+import { FC, MouseEvent, useContext, useEffect, useRef, useState } from 'react';
 
 interface DrawingCanvasProps {
-  imageItem: MessageImage
+  imageItem: MessageImage;
 }
 
 export const DrawingCanvas: FC<DrawingCanvasProps> = ({ imageItem }) => {
-  const { setNewMessageImages } = useContext(ChatbotUIContext)
+  const { setNewMessageImages } = useContext(ChatbotUIContext);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [isDrawing, setIsDrawing] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    const parentElement = canvas?.parentElement
+    const canvas = canvasRef.current;
+    const parentElement = canvas?.parentElement;
     if (canvas && parentElement) {
-      const context = canvas.getContext("2d")
-      const image = new Image()
+      const context = canvas.getContext('2d');
+      const image = new Image();
 
       image.onload = () => {
-        const aspectRatio = image.width / image.height
+        const aspectRatio = image.width / image.height;
 
-        let newWidth = parentElement.clientWidth
-        let newHeight = newWidth / aspectRatio
+        let newWidth = parentElement.clientWidth;
+        let newHeight = newWidth / aspectRatio;
 
         if (newHeight > parentElement.clientHeight) {
-          newHeight = parentElement.clientHeight
-          newWidth = newHeight * aspectRatio
+          newHeight = parentElement.clientHeight;
+          newWidth = newHeight * aspectRatio;
         }
 
-        canvas.width = newWidth
-        canvas.height = newHeight
+        canvas.width = newWidth;
+        canvas.height = newHeight;
 
-        context?.drawImage(image, 0, 0, newWidth, newHeight)
-      }
+        context?.drawImage(image, 0, 0, newWidth, newHeight);
+      };
 
-      image.src = imageItem.url
+      image.src = imageItem.url;
     }
-  }, [imageItem.url])
+  }, [imageItem.url]);
 
   const startDrawing = ({ nativeEvent }: MouseEvent) => {
-    const { offsetX, offsetY } = nativeEvent
-    const context = canvasRef.current?.getContext("2d")
+    const { offsetX, offsetY } = nativeEvent;
+    const context = canvasRef.current?.getContext('2d');
     if (context) {
-      context.strokeStyle = "red"
-      context.lineWidth = 2
+      context.strokeStyle = 'red';
+      context.lineWidth = 2;
     }
-    context?.beginPath()
-    context?.moveTo(offsetX, offsetY)
-    setIsDrawing(true)
-  }
+    context?.beginPath();
+    context?.moveTo(offsetX, offsetY);
+    setIsDrawing(true);
+  };
 
   const draw = ({ nativeEvent }: MouseEvent) => {
     if (!isDrawing) {
-      return
+      return;
     }
-    const { offsetX, offsetY } = nativeEvent
-    const context = canvasRef.current?.getContext("2d")
-    context?.lineTo(offsetX, offsetY)
-    context?.stroke()
-  }
+    const { offsetX, offsetY } = nativeEvent;
+    const context = canvasRef.current?.getContext('2d');
+    context?.lineTo(offsetX, offsetY);
+    context?.stroke();
+  };
 
   const finishDrawing = () => {
-    const canvas = canvasRef.current
-    const context = canvas?.getContext("2d")
-    context?.closePath()
-    setIsDrawing(false)
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext('2d');
+    context?.closePath();
+    setIsDrawing(false);
 
     if (canvas) {
-      const dataURL = canvas.toDataURL("image/png")
+      const dataURL = canvas.toDataURL('image/png');
       fetch(dataURL)
         .then(res => res.blob())
         .then(blob => {
-          const newImageFile = new File([blob], "drawing.png", {
-            type: "image/png"
-          })
+          const newImageFile = new File([blob], 'drawing.png', {
+            type: 'image/png'
+          });
 
           setNewMessageImages(prevImages => {
             return prevImages.map(img => {
               if (img.url === imageItem.url) {
-                return { ...img, base64: dataURL, file: newImageFile }
+                return { ...img, base64: dataURL, file: newImageFile };
               }
-              return img
-            })
-          })
-        })
+              return img;
+            });
+          });
+        });
     }
-  }
+  };
 
   return (
     <canvas
@@ -100,9 +100,9 @@ export const DrawingCanvas: FC<DrawingCanvasProps> = ({ imageItem }) => {
       onMouseMove={draw}
       onMouseLeave={finishDrawing}
       style={{
-        maxHeight: "67vh",
-        maxWidth: "67vw"
+        maxHeight: '67vh',
+        maxWidth: '67vw'
       }}
     />
-  )
-}
+  );
+};

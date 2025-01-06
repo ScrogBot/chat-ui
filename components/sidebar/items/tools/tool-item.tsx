@@ -1,27 +1,27 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { TextareaAutosize } from "@/components/ui/textarea-autosize"
-import { TOOL_DESCRIPTION_MAX, TOOL_NAME_MAX } from "@/db/limits"
-import { validateOpenAPI } from "@/lib/openapi-conversion"
-import { Tables } from "@/supabase/types"
-import { IconBolt } from "@tabler/icons-react"
-import { FC, useState } from "react"
-import { SidebarItem } from "../all/sidebar-display-item"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { TextareaAutosize } from '@/components/ui/textarea-autosize';
+import { TOOL_DESCRIPTION_MAX, TOOL_NAME_MAX } from '@/db/limits';
+import { validateOpenAPI } from '@/lib/openapi-conversion';
+import { Tables } from '@/supabase/types';
+import { IconBolt } from '@tabler/icons-react';
+import { FC, useState } from 'react';
+import { SidebarItem } from '../all/sidebar-display-item';
 
 interface ToolItemProps {
-  tool: Tables<"tools">
+  tool: Tables<'tools'>;
 }
 
 export const ToolItem: FC<ToolItemProps> = ({ tool }) => {
-  const [name, setName] = useState(tool.name)
-  const [isTyping, setIsTyping] = useState(false)
-  const [description, setDescription] = useState(tool.description)
-  const [url, setUrl] = useState(tool.url)
+  const [name, setName] = useState(tool.name);
+  const [isTyping, setIsTyping] = useState(false);
+  const [description, setDescription] = useState(tool.description);
+  const [url, setUrl] = useState(tool.url);
   const [customHeaders, setCustomHeaders] = useState(
     tool.custom_headers as string
-  )
-  const [schema, setSchema] = useState(tool.schema as string)
-  const [schemaError, setSchemaError] = useState("")
+  );
+  const [schema, setSchema] = useState(tool.schema as string);
+  const [schemaError, setSchemaError] = useState('');
 
   return (
     <SidebarItem
@@ -143,15 +143,15 @@ export const ToolItem: FC<ToolItemProps> = ({ tool }) => {
               }`}
               value={schema}
               onValueChange={value => {
-                setSchema(value)
+                setSchema(value);
 
                 try {
-                  const parsedSchema = JSON.parse(value)
+                  const parsedSchema = JSON.parse(value);
                   validateOpenAPI(parsedSchema)
-                    .then(() => setSchemaError("")) // Clear error if validation is successful
-                    .catch(error => setSchemaError(error.message)) // Set specific validation error message
+                    .then(() => setSchemaError('')) // Clear error if validation is successful
+                    .catch(error => setSchemaError(error.message)); // Set specific validation error message
                 } catch (error) {
-                  setSchemaError("Invalid JSON format") // Set error for invalid JSON format
+                  setSchemaError('Invalid JSON format'); // Set error for invalid JSON format
                 }
               }}
               minRows={15}
@@ -162,5 +162,5 @@ export const ToolItem: FC<ToolItemProps> = ({ tool }) => {
         </>
       )}
     />
-  )
-}
+  );
+};

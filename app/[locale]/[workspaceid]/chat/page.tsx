@@ -1,35 +1,87 @@
-"use client"
+'use client';
 
-import { ChatHelp } from "@/components/chat/chat-help"
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
-import { ChatInput } from "@/components/chat/chat-input"
-import { ChatSettings } from "@/components/chat/chat-settings"
-import { ChatUI } from "@/components/chat/chat-ui"
-import { QuickSettings } from "@/components/chat/quick-settings"
-import { Brand } from "@/components/ui/brand"
-import { ChatbotUIContext } from "@/context/context"
-import useHotkey from "@/lib/hooks/use-hotkey"
-import { useTheme } from "next-themes"
-import { useContext } from "react"
+import { ChatHelp } from '@/components/chat/chat-help';
+import { useChatHandler } from '@/components/chat/chat-hooks/use-chat-handler';
+import { ChatInput } from '@/components/chat/chat-input';
+import { ChatSettings } from '@/components/chat/chat-settings';
+import { ChatUI } from '@/components/chat/chat-ui';
+import { QuickSettings } from '@/components/chat/quick-settings';
+import { Brand } from '@/components/ui/brand';
+import { ChatbotUIContext } from '@/context/context';
+import useHotkey from '@/lib/hooks/use-hotkey';
+import { useTheme } from 'next-themes';
+import { useContext } from 'react';
 
 export default function ChatPage() {
-  useHotkey("o", () => handleNewChat())
-  useHotkey("l", () => {
-    handleFocusChatInput()
-  })
+  useHotkey('o', () => handleNewChat());
+  useHotkey('l', () => {
+    handleFocusChatInput();
+  });
 
-  const { chatMessages } = useContext(ChatbotUIContext)
+  const { chatMessages, models, setModels } = useContext(ChatbotUIContext);
 
-  const { handleNewChat, handleFocusChatInput } = useChatHandler()
+  // update models
+  if (!models.find(model => model.model_id === 'FineTuning_LLM')) {
+    models.push({
+      api_key: '',
+      base_url: 'http://223.130.135.187:8001/v1',
+      context_length: 0,
+      created_at: '',
+      description: '',
+      folder_id: null,
+      id: '',
+      sharing: '',
+      updated_at: null,
+      user_id: '',
+      model_id: 'FineTuning_LLM',
+      name: 'FineTuning_LLM'
+    });
+    setModels(models);
+  }
 
-  const { theme } = useTheme()
+  const modelIds = [
+    'jailbreaking-level-1',
+    'jailbreaking-level-2',
+    'jailbreaking-level-3',
+    'jailbreaking-level-4',
+    'jailbreaking-level-5',
+    'jailbreaking-level-6',
+    'jailbreaking-level-7',
+    'jailbreaking-level-8',
+    'jailbreaking-level-9',
+    'jailbreaking-level-10'
+  ];
+
+  for (const modelId of modelIds) {
+    if (!models.find(model => model.model_id === modelId)) {
+      models.push({
+        api_key: '',
+        base_url: 'https://pcp-ai.openai.azure.com/openai',
+        context_length: 0,
+        created_at: '',
+        description: '',
+        folder_id: null,
+        id: '',
+        sharing: '',
+        updated_at: null,
+        user_id: '',
+        model_id: modelId,
+        name: modelId
+      });
+    }
+    setModels(models);
+  }
+
+  const { handleNewChat, handleFocusChatInput } = useChatHandler();
+
+  const { theme } = useTheme();
 
   return (
     <>
       {chatMessages.length === 0 ? (
         <div className="relative flex h-full flex-col items-center justify-center">
           <div className="top-50% left-50% -translate-x-50% -translate-y-50% absolute mb-20">
-            <Brand theme={theme === "dark" ? "dark" : "light"} />
+            {/*<Brand theme={theme === 'dark' ? 'dark' : 'light'} />*/}
           </div>
 
           <div className="absolute left-2 top-2">
@@ -54,5 +106,5 @@ export default function ChatPage() {
         <ChatUI />
       )}
     </>
-  )
+  );
 }

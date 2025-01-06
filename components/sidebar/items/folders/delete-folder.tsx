@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,19 +7,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "@/components/ui/dialog"
-import { ChatbotUIContext } from "@/context/context"
-import { deleteFolder } from "@/db/folders"
-import { supabase } from "@/lib/supabase/browser-client"
-import { Tables } from "@/supabase/types"
-import { ContentType } from "@/types"
-import { IconTrash } from "@tabler/icons-react"
-import { FC, useContext, useRef, useState } from "react"
-import { toast } from "sonner"
+} from '@/components/ui/dialog';
+import { ChatbotUIContext } from '@/context/context';
+import { deleteFolder } from '@/db/folders';
+import { supabase } from '@/lib/supabase/browser-client';
+import { Tables } from '@/supabase/types';
+import { ContentType } from '@/types';
+import { IconTrash } from '@tabler/icons-react';
+import { FC, useContext, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 interface DeleteFolderProps {
-  folder: Tables<"folders">
-  contentType: ContentType
+  folder: Tables<'folders'>;
+  contentType: ContentType;
 }
 
 export const DeleteFolder: FC<DeleteFolderProps> = ({
@@ -35,13 +35,14 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     setCollections,
     setAssistants,
     setTools,
-    setPlatformTools,
-    setModels
-  } = useContext(ChatbotUIContext)
+    setModels,
+    setGameResults,
+    setSharedChats
+  } = useContext(ChatbotUIContext);
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [showFolderDialog, setShowFolderDialog] = useState(false)
+  const [showFolderDialog, setShowFolderDialog] = useState(false);
 
   const stateUpdateFunctions = {
     chats: setChats,
@@ -51,20 +52,21 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
-    platformTools: setPlatformTools,
-    models: setModels
-  }
+       models: setModels,
+    game_results: setGameResults,
+    share: null
+  };
 
   const handleDeleteFolderOnly = async () => {
-    await deleteFolder(folder.id)
+    await deleteFolder(folder.id);
 
-    setFolders(prevState => prevState.filter(c => c.id !== folder.id))
+    setFolders(prevState => prevState.filter(c => c.id !== folder.id));
 
-    setShowFolderDialog(false)
+    setShowFolderDialog(false);
 
-    const setStateFunction = stateUpdateFunctions[contentType]
+    const setStateFunction = stateUpdateFunctions[contentType];
 
-    if (!setStateFunction) return
+    if (!setStateFunction) return;
 
     setStateFunction((prevItems: any) =>
       prevItems.map((item: any) => {
@@ -72,34 +74,35 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
           return {
             ...item,
             folder_id: null
-          }
+          };
         }
 
-        return item
+        return item;
       })
-    )
-  }
+    );
+  };
 
   const handleDeleteFolderAndItems = async () => {
-    const setStateFunction = stateUpdateFunctions[contentType]
+    const setStateFunction = stateUpdateFunctions[contentType];
 
-    if (!setStateFunction) return
+    if (!setStateFunction) return;
+    if (contentType === 'share') return;
 
     const { error } = await supabase
       .from(contentType)
       .delete()
-      .eq("folder_id", folder.id)
+      .eq('folder_id', folder.id);
 
     if (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
 
     setStateFunction((prevItems: any) =>
       prevItems.filter((item: any) => item.folder_id !== folder.id)
-    )
+    );
 
-    handleDeleteFolderOnly()
-  }
+    handleDeleteFolderOnly();
+  };
 
   return (
     <Dialog open={showFolderDialog} onOpenChange={setShowFolderDialog}>
@@ -139,5 +142,5 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

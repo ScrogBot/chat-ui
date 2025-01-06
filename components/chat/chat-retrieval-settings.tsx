@@ -1,23 +1,23 @@
-import { ChatbotUIContext } from "@/context/context"
-import { IconAdjustmentsHorizontal } from "@tabler/icons-react"
-import { FC, useContext, useState } from "react"
-import { Button } from "../ui/button"
+import { ChatbotUIContext } from '@/context/context';
+import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
+import { FC, useContext, useState } from 'react';
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogTrigger
-} from "../ui/dialog"
-import { Label } from "../ui/label"
-import { Slider } from "../ui/slider"
-import { WithTooltip } from "../ui/with-tooltip"
+} from '../ui/dialog';
+import { Label } from '../ui/label';
+import { Slider } from '../ui/slider';
+import { WithTooltip } from '../ui/with-tooltip';
 
 interface ChatRetrievalSettingsProps {}
 
 export const ChatRetrievalSettings: FC<ChatRetrievalSettingsProps> = ({}) => {
-  const { sourceCount, setSourceCount } = useContext(ChatbotUIContext)
+  const { sourceCount, setSourceCount } = useContext(ChatbotUIContext);
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -46,7 +46,7 @@ export const ChatRetrievalSettings: FC<ChatRetrievalSettingsProps> = ({}) => {
           <Slider
             value={[sourceCount]}
             onValueChange={values => {
-              setSourceCount(values[0])
+              setSourceCount(values[0]);
             }}
             min={1}
             max={10}
@@ -61,5 +61,5 @@ export const ChatRetrievalSettings: FC<ChatRetrievalSettingsProps> = ({}) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

@@ -1,30 +1,30 @@
-import { SidebarCreateItem } from "@/components/sidebar/items/all/sidebar-create-item"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { TextareaAutosize } from "@/components/ui/textarea-autosize"
-import { ChatbotUIContext } from "@/context/context"
-import { TOOL_DESCRIPTION_MAX, TOOL_NAME_MAX } from "@/db/limits"
-import { validateOpenAPI } from "@/lib/openapi-conversion"
-import { TablesInsert } from "@/supabase/types"
-import { FC, useContext, useState } from "react"
+import { SidebarCreateItem } from '@/components/sidebar/items/all/sidebar-create-item';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { TextareaAutosize } from '@/components/ui/textarea-autosize';
+import { ChatbotUIContext } from '@/context/context';
+import { TOOL_DESCRIPTION_MAX, TOOL_NAME_MAX } from '@/db/limits';
+import { validateOpenAPI } from '@/lib/openapi-conversion';
+import { TablesInsert } from '@/supabase/types';
+import { FC, useContext, useState } from 'react';
 
 interface CreateToolProps {
-  isOpen: boolean
-  onOpenChange: (isOpen: boolean) => void
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 }
 
 export const CreateTool: FC<CreateToolProps> = ({ isOpen, onOpenChange }) => {
-  const { profile, selectedWorkspace } = useContext(ChatbotUIContext)
+  const { profile, selectedWorkspace } = useContext(ChatbotUIContext);
 
-  const [name, setName] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
-  const [description, setDescription] = useState("")
-  const [url, setUrl] = useState("")
-  const [customHeaders, setCustomHeaders] = useState("")
-  const [schema, setSchema] = useState("")
-  const [schemaError, setSchemaError] = useState("")
+  const [name, setName] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [description, setDescription] = useState('');
+  const [url, setUrl] = useState('');
+  const [customHeaders, setCustomHeaders] = useState('');
+  const [schema, setSchema] = useState('');
+  const [schemaError, setSchemaError] = useState('');
 
-  if (!profile || !selectedWorkspace) return null
+  if (!profile || !selectedWorkspace) return null;
 
   return (
     <SidebarCreateItem
@@ -37,7 +37,7 @@ export const CreateTool: FC<CreateToolProps> = ({ isOpen, onOpenChange }) => {
           url,
           custom_headers: customHeaders,
           schema
-        } as TablesInsert<"tools">
+        } as TablesInsert<'tools'>
       }
       isOpen={isOpen}
       isTyping={isTyping}
@@ -148,15 +148,15 @@ export const CreateTool: FC<CreateToolProps> = ({ isOpen, onOpenChange }) => {
               }`}
               value={schema}
               onValueChange={value => {
-                setSchema(value)
+                setSchema(value);
 
                 try {
-                  const parsedSchema = JSON.parse(value)
+                  const parsedSchema = JSON.parse(value);
                   validateOpenAPI(parsedSchema)
-                    .then(() => setSchemaError("")) // Clear error if validation is successful
-                    .catch(error => setSchemaError(error.message)) // Set specific validation error message
+                    .then(() => setSchemaError('')) // Clear error if validation is successful
+                    .catch(error => setSchemaError(error.message)); // Set specific validation error message
                 } catch (error) {
-                  setSchemaError("Invalid JSON format") // Set error for invalid JSON format
+                  setSchemaError('Invalid JSON format'); // Set error for invalid JSON format
                 }
               }}
               minRows={15}
@@ -168,5 +168,5 @@ export const CreateTool: FC<CreateToolProps> = ({ isOpen, onOpenChange }) => {
       )}
       onOpenChange={onOpenChange}
     />
-  )
-}
+  );
+};

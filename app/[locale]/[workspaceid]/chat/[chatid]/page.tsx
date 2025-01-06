@@ -1,7 +1,14 @@
-"use client"
+'use client';
 
-import { ChatUI } from "@/components/chat/chat-ui"
+import { ChatbotUIContext } from '@/context/context';
+import { useContext } from 'react';
 
-export default function ChatIDPage() {
-  return <ChatUI />
+export default function WorkspacePage() {
+  const { selectedWorkspace } = useContext(ChatbotUIContext);
+
+  return (
+    <div className="flex h-screen w-full flex-col items-center justify-center">
+      <div className="text-4xl">{selectedWorkspace?.name}</div>
+    </div>
+  );
 }

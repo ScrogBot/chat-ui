@@ -1,17 +1,17 @@
-import { FC } from "react"
+import { FC } from 'react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from "./tooltip"
+} from './tooltip';
 
 interface WithTooltipProps {
-  display: React.ReactNode
-  trigger: React.ReactNode
+  display: React.ReactNode;
+  trigger: React.ReactNode;
 
-  delayDuration?: number
-  side?: "left" | "right" | "top" | "bottom"
+  delayDuration?: number;
+  side?: 'left' | 'right' | 'top' | 'bottom';
 }
 
 export const WithTooltip: FC<WithTooltipProps> = ({
@@ -19,7 +19,7 @@ export const WithTooltip: FC<WithTooltipProps> = ({
   trigger,
 
   delayDuration = 500,
-  side = "right"
+  side = 'right'
 }) => {
   return (
     <TooltipProvider delayDuration={delayDuration}>
@@ -29,5 +29,5 @@ export const WithTooltip: FC<WithTooltipProps> = ({
         <TooltipContent side={side}>{display}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
-}
+  );
+};

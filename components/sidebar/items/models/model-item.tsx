@@ -1,24 +1,24 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { MODEL_NAME_MAX } from "@/db/limits"
-import { Tables, TablesUpdate } from "@/supabase/types"
-import { IconSparkles } from "@tabler/icons-react"
-import { FC, useState } from "react"
-import { SidebarItem } from "../all/sidebar-display-item"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { MODEL_NAME_MAX } from '@/db/limits';
+import { Tables, TablesUpdate } from '@/supabase/types';
+import { IconSparkles } from '@tabler/icons-react';
+import { FC, useState } from 'react';
+import { SidebarItem } from '../all/sidebar-display-item';
 
 interface ModelItemProps {
-  model: Tables<"models">
+  model: Tables<'models'>;
 }
 
 export const ModelItem: FC<ModelItemProps> = ({ model }) => {
-  const [isTyping, setIsTyping] = useState(false)
+  const [isTyping, setIsTyping] = useState(false);
 
-  const [apiKey, setApiKey] = useState(model.api_key)
-  const [baseUrl, setBaseUrl] = useState(model.base_url)
-  const [description, setDescription] = useState(model.description)
-  const [modelId, setModelId] = useState(model.model_id)
-  const [name, setName] = useState(model.name)
-  const [contextLength, setContextLength] = useState(model.context_length)
+  const [apiKey, setApiKey] = useState(model.api_key);
+  const [baseUrl, setBaseUrl] = useState(model.base_url);
+  const [description, setDescription] = useState(model.description);
+  const [modelId, setModelId] = useState(model.model_id);
+  const [name, setName] = useState(model.name);
+  const [contextLength, setContextLength] = useState(model.context_length);
 
   return (
     <SidebarItem
@@ -34,7 +34,7 @@ export const ModelItem: FC<ModelItemProps> = ({ model }) => {
           context_length: contextLength,
           model_id: modelId,
           name
-        } as TablesUpdate<"models">
+        } as TablesUpdate<'models'>
       }
       renderInputs={() => (
         <>
@@ -98,5 +98,5 @@ export const ModelItem: FC<ModelItemProps> = ({ model }) => {
         </>
       )}
     />
-  )
-}
+  );
+};

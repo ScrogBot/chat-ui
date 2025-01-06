@@ -1,57 +1,57 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert, TablesUpdate } from '@/supabase/types';
 
 export const getFoldersByWorkspaceId = async (workspaceId: string) => {
   const { data: folders, error } = await supabase
-    .from("folders")
-    .select("*")
-    .eq("workspace_id", workspaceId)
+    .from('folders')
+    .select('*')
+    .eq('workspace_id', workspaceId);
 
   if (!folders) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return folders
-}
+  return folders;
+};
 
-export const createFolder = async (folder: TablesInsert<"folders">) => {
+export const createFolder = async (folder: TablesInsert<'folders'>) => {
   const { data: createdFolder, error } = await supabase
-    .from("folders")
+    .from('folders')
     .insert([folder])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdFolder
-}
+  return createdFolder;
+};
 
 export const updateFolder = async (
   folderId: string,
-  folder: TablesUpdate<"folders">
+  folder: TablesUpdate<'folders'>
 ) => {
   const { data: updatedFolder, error } = await supabase
-    .from("folders")
+    .from('folders')
     .update(folder)
-    .eq("id", folderId)
-    .select("*")
-    .single()
+    .eq('id', folderId)
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return updatedFolder
-}
+  return updatedFolder;
+};
 
 export const deleteFolder = async (folderId: string) => {
-  const { error } = await supabase.from("folders").delete().eq("id", folderId)
+  const { error } = await supabase.from('folders').delete().eq('id', folderId);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return true
-}
+  return true;
+};

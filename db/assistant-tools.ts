@@ -5,7 +5,7 @@ import { TablesInsert } from "@/supabase/types"
 
 export const getAssistantToolsByAssistantId = async (assistantId: string) => {
   const { data: assistantTools, error } = await supabase
-    .from("assistants")
+    .from('assistants')
     .select(
       `
         id, 
@@ -14,11 +14,11 @@ export const getAssistantToolsByAssistantId = async (assistantId: string) => {
         assistant_platform_tools (*)
       `
     )
-    .eq("id", assistantId)
-    .single()
+    .eq('id', assistantId)
+    .single();
 
   if (!assistantTools) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   const platformTools = assistantTools.assistant_platform_tools.map(tool =>
@@ -41,7 +41,7 @@ async function insertAssistantTool(
   const { data, error } = await supabase
     .from("assistant_tools")
     .insert(assistantTool)
-    .select("*")
+    .select('*');
 
   if (!data) {
     throw new Error(error.message)
@@ -75,23 +75,19 @@ export const createAssistantTool = async (
   }
 }
 export const createAssistantTools = async (
-  assistantTools: TablesInsert<"assistant_tools">[]
+  assistantTools: TablesInsert<'assistant_tools'>[]
 ) => {
-  const createdAssistantUserTools = await Promise.all(
-    assistantTools
-      .filter(
-        tool => !platformToolList.some(ptool => ptool.id === tool.tool_id)
-      )
-      .map(async tool => await insertAssistantTool(tool))
-  )
-  const createdPlatformTools = await Promise.all(
-    assistantTools
-      .filter(tool => platformToolList.some(ptool => ptool.id === tool.tool_id))
-      .map(async tool => await insertAssistantPlatformTool(tool))
-  )
+  const { data: createdAssistantTools, error } = await supabase
+    .from('assistant_tools')
+    .insert(assistantTools)
+    .select('*');
 
-  return { createdAssistantUserTools, createdPlatformTools }
-}
+  if (!createdAssistantTools) {
+    throw new Error(error.message);
+  }
+
+  return createdAssistantTools;
+};
 
 export const deleteAssistantTool = async (
   assistantId: string,
@@ -103,10 +99,10 @@ export const deleteAssistantTool = async (
   const { error } = await supabase
     .from(tableName)
     .delete()
-    .eq("assistant_id", assistantId)
-    .eq("tool_id", toolId)
+    .eq('assistant_id', assistantId)
+    .eq('tool_id', toolId);
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return true
-}
+  return true;
+};
