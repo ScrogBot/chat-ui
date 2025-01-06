@@ -18,8 +18,8 @@ import {
 import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { supabase } from "@/lib/supabase/browser-client"
 import { LLMID } from "@/types"
-import { useParams, useRouter } from "next/navigation"
-import { ReactNode, useContext, useEffect, useState, useCallback } from "react"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
+import { ReactNode, useContext, useEffect, useState } from "react"
 import Loading from "../loading"
 import { platformToolDefinitions } from "@/lib/platformTools/utils/platformToolsUtils"
 
@@ -30,6 +30,7 @@ interface WorkspaceLayoutProps {
 export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const workspaceId = params.workspaceid as string
 
   const {
