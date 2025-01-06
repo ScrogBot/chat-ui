@@ -43,7 +43,6 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setPresets,
     setPrompts,
     setTools,
-    setPlatformTools,
     setModels,
     selectedWorkspace,
     setSelectedWorkspace,
@@ -138,7 +137,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const chats = await getChatsByWorkspaceId(workspaceId);
     setChats(chats);
 
-    const collectionData = await getCollectionWorkspacesByWorkspaceId(workspaceId);
+    const collectionData =
+      await getCollectionWorkspacesByWorkspaceId(workspaceId);
     setCollections(collectionData.collections);
 
     const folders = await getFoldersByWorkspaceId(workspaceId);
@@ -155,7 +155,6 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
     const toolData = await getToolWorkspacesByWorkspaceId(workspaceId);
     setTools(toolData.tools);
-    setPlatformTools(platformToolDefinitions())
 
     const modelData = await getModelWorkspacesByWorkspaceId(workspaceId);
     setModels(modelData.models);
@@ -169,7 +168,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
         'gpt-4-1106-preview') as LLMID,
       prompt:
         workspace?.default_prompt ||
-        "You are the Clarksonbot, an AI with expertise in medical science, and your user is a physician in training who needs you assistance with a medical question or complex patient. Do not recommend consulting a health care provider or professional, they are professionals. They may ask questions related to diseases, treatments, patient care, public health, or other medically relevant topics. Your responses should be conversational, informative, and supportive.  Engage in the following manner: Understanding the Inquiry: Clarify and comprehend the users question or topic, whether it relates to a medical condition, therapeutic approach, or any other medical subject. Providing Insightful Explanations: Offer detailed and accessible insights tailored to the providing quality evidence based answers. Break down complex medical concepts, providing relevant examples or analogies.   Referencing Evidence-Based Medicine: Support your insights with evidence, citing reputable sources like studies or medical guidelines. Citations can be informal, like: 'You might find this study interesting: [Title and hyperlink].' Connecting to Broader Contexts: If relevant, discuss the larger public health implications or the ethical considerations tied to the topic at hand",
+        'You are a friendly, helpful AI assistant.',
       temperature: workspace?.default_temperature || 0.5,
       contextLength: workspace?.default_context_length || 4096,
       includeProfileContext: workspace?.include_profile_context || true,
@@ -179,68 +178,6 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
         (workspace?.embeddings_provider as 'openai' | 'local') || 'openai'
     });
 
-    setLoading(false)
-  }, [
-    setAssistantImages,
-    setAssistants,
-    setChatFiles,
-    setChatImages,
-    setChatMessages,
-    setChatSettings,
-    setChats,
-    setCollections,
-    setFiles,
-    setFirstTokenReceived,
-    setFolders,
-    setIsGenerating,
-    setModels,
-    setPlatformTools,
-    setPresets,
-    setPrompts,
-    setSelectedWorkspace,
-    setShowFilesDisplay,
-    setTools
-  ])
-
-  useEffect(() => {
-    (async () => {
-      const session = (await supabase.auth.getSession()).data.session
-
-      if (!session) {
-        return router.push("/login")
-      } else {
-        await fetchWorkspaceData(workspaceId)
-      }
-    })()
-  }, [fetchWorkspaceData, router, workspaceId])
-
-  useEffect(() => {
-    fetchWorkspaceData(workspaceId)
-
-    setUserInput("")
-    setChatMessages([])
-    setSelectedChat(null)
-    setIsGenerating(false)
-    setFirstTokenReceived(false)
-    setChatFiles([])
-    setChatImages([])
-    setNewMessageFiles([])
-    setNewMessageImages([])
-    setShowFilesDisplay(false)
-  }, [
-    fetchWorkspaceData,
-    setUserInput,
-    setChatMessages,
-    setSelectedChat,
-    setIsGenerating,
-    setFirstTokenReceived,
-    setChatFiles,
-    setChatImages,
-    setNewMessageFiles,
-    setNewMessageImages,
-    setShowFilesDisplay,
-    workspaceId
-  ])
     setLoading(false);
   };
 

@@ -23,10 +23,10 @@ export const AssistantToolSelect: FC<AssistantToolSelectProps> = ({
   selectedAssistantTools,
   onAssistantToolsSelect
 }) => {
-  const { tools, platformTools } = useContext(ChatbotUIContext)
+  const { tools } = useContext(ChatbotUIContext)
 
   const allTools = (tools || []).concat(
-    platformTools || []
+   []
   ) as Tables<"tools">[]
 
   const inputRef = useRef<HTMLInputElement>(null);
