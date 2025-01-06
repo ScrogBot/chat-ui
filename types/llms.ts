@@ -40,7 +40,6 @@ export type MistralLLMID =
   | "mistral-small-latest" // Mistral Small
   | "mistral-medium-latest" // Mistral Medium
   | "mistral-large-latest" // Mistral Large
-  | "open-mistral-nemo" // Open Mistral Nemo
   | "codestral-mamba-2407" // CodeStral Mamba 2407
   | "codestral-2405" // CodeStral 2405
   | "mistral-large-2407" // Mistral Large 2407
