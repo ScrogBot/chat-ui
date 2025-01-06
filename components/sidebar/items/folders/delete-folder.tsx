@@ -35,7 +35,6 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     setCollections,
     setAssistants,
     setTools,
-    setPlatformTools,
     setModels,
     setGameResults,
     setSharedChats
@@ -53,8 +52,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
-    platformTools: setPlatformTools,
-    models: setModels,
+       models: setModels,
     game_results: setGameResults,
     share: null
   };
