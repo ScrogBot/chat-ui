@@ -1,21 +1,21 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { COLLECTION_DESCRIPTION_MAX, COLLECTION_NAME_MAX } from "@/db/limits"
-import { Tables } from "@/supabase/types"
-import { CollectionFile } from "@/types"
-import { IconBooks } from "@tabler/icons-react"
-import { FC, useState } from "react"
-import { SidebarItem } from "../all/sidebar-display-item"
-import { CollectionFileSelect } from "./collection-file-select"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { COLLECTION_DESCRIPTION_MAX, COLLECTION_NAME_MAX } from '@/db/limits';
+import { Tables } from '@/supabase/types';
+import { CollectionFile } from '@/types';
+import { IconBooks } from '@tabler/icons-react';
+import { FC, useState } from 'react';
+import { SidebarItem } from '../all/sidebar-display-item';
+import { CollectionFileSelect } from './collection-file-select';
 
 interface CollectionItemProps {
-  collection: Tables<"collections">
+  collection: Tables<'collections'>;
 }
 
 export const CollectionItem: FC<CollectionItemProps> = ({ collection }) => {
-  const [name, setName] = useState(collection.name)
-  const [isTyping, setIsTyping] = useState(false)
-  const [description, setDescription] = useState(collection.description)
+  const [name, setName] = useState(collection.name);
+  const [isTyping, setIsTyping] = useState(false);
+  const [description, setDescription] = useState(collection.description);
 
   const handleFileSelect = (
     file: CollectionFile,
@@ -26,15 +26,15 @@ export const CollectionItem: FC<CollectionItemProps> = ({ collection }) => {
     setSelectedCollectionFiles(prevState => {
       const isFileAlreadySelected = prevState.find(
         selectedFile => selectedFile.id === file.id
-      )
+      );
 
       if (isFileAlreadySelected) {
-        return prevState.filter(selectedFile => selectedFile.id !== file.id)
+        return prevState.filter(selectedFile => selectedFile.id !== file.id);
       } else {
-        return [...prevState, file]
+        return [...prevState, file];
       }
-    })
-  }
+    });
+  };
 
   return (
     <SidebarItem
@@ -47,14 +47,14 @@ export const CollectionItem: FC<CollectionItemProps> = ({ collection }) => {
         description
       }}
       renderInputs={(renderState: {
-        startingCollectionFiles: CollectionFile[]
+        startingCollectionFiles: CollectionFile[];
         setStartingCollectionFiles: React.Dispatch<
           React.SetStateAction<CollectionFile[]>
-        >
-        selectedCollectionFiles: CollectionFile[]
+        >;
+        selectedCollectionFiles: CollectionFile[];
         setSelectedCollectionFiles: React.Dispatch<
           React.SetStateAction<CollectionFile[]>
-        >
+        >;
       }) => {
         return (
           <>
@@ -110,8 +110,8 @@ export const CollectionItem: FC<CollectionItemProps> = ({ collection }) => {
               />
             </div>
           </>
-        )
+        );
       }}
     />
-  )
-}
+  );
+};

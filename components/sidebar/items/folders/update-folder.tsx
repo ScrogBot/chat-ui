@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,43 +6,43 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ChatbotUIContext } from "@/context/context"
-import { updateFolder } from "@/db/folders"
-import { Tables } from "@/supabase/types"
-import { IconEdit } from "@tabler/icons-react"
-import { FC, useContext, useRef, useState } from "react"
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ChatbotUIContext } from '@/context/context';
+import { updateFolder } from '@/db/folders';
+import { Tables } from '@/supabase/types';
+import { IconEdit } from '@tabler/icons-react';
+import { FC, useContext, useRef, useState } from 'react';
 
 interface UpdateFolderProps {
-  folder: Tables<"folders">
+  folder: Tables<'folders'>;
 }
 
 export const UpdateFolder: FC<UpdateFolderProps> = ({ folder }) => {
-  const { setFolders } = useContext(ChatbotUIContext)
+  const { setFolders } = useContext(ChatbotUIContext);
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [showFolderDialog, setShowFolderDialog] = useState(false)
-  const [name, setName] = useState(folder.name)
+  const [showFolderDialog, setShowFolderDialog] = useState(false);
+  const [name, setName] = useState(folder.name);
 
   const handleUpdateFolder = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const updatedFolder = await updateFolder(folder.id, {
       name
-    })
+    });
     setFolders(prevState =>
       prevState.map(c => (c.id === folder.id ? updatedFolder : c))
-    )
+    );
 
-    setShowFolderDialog(false)
-  }
+    setShowFolderDialog(false);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      buttonRef.current?.click()
+    if (e.key === 'Enter') {
+      buttonRef.current?.click();
     }
-  }
+  };
 
   return (
     <Dialog open={showFolderDialog} onOpenChange={setShowFolderDialog}>
@@ -72,5 +72,5 @@ export const UpdateFolder: FC<UpdateFolderProps> = ({ folder }) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

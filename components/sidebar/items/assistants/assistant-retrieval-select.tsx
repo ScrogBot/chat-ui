@@ -1,59 +1,59 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { ChatbotUIContext } from "@/context/context"
-import { Tables } from "@/supabase/types"
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { ChatbotUIContext } from '@/context/context';
+import { Tables } from '@/supabase/types';
 import {
   IconBooks,
   IconChevronDown,
   IconCircleCheckFilled
-} from "@tabler/icons-react"
-import { FileIcon } from "lucide-react"
-import { FC, useContext, useEffect, useRef, useState } from "react"
+} from '@tabler/icons-react';
+import { FileIcon } from 'lucide-react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 interface AssistantRetrievalSelectProps {
-  selectedAssistantRetrievalItems: Tables<"files">[] | Tables<"collections">[]
+  selectedAssistantRetrievalItems: Tables<'files'>[] | Tables<'collections'>[];
   onAssistantRetrievalItemsSelect: (
-    item: Tables<"files"> | Tables<"collections">
-  ) => void
+    item: Tables<'files'> | Tables<'collections'>
+  ) => void;
 }
 
 export const AssistantRetrievalSelect: FC<AssistantRetrievalSelectProps> = ({
   selectedAssistantRetrievalItems,
   onAssistantRetrievalItemsSelect
 }) => {
-  const { files, collections } = useContext(ChatbotUIContext)
+  const { files, collections } = useContext(ChatbotUIContext);
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState("")
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100) // FIX: hacky
+        inputRef.current?.focus();
+      }, 100); // FIX: hacky
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  const handleItemSelect = (item: Tables<"files"> | Tables<"collections">) => {
-    onAssistantRetrievalItemsSelect(item)
-  }
+  const handleItemSelect = (item: Tables<'files'> | Tables<'collections'>) => {
+    onAssistantRetrievalItemsSelect(item);
+  };
 
-  if (!files || !collections) return null
+  if (!files || !collections) return null;
 
   return (
     <DropdownMenu
       open={isOpen}
       onOpenChange={isOpen => {
-        setIsOpen(isOpen)
-        setSearch("")
+        setIsOpen(isOpen);
+        setSearch('');
       }}
     >
       <DropdownMenuTrigger
@@ -96,9 +96,9 @@ export const AssistantRetrievalSelect: FC<AssistantRetrievalSelectProps> = ({
             <AssistantRetrievalItemOption
               key={item.id}
               contentType={
-                item.hasOwnProperty("type") ? "files" : "collections"
+                item.hasOwnProperty('type') ? 'files' : 'collections'
               }
-              item={item as Tables<"files"> | Tables<"collections">}
+              item={item as Tables<'files'> | Tables<'collections'>}
               selected={selectedAssistantRetrievalItems.some(
                 selectedAssistantRetrieval =>
                   selectedAssistantRetrieval.id === item.id
@@ -150,14 +150,14 @@ export const AssistantRetrievalSelect: FC<AssistantRetrievalSelectProps> = ({
           ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
 interface AssistantRetrievalOptionItemProps {
-  contentType: "files" | "collections"
-  item: Tables<"files"> | Tables<"collections">
-  selected: boolean
-  onSelect: (item: Tables<"files"> | Tables<"collections">) => void
+  contentType: 'files' | 'collections';
+  item: Tables<'files'> | Tables<'collections'>;
+  selected: boolean;
+  onSelect: (item: Tables<'files'> | Tables<'collections'>) => void;
 }
 
 const AssistantRetrievalItemOption: FC<AssistantRetrievalOptionItemProps> = ({
@@ -167,8 +167,8 @@ const AssistantRetrievalItemOption: FC<AssistantRetrievalOptionItemProps> = ({
   onSelect
 }) => {
   const handleSelect = () => {
-    onSelect(item)
-  }
+    onSelect(item);
+  };
 
   return (
     <div
@@ -176,9 +176,9 @@ const AssistantRetrievalItemOption: FC<AssistantRetrievalOptionItemProps> = ({
       onClick={handleSelect}
     >
       <div className="flex grow items-center truncate">
-        {contentType === "files" ? (
+        {contentType === 'files' ? (
           <div className="mr-2 min-w-[24px]">
-            <FileIcon type={(item as Tables<"files">).type} size={24} />
+            <FileIcon type={(item as Tables<'files'>).type} size={24} />
           </div>
         ) : (
           <div className="mr-2 min-w-[24px]">
@@ -193,5 +193,5 @@ const AssistantRetrievalItemOption: FC<AssistantRetrievalOptionItemProps> = ({
         <IconCircleCheckFilled size={20} className="min-w-[30px] flex-none" />
       )}
     </div>
-  )
-}
+  );
+};

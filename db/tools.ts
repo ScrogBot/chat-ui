@@ -1,23 +1,23 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert, TablesUpdate } from '@/supabase/types';
 
 export const getToolById = async (toolId: string) => {
   const { data: tool, error } = await supabase
-    .from("tools")
-    .select("*")
-    .eq("id", toolId)
-    .single()
+    .from('tools')
+    .select('*')
+    .eq('id', toolId)
+    .single();
 
   if (!tool) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return tool
-}
+  return tool;
+};
 
 export const getToolWorkspacesByWorkspaceId = async (workspaceId: string) => {
   const { data: workspace, error } = await supabase
-    .from("workspaces")
+    .from('workspaces')
     .select(
       `
       id,
@@ -25,19 +25,19 @@ export const getToolWorkspacesByWorkspaceId = async (workspaceId: string) => {
       tools (*)
     `
     )
-    .eq("id", workspaceId)
-    .single()
+    .eq('id', workspaceId)
+    .single();
 
   if (!workspace) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return workspace
-}
+  return workspace;
+};
 
 export const getToolWorkspacesByToolId = async (toolId: string) => {
   const { data: tool, error } = await supabase
-    .from("tools")
+    .from('tools')
     .select(
       `
       id, 
@@ -45,50 +45,50 @@ export const getToolWorkspacesByToolId = async (toolId: string) => {
       workspaces (*)
     `
     )
-    .eq("id", toolId)
-    .single()
+    .eq('id', toolId)
+    .single();
 
   if (!tool) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return tool
-}
+  return tool;
+};
 
 export const createTool = async (
-  tool: TablesInsert<"tools">,
+  tool: TablesInsert<'tools'>,
   workspace_id: string
 ) => {
   const { data: createdTool, error } = await supabase
-    .from("tools")
+    .from('tools')
     .insert([tool])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createToolWorkspace({
     user_id: createdTool.user_id,
     tool_id: createdTool.id,
     workspace_id
-  })
+  });
 
-  return createdTool
-}
+  return createdTool;
+};
 
 export const createTools = async (
-  tools: TablesInsert<"tools">[],
+  tools: TablesInsert<'tools'>[],
   workspace_id: string
 ) => {
   const { data: createdTools, error } = await supabase
-    .from("tools")
+    .from('tools')
     .insert(tools)
-    .select("*")
+    .select('*');
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createToolWorkspaces(
@@ -97,81 +97,81 @@ export const createTools = async (
       tool_id: tool.id,
       workspace_id
     }))
-  )
+  );
 
-  return createdTools
-}
+  return createdTools;
+};
 
 export const createToolWorkspace = async (item: {
-  user_id: string
-  tool_id: string
-  workspace_id: string
+  user_id: string;
+  tool_id: string;
+  workspace_id: string;
 }) => {
   const { data: createdToolWorkspace, error } = await supabase
-    .from("tool_workspaces")
+    .from('tool_workspaces')
     .insert([item])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdToolWorkspace
-}
+  return createdToolWorkspace;
+};
 
 export const createToolWorkspaces = async (
   items: { user_id: string; tool_id: string; workspace_id: string }[]
 ) => {
   const { data: createdToolWorkspaces, error } = await supabase
-    .from("tool_workspaces")
+    .from('tool_workspaces')
     .insert(items)
-    .select("*")
+    .select('*');
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return createdToolWorkspaces
-}
+  return createdToolWorkspaces;
+};
 
 export const updateTool = async (
   toolId: string,
-  tool: TablesUpdate<"tools">
+  tool: TablesUpdate<'tools'>
 ) => {
   const { data: updatedTool, error } = await supabase
-    .from("tools")
+    .from('tools')
     .update(tool)
-    .eq("id", toolId)
-    .select("*")
-    .single()
+    .eq('id', toolId)
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return updatedTool
-}
+  return updatedTool;
+};
 
 export const deleteTool = async (toolId: string) => {
-  const { error } = await supabase.from("tools").delete().eq("id", toolId)
+  const { error } = await supabase.from('tools').delete().eq('id', toolId);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return true
-}
+  return true;
+};
 
 export const deleteToolWorkspace = async (
   toolId: string,
   workspaceId: string
 ) => {
   const { error } = await supabase
-    .from("tool_workspaces")
+    .from('tool_workspaces')
     .delete()
-    .eq("tool_id", toolId)
-    .eq("workspace_id", workspaceId)
+    .eq('tool_id', toolId)
+    .eq('workspace_id', workspaceId);
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return true
-}
+  return true;
+};

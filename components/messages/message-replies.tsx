@@ -1,5 +1,5 @@
-import { IconMessage } from "@tabler/icons-react"
-import { FC, useState } from "react"
+import { IconMessage } from '@tabler/icons-react';
+import { FC, useState } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -7,14 +7,14 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger
-} from "../ui/sheet"
-import { WithTooltip } from "../ui/with-tooltip"
-import { MESSAGE_ICON_SIZE } from "./message-actions"
+} from '../ui/sheet';
+import { WithTooltip } from '../ui/with-tooltip';
+import { MESSAGE_ICON_SIZE } from './message-actions';
 
 interface MessageRepliesProps {}
 
 export const MessageReplies: FC<MessageRepliesProps> = ({}) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -47,5 +47,5 @@ export const MessageReplies: FC<MessageRepliesProps> = ({}) => {
         </SheetHeader>
       </SheetContent>
     </Sheet>
-  )
-}
+  );
+};

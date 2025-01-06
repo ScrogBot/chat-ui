@@ -1,9 +1,9 @@
-import { FC } from "react"
+import { FC } from 'react';
 
 interface OpenAISVGProps {
-  height?: number
-  width?: number
-  className?: string
+  height?: number;
+  width?: number;
+  className?: string;
 }
 
 export const OpenAISVG: FC<OpenAISVGProps> = ({
@@ -27,5 +27,5 @@ export const OpenAISVG: FC<OpenAISVGProps> = ({
         fill="currentColor"
       ></path>
     </svg>
-  )
-}
+  );
+};

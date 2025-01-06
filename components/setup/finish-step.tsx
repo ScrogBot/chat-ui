@@ -1,7 +1,7 @@
-import { FC } from "react"
+import { FC } from 'react';
 
 interface FinishStepProps {
-  displayName: string
+  displayName: string;
 }
 
 export const FinishStep: FC<FinishStepProps> = ({ displayName }) => {
@@ -14,5 +14,5 @@ export const FinishStep: FC<FinishStepProps> = ({ displayName }) => {
 
       <div>Click next to start chatting.</div>
     </div>
-  )
-}
+  );
+};

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,43 +6,43 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ChatbotUIContext } from "@/context/context"
-import { updateChat } from "@/db/chats"
-import { Tables } from "@/supabase/types"
-import { IconEdit } from "@tabler/icons-react"
-import { FC, useContext, useRef, useState } from "react"
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ChatbotUIContext } from '@/context/context';
+import { updateChat } from '@/db/chats';
+import { Tables } from '@/supabase/types';
+import { IconEdit } from '@tabler/icons-react';
+import { FC, useContext, useRef, useState } from 'react';
 
 interface UpdateChatProps {
-  chat: Tables<"chats">
+  chat: Tables<'chats'>;
 }
 
 export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
-  const { setChats } = useContext(ChatbotUIContext)
+  const { setChats } = useContext(ChatbotUIContext);
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [showChatDialog, setShowChatDialog] = useState(false)
-  const [name, setName] = useState(chat.name)
+  const [showChatDialog, setShowChatDialog] = useState(false);
+  const [name, setName] = useState(chat.name);
 
   const handleUpdateChat = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const updatedChat = await updateChat(chat.id, {
       name
-    })
+    });
     setChats(prevState =>
       prevState.map(c => (c.id === chat.id ? updatedChat : c))
-    )
+    );
 
-    setShowChatDialog(false)
-  }
+    setShowChatDialog(false);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      buttonRef.current?.click()
+    if (e.key === 'Enter') {
+      buttonRef.current?.click();
     }
-  }
+  };
 
   return (
     <Dialog open={showChatDialog} onOpenChange={setShowChatDialog}>
@@ -72,5 +72,5 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

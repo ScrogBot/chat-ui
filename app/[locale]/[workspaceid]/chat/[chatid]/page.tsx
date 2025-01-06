@@ -1,7 +1,7 @@
-"use client"
+'use client';
 
-import ChatUI from "@/components/chat/chat-ui"
+import { ChatUI } from '@/components/chat/chat-ui';
 
 export default function ChatIDPage() {
-  return <ChatUI />
+  return <ChatUI />;
 }

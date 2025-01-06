@@ -1,23 +1,23 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
+import { supabase } from '@/lib/supabase/browser-client';
+import { TablesInsert, TablesUpdate } from '@/supabase/types';
 
 export const getModelById = async (modelId: string) => {
   const { data: model, error } = await supabase
-    .from("models")
-    .select("*")
-    .eq("id", modelId)
-    .single()
+    .from('models')
+    .select('*')
+    .eq('id', modelId)
+    .single();
 
   if (!model) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return model
-}
+  return model;
+};
 
 export const getModelWorkspacesByWorkspaceId = async (workspaceId: string) => {
   const { data: workspace, error } = await supabase
-    .from("workspaces")
+    .from('workspaces')
     .select(
       `
       id,
@@ -25,19 +25,19 @@ export const getModelWorkspacesByWorkspaceId = async (workspaceId: string) => {
       models (*)
     `
     )
-    .eq("id", workspaceId)
-    .single()
+    .eq('id', workspaceId)
+    .single();
 
   if (!workspace) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return workspace
-}
+  return workspace;
+};
 
 export const getModelWorkspacesByModelId = async (modelId: string) => {
   const { data: model, error } = await supabase
-    .from("models")
+    .from('models')
     .select(
       `
       id, 
@@ -45,50 +45,50 @@ export const getModelWorkspacesByModelId = async (modelId: string) => {
       workspaces (*)
     `
     )
-    .eq("id", modelId)
-    .single()
+    .eq('id', modelId)
+    .single();
 
   if (!model) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return model
-}
+  return model;
+};
 
 export const createModel = async (
-  model: TablesInsert<"models">,
+  model: TablesInsert<'models'>,
   workspace_id: string
 ) => {
   const { data: createdModel, error } = await supabase
-    .from("models")
+    .from('models')
     .insert([model])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createModelWorkspace({
     user_id: model.user_id,
     model_id: createdModel.id,
     workspace_id: workspace_id
-  })
+  });
 
-  return createdModel
-}
+  return createdModel;
+};
 
 export const createModels = async (
-  models: TablesInsert<"models">[],
+  models: TablesInsert<'models'>[],
   workspace_id: string
 ) => {
   const { data: createdModels, error } = await supabase
-    .from("models")
+    .from('models')
     .insert(models)
-    .select("*")
+    .select('*');
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
   await createModelWorkspaces(
@@ -97,81 +97,81 @@ export const createModels = async (
       model_id: model.id,
       workspace_id
     }))
-  )
+  );
 
-  return createdModels
-}
+  return createdModels;
+};
 
 export const createModelWorkspace = async (item: {
-  user_id: string
-  model_id: string
-  workspace_id: string
+  user_id: string;
+  model_id: string;
+  workspace_id: string;
 }) => {
   const { data: createdModelWorkspace, error } = await supabase
-    .from("model_workspaces")
+    .from('model_workspaces')
     .insert([item])
-    .select("*")
-    .single()
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return createdModelWorkspace
-}
+  return createdModelWorkspace;
+};
 
 export const createModelWorkspaces = async (
   items: { user_id: string; model_id: string; workspace_id: string }[]
 ) => {
   const { data: createdModelWorkspaces, error } = await supabase
-    .from("model_workspaces")
+    .from('model_workspaces')
     .insert(items)
-    .select("*")
+    .select('*');
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return createdModelWorkspaces
-}
+  return createdModelWorkspaces;
+};
 
 export const updateModel = async (
   modelId: string,
-  model: TablesUpdate<"models">
+  model: TablesUpdate<'models'>
 ) => {
   const { data: updatedModel, error } = await supabase
-    .from("models")
+    .from('models')
     .update(model)
-    .eq("id", modelId)
-    .select("*")
-    .single()
+    .eq('id', modelId)
+    .select('*')
+    .single();
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return updatedModel
-}
+  return updatedModel;
+};
 
 export const deleteModel = async (modelId: string) => {
-  const { error } = await supabase.from("models").delete().eq("id", modelId)
+  const { error } = await supabase.from('models').delete().eq('id', modelId);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return true
-}
+  return true;
+};
 
 export const deleteModelWorkspace = async (
   modelId: string,
   workspaceId: string
 ) => {
   const { error } = await supabase
-    .from("model_workspaces")
+    .from('model_workspaces')
     .delete()
-    .eq("model_id", modelId)
-    .eq("workspace_id", workspaceId)
+    .eq('model_id', modelId)
+    .eq('workspace_id', workspaceId);
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message);
 
-  return true
-}
+  return true;
+};

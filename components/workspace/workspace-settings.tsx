@@ -1,32 +1,32 @@
-import { ChatbotUIContext } from "@/context/context"
-import { WORKSPACE_INSTRUCTIONS_MAX } from "@/db/limits"
+import { ChatbotUIContext } from '@/context/context';
+import { WORKSPACE_INSTRUCTIONS_MAX } from '@/db/limits';
 import {
   getWorkspaceImageFromStorage,
   uploadWorkspaceImage
-} from "@/db/storage/workspace-images"
-import { updateWorkspace } from "@/db/workspaces"
-import { convertBlobToBase64 } from "@/lib/blob-to-b64"
-import { LLMID } from "@/types"
-import { IconHome, IconSettings } from "@tabler/icons-react"
-import { FC, useContext, useEffect, useRef, useState } from "react"
-import { toast } from "sonner"
-import { Button } from "../ui/button"
-import { ChatSettingsForm } from "../ui/chat-settings-form"
-import ImagePicker from "../ui/image-picker"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import { LimitDisplay } from "../ui/limit-display"
+} from '@/db/storage/workspace-images';
+import { updateWorkspace } from '@/db/workspaces';
+import { convertBlobToBase64 } from '@/lib/blob-to-b64';
+import { LLMID } from '@/types';
+import { IconHome, IconSettings } from '@tabler/icons-react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '../ui/button';
+import { ChatSettingsForm } from '../ui/chat-settings-form';
+import ImagePicker from '../ui/image-picker';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { LimitDisplay } from '../ui/limit-display';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger
-} from "../ui/sheet"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
-import { TextareaAutosize } from "../ui/textarea-autosize"
-import { WithTooltip } from "../ui/with-tooltip"
-import { DeleteWorkspace } from "./delete-workspace"
+} from '../ui/sheet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { TextareaAutosize } from '../ui/textarea-autosize';
+import { WithTooltip } from '../ui/with-tooltip';
+import { DeleteWorkspace } from './delete-workspace';
 
 interface WorkspaceSettingsProps {}
 
@@ -39,21 +39,21 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
     setChatSettings,
     workspaceImages,
     setWorkspaceImages
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [name, setName] = useState(selectedWorkspace?.name || "")
-  const [imageLink, setImageLink] = useState("")
-  const [selectedImage, setSelectedImage] = useState<File | null>(null)
+  const [name, setName] = useState(selectedWorkspace?.name || '');
+  const [imageLink, setImageLink] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [description, setDescription] = useState(
-    selectedWorkspace?.description || ""
-  )
+    selectedWorkspace?.description || ''
+  );
   const [instructions, setInstructions] = useState(
-    selectedWorkspace?.instructions || ""
-  )
+    selectedWorkspace?.instructions || ''
+  );
 
   const [defaultChatSettings, setDefaultChatSettings] = useState({
     model: selectedWorkspace?.default_model,
@@ -64,31 +64,31 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
     includeWorkspaceInstructions:
       selectedWorkspace?.include_workspace_instructions,
     embeddingsProvider: selectedWorkspace?.embeddings_provider
-  })
+  });
 
   useEffect(() => {
     const workspaceImage =
       workspaceImages.find(
         image => image.path === selectedWorkspace?.image_path
-      )?.base64 || ""
+      )?.base64 || '';
 
-    setImageLink(workspaceImage)
-  }, [workspaceImages])
+    setImageLink(workspaceImage);
+  }, [workspaceImages]);
 
   const handleSave = async () => {
-    if (!selectedWorkspace) return
+    if (!selectedWorkspace) return;
 
-    let imagePath = ""
+    let imagePath = '';
 
     if (selectedImage) {
-      imagePath = await uploadWorkspaceImage(selectedWorkspace, selectedImage)
+      imagePath = await uploadWorkspaceImage(selectedWorkspace, selectedImage);
 
-      const url = (await getWorkspaceImageFromStorage(imagePath)) || ""
+      const url = (await getWorkspaceImageFromStorage(imagePath)) || '';
 
       if (url) {
-        const response = await fetch(url)
-        const blob = await response.blob()
-        const base64 = await convertBlobToBase64(blob)
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const base64 = await convertBlobToBase64(blob);
 
         setWorkspaceImages(prev => [
           ...prev,
@@ -98,7 +98,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
             base64,
             url
           }
-        ])
+        ]);
       }
     }
 
@@ -116,7 +116,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
       include_profile_context: defaultChatSettings.includeProfileContext,
       include_workspace_instructions:
         defaultChatSettings.includeWorkspaceInstructions
-    })
+    });
 
     if (
       defaultChatSettings.model &&
@@ -136,33 +136,33 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
         includeWorkspaceInstructions:
           defaultChatSettings.includeWorkspaceInstructions,
         embeddingsProvider: defaultChatSettings.embeddingsProvider as
-          | "openai"
-          | "local"
-      })
+          | 'openai'
+          | 'local'
+      });
     }
 
-    setIsOpen(false)
-    setSelectedWorkspace(updatedWorkspace)
+    setIsOpen(false);
+    setSelectedWorkspace(updatedWorkspace);
     setWorkspaces(workspaces => {
       return workspaces.map(workspace => {
         if (workspace.id === selectedWorkspace.id) {
-          return updatedWorkspace
+          return updatedWorkspace;
         }
 
-        return workspace
-      })
-    })
+        return workspace;
+      });
+    });
 
-    toast.success("Workspace updated!")
-  }
+    toast.success('Workspace updated!');
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      buttonRef.current?.click()
+    if (e.key === 'Enter' && !e.shiftKey) {
+      buttonRef.current?.click();
     }
-  }
+  };
 
-  if (!selectedWorkspace || !profile) return null
+  if (!selectedWorkspace || !profile) return null;
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -296,5 +296,5 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
         </div>
       </SheetContent>
     </Sheet>
-  )
-}
+  );
+};

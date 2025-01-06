@@ -1,18 +1,18 @@
-import { ChatbotUIContext } from "@/context/context"
-import { IconCheck, IconCopy, IconEdit, IconRepeat } from "@tabler/icons-react"
-import { FC, useContext, useEffect, useState } from "react"
-import { WithTooltip } from "../ui/with-tooltip"
+import { ChatbotUIContext } from '@/context/context';
+import { IconCheck, IconCopy, IconEdit, IconRepeat } from '@tabler/icons-react';
+import { FC, useContext, useEffect, useState } from 'react';
+import { WithTooltip } from '../ui/with-tooltip';
 
-export const MESSAGE_ICON_SIZE = 18
+export const MESSAGE_ICON_SIZE = 18;
 
 interface MessageActionsProps {
-  isAssistant: boolean
-  isLast: boolean
-  isEditing: boolean
-  isHovering: boolean
-  onCopy: () => void
-  onEdit: () => void
-  onRegenerate: () => void
+  isAssistant: boolean;
+  isLast: boolean;
+  isEditing: boolean;
+  isHovering: boolean;
+  onCopy: () => void;
+  onEdit: () => void;
+  onRegenerate: () => void;
 }
 
 export const MessageActions: FC<MessageActionsProps> = ({
@@ -24,26 +24,26 @@ export const MessageActions: FC<MessageActionsProps> = ({
   onEdit,
   onRegenerate
 }) => {
-  const { isGenerating } = useContext(ChatbotUIContext)
+  const { isGenerating } = useContext(ChatbotUIContext);
 
-  const [showCheckmark, setShowCheckmark] = useState(false)
+  const [showCheckmark, setShowCheckmark] = useState(false);
 
   const handleCopy = () => {
-    onCopy()
-    setShowCheckmark(true)
-  }
+    onCopy();
+    setShowCheckmark(true);
+  };
 
-  const handleForkChat = async () => {}
+  const handleForkChat = async () => {};
 
   useEffect(() => {
     if (showCheckmark) {
       const timer = setTimeout(() => {
-        setShowCheckmark(false)
-      }, 2000)
+        setShowCheckmark(false);
+      }, 2000);
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [showCheckmark])
+  }, [showCheckmark]);
 
   return (isLast && isGenerating) || isEditing ? null : (
     <div className="text-muted-foreground flex items-center space-x-2">
@@ -113,5 +113,5 @@ export const MessageActions: FC<MessageActionsProps> = ({
 
       {/* {1 > 0 && isAssistant && <MessageReplies />} */}
     </div>
-  )
-}
+  );
+};

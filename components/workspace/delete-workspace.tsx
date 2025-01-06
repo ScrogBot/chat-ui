@@ -1,5 +1,5 @@
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
-import { Button } from "@/components/ui/button"
+import { useChatHandler } from '@/components/chat/chat-hooks/use-chat-handler';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -8,60 +8,60 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "@/components/ui/dialog"
-import { ChatbotUIContext } from "@/context/context"
-import { deleteWorkspace } from "@/db/workspaces"
-import { Tables } from "@/supabase/types"
-import { FC, useContext, useRef, useState } from "react"
-import { Input } from "../ui/input"
-import { useRouter } from "next/navigation"
+} from '@/components/ui/dialog';
+import { ChatbotUIContext } from '@/context/context';
+import { deleteWorkspace } from '@/db/workspaces';
+import { Tables } from '@/supabase/types';
+import { FC, useContext, useRef, useState } from 'react';
+import { Input } from '../ui/input';
+import { useRouter } from 'next/navigation';
 
 interface DeleteWorkspaceProps {
-  workspace: Tables<"workspaces">
-  onDelete: () => void
+  workspace: Tables<'workspaces'>;
+  onDelete: () => void;
 }
 
 export const DeleteWorkspace: FC<DeleteWorkspaceProps> = ({
   workspace,
   onDelete
 }) => {
-  const { setWorkspaces, setSelectedWorkspace } = useContext(ChatbotUIContext)
-  const { handleNewChat } = useChatHandler()
-  const router = useRouter()
+  const { setWorkspaces, setSelectedWorkspace } = useContext(ChatbotUIContext);
+  const { handleNewChat } = useChatHandler();
+  const router = useRouter();
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [showWorkspaceDialog, setShowWorkspaceDialog] = useState(false)
+  const [showWorkspaceDialog, setShowWorkspaceDialog] = useState(false);
 
-  const [name, setName] = useState("")
+  const [name, setName] = useState('');
 
   const handleDeleteWorkspace = async () => {
-    await deleteWorkspace(workspace.id)
+    await deleteWorkspace(workspace.id);
 
     setWorkspaces(prevWorkspaces => {
       const filteredWorkspaces = prevWorkspaces.filter(
         w => w.id !== workspace.id
-      )
+      );
 
-      const defaultWorkspace = filteredWorkspaces[0]
+      const defaultWorkspace = filteredWorkspaces[0];
 
-      setSelectedWorkspace(defaultWorkspace)
-      router.push(`/${defaultWorkspace.id}/chat`)
+      setSelectedWorkspace(defaultWorkspace);
+      router.push(`/${defaultWorkspace.id}/chat`);
 
-      return filteredWorkspaces
-    })
+      return filteredWorkspaces;
+    });
 
-    setShowWorkspaceDialog(false)
-    onDelete()
+    setShowWorkspaceDialog(false);
+    onDelete();
 
-    handleNewChat()
-  }
+    handleNewChat();
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      buttonRef.current?.click()
+    if (e.key === 'Enter') {
+      buttonRef.current?.click();
     }
-  }
+  };
 
   return (
     <Dialog open={showWorkspaceDialog} onOpenChange={setShowWorkspaceDialog}>
@@ -101,5 +101,5 @@ export const DeleteWorkspace: FC<DeleteWorkspaceProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

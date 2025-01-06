@@ -1,39 +1,39 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { FC } from "react"
-import { Button } from "../ui/button"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { FC } from 'react';
+import { Button } from '../ui/button';
 
 interface APIStepProps {
-  openaiAPIKey: string
-  openaiOrgID: string
-  azureOpenaiAPIKey: string
-  azureOpenaiEndpoint: string
-  azureOpenai35TurboID: string
-  azureOpenai45TurboID: string
-  azureOpenai45VisionID: string
-  azureOpenaiEmbeddingsID: string
-  anthropicAPIKey: string
-  googleGeminiAPIKey: string
-  mistralAPIKey: string
-  groqAPIKey: string
-  perplexityAPIKey: string
-  useAzureOpenai: boolean
-  openrouterAPIKey: string
-  onOpenrouterAPIKeyChange: (value: string) => void
-  onOpenaiAPIKeyChange: (value: string) => void
-  onOpenaiOrgIDChange: (value: string) => void
-  onAzureOpenaiAPIKeyChange: (value: string) => void
-  onAzureOpenaiEndpointChange: (value: string) => void
-  onAzureOpenai35TurboIDChange: (value: string) => void
-  onAzureOpenai45TurboIDChange: (value: string) => void
-  onAzureOpenai45VisionIDChange: (value: string) => void
-  onAzureOpenaiEmbeddingsIDChange: (value: string) => void
-  onAnthropicAPIKeyChange: (value: string) => void
-  onGoogleGeminiAPIKeyChange: (value: string) => void
-  onMistralAPIKeyChange: (value: string) => void
-  onGroqAPIKeyChange: (value: string) => void
-  onPerplexityAPIKeyChange: (value: string) => void
-  onUseAzureOpenaiChange: (value: boolean) => void
+  openaiAPIKey: string;
+  openaiOrgID: string;
+  azureOpenaiAPIKey: string;
+  azureOpenaiEndpoint: string;
+  azureOpenai35TurboID: string;
+  azureOpenai45TurboID: string;
+  azureOpenai45VisionID: string;
+  azureOpenaiEmbeddingsID: string;
+  anthropicAPIKey: string;
+  googleGeminiAPIKey: string;
+  mistralAPIKey: string;
+  groqAPIKey: string;
+  perplexityAPIKey: string;
+  useAzureOpenai: boolean;
+  openrouterAPIKey: string;
+  onOpenrouterAPIKeyChange: (value: string) => void;
+  onOpenaiAPIKeyChange: (value: string) => void;
+  onOpenaiOrgIDChange: (value: string) => void;
+  onAzureOpenaiAPIKeyChange: (value: string) => void;
+  onAzureOpenaiEndpointChange: (value: string) => void;
+  onAzureOpenai35TurboIDChange: (value: string) => void;
+  onAzureOpenai45TurboIDChange: (value: string) => void;
+  onAzureOpenai45VisionIDChange: (value: string) => void;
+  onAzureOpenaiEmbeddingsIDChange: (value: string) => void;
+  onAnthropicAPIKeyChange: (value: string) => void;
+  onGoogleGeminiAPIKeyChange: (value: string) => void;
+  onMistralAPIKeyChange: (value: string) => void;
+  onGroqAPIKeyChange: (value: string) => void;
+  onPerplexityAPIKeyChange: (value: string) => void;
+  onUseAzureOpenaiChange: (value: boolean) => void;
 }
 
 export const APIStep: FC<APIStepProps> = ({
@@ -73,7 +73,7 @@ export const APIStep: FC<APIStepProps> = ({
       <div className="mt-5 space-y-2">
         <Label className="flex items-center">
           <div>
-            {useAzureOpenai ? "Azure OpenAI API Key" : "OpenAI API Key"}
+            {useAzureOpenai ? 'Azure OpenAI API Key' : 'OpenAI API Key'}
           </div>
 
           <Button
@@ -81,14 +81,14 @@ export const APIStep: FC<APIStepProps> = ({
             onClick={() => onUseAzureOpenaiChange(!useAzureOpenai)}
           >
             {useAzureOpenai
-              ? "Switch To Standard OpenAI"
-              : "Switch To Azure OpenAI"}
+              ? 'Switch To Standard OpenAI'
+              : 'Switch To Azure OpenAI'}
           </Button>
         </Label>
 
         <Input
           placeholder={
-            useAzureOpenai ? "Azure OpenAI API Key" : "OpenAI API Key"
+            useAzureOpenai ? 'Azure OpenAI API Key' : 'OpenAI API Key'
           }
           type="password"
           value={useAzureOpenai ? azureOpenaiAPIKey : openaiAPIKey}
@@ -239,5 +239,5 @@ export const APIStep: FC<APIStepProps> = ({
         />
       </div>
     </>
-  )
-}
+  );
+};

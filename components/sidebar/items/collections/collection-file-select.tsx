@@ -1,53 +1,53 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { FileIcon } from "@/components/ui/file-icon"
-import { Input } from "@/components/ui/input"
-import { ChatbotUIContext } from "@/context/context"
-import { CollectionFile } from "@/types"
-import { IconChevronDown, IconCircleCheckFilled } from "@tabler/icons-react"
-import { FC, useContext, useEffect, useRef, useState } from "react"
+} from '@/components/ui/dropdown-menu';
+import { FileIcon } from '@/components/ui/file-icon';
+import { Input } from '@/components/ui/input';
+import { ChatbotUIContext } from '@/context/context';
+import { CollectionFile } from '@/types';
+import { IconChevronDown, IconCircleCheckFilled } from '@tabler/icons-react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 interface CollectionFileSelectProps {
-  selectedCollectionFiles: CollectionFile[]
-  onCollectionFileSelect: (file: CollectionFile) => void
+  selectedCollectionFiles: CollectionFile[];
+  onCollectionFileSelect: (file: CollectionFile) => void;
 }
 
 export const CollectionFileSelect: FC<CollectionFileSelectProps> = ({
   selectedCollectionFiles,
   onCollectionFileSelect
 }) => {
-  const { files } = useContext(ChatbotUIContext)
+  const { files } = useContext(ChatbotUIContext);
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState("")
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100) // FIX: hacky
+        inputRef.current?.focus();
+      }, 100); // FIX: hacky
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   const handleFileSelect = (file: CollectionFile) => {
-    onCollectionFileSelect(file)
-  }
+    onCollectionFileSelect(file);
+  };
 
-  if (!files) return null
+  if (!files) return null;
 
   return (
     <DropdownMenu
       open={isOpen}
       onOpenChange={isOpen => {
-        setIsOpen(isOpen)
-        setSearch("")
+        setIsOpen(isOpen);
+        setSearch('');
       }}
     >
       <DropdownMenuTrigger
@@ -116,13 +116,13 @@ export const CollectionFileSelect: FC<CollectionFileSelectProps> = ({
           ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
 interface CollectionFileItemProps {
-  file: CollectionFile
-  selected: boolean
-  onSelect: (file: CollectionFile) => void
+  file: CollectionFile;
+  selected: boolean;
+  onSelect: (file: CollectionFile) => void;
 }
 
 const CollectionFileItem: FC<CollectionFileItemProps> = ({
@@ -131,8 +131,8 @@ const CollectionFileItem: FC<CollectionFileItemProps> = ({
   onSelect
 }) => {
   const handleSelect = () => {
-    onSelect(file)
-  }
+    onSelect(file);
+  };
 
   return (
     <div
@@ -151,5 +151,5 @@ const CollectionFileItem: FC<CollectionFileItemProps> = ({
         <IconCircleCheckFilled size={20} className="min-w-[30px] flex-none" />
       )}
     </div>
-  )
-}
+  );
+};

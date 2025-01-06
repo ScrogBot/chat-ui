@@ -1,11 +1,11 @@
-import { ContentType } from "@/types"
-import { FC } from "react"
-import { Input } from "../ui/input"
+import { ContentType } from '@/types';
+import { FC } from 'react';
+import { Input } from '../ui/input';
 
 interface SidebarSearchProps {
-  contentType: ContentType
-  searchTerm: string
-  setSearchTerm: Function
+  contentType: ContentType;
+  searchTerm: string;
+  setSearchTerm: Function;
 }
 
 export const SidebarSearch: FC<SidebarSearchProps> = ({
@@ -19,5 +19,5 @@ export const SidebarSearch: FC<SidebarSearchProps> = ({
       value={searchTerm}
       onChange={e => setSearchTerm(e.target.value)}
     />
-  )
-}
+  );
+};

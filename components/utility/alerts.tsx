@@ -2,10 +2,10 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from "@/components/ui/popover"
-import { IconBell } from "@tabler/icons-react"
-import { FC } from "react"
-import { SIDEBAR_ICON_SIZE } from "../sidebar/sidebar-switcher"
+} from '@/components/ui/popover';
+import { IconBell } from '@tabler/icons-react';
+import { FC } from 'react';
+import { SIDEBAR_ICON_SIZE } from '../sidebar/sidebar-switcher';
 
 interface AlertsProps {}
 
@@ -26,5 +26,5 @@ export const Alerts: FC<AlertsProps> = () => {
         <div>placeholder</div>
       </PopoverContent>
     </Popover>
-  )
-}
+  );
+};

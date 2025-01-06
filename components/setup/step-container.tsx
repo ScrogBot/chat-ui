@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,19 +6,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle
-} from "@/components/ui/card"
-import { FC, useRef } from "react"
+} from '@/components/ui/card';
+import { FC, useRef } from 'react';
 
-export const SETUP_STEP_COUNT = 3
+export const SETUP_STEP_COUNT = 2;
 
 interface StepContainerProps {
-  stepDescription: string
-  stepNum: number
-  stepTitle: string
-  onShouldProceed: (shouldProceed: boolean) => void
-  children?: React.ReactNode
-  showBackButton?: boolean
-  showNextButton?: boolean
+  stepDescription: string;
+  stepNum: number;
+  stepTitle: string;
+  onShouldProceed: (shouldProceed: boolean) => void;
+  children?: React.ReactNode;
+  showBackButton?: boolean;
+  showNextButton?: boolean;
 }
 
 export const StepContainer: FC<StepContainerProps> = ({
@@ -30,15 +30,15 @@ export const StepContainer: FC<StepContainerProps> = ({
   showBackButton = false,
   showNextButton = true
 }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       if (buttonRef.current) {
-        buttonRef.current.click()
+        buttonRef.current.click();
       }
     }
-  }
+  };
 
   return (
     <Card
@@ -85,5 +85,5 @@ export const StepContainer: FC<StepContainerProps> = ({
         </div>
       </CardFooter>
     </Card>
-  )
-}
+  );
+};

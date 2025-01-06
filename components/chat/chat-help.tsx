@@ -1,12 +1,12 @@
-import useHotkey from "@/lib/hooks/use-hotkey"
+import useHotkey from '@/lib/hooks/use-hotkey';
 import {
   IconBrandGithub,
   IconBrandX,
   IconHelpCircle,
   IconQuestionMark
-} from "@tabler/icons-react"
-import Link from "next/link"
-import { FC, useState } from "react"
+} from '@tabler/icons-react';
+import Link from 'next/link';
+import { FC, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,15 +14,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "../ui/dropdown-menu"
-import { Announcements } from "../utility/announcements"
+} from '../ui/dropdown-menu';
+import { Announcements } from '../utility/announcements';
 
 interface ChatHelpProps {}
 
 export const ChatHelp: FC<ChatHelpProps> = ({}) => {
-  useHotkey("/", () => setIsOpen(prevState => !prevState))
+  useHotkey('/', () => setIsOpen(prevState => !prevState));
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -204,5 +204,5 @@ export const ChatHelp: FC<ChatHelpProps> = ({}) => {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

@@ -1,18 +1,18 @@
-import { ChatbotUIContext } from "@/context/context"
-import { createDocXFile, createFile } from "@/db/files"
-import { LLM_LIST } from "@/lib/models/llm/llm-list"
-import mammoth from "mammoth"
-import { useContext, useEffect, useState } from "react"
-import { toast } from "sonner"
+import { ChatbotUIContext } from '@/context/context';
+import { createDocXFile, createFile } from '@/db/files';
+import { LLM_LIST } from '@/lib/models/llm/llm-list';
+import mammoth from 'mammoth';
+import { useContext, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export const ACCEPTED_FILE_TYPES = [
-  "text/csv",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/json",
-  "text/markdown",
-  "application/pdf",
-  "text/plain"
-].join(",")
+  'text/csv',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/json',
+  'text/markdown',
+  'application/pdf',
+  'text/plain'
+].join(',');
 
 export const useSelectFileHandler = () => {
   const {
@@ -24,81 +24,82 @@ export const useSelectFileHandler = () => {
     setShowFilesDisplay,
     setFiles,
     setUseRetrieval
-  } = useContext(ChatbotUIContext)
+  } = useContext(ChatbotUIContext);
 
-  const [filesToAccept, setFilesToAccept] = useState(ACCEPTED_FILE_TYPES)
+  const [filesToAccept, setFilesToAccept] = useState(ACCEPTED_FILE_TYPES);
 
   useEffect(() => {
-    handleFilesToAccept()
-  }, [chatSettings?.model])
+    handleFilesToAccept();
+  }, [chatSettings?.model]);
 
   const handleFilesToAccept = () => {
-    const model = chatSettings?.model
-    const FULL_MODEL = LLM_LIST.find(llm => llm.modelId === model)
+    const model = chatSettings?.model;
+    const FULL_MODEL = LLM_LIST.find(llm => llm.modelId === model);
 
-    if (!FULL_MODEL) return
+    if (!FULL_MODEL) return;
 
     setFilesToAccept(
       FULL_MODEL.imageInput
         ? `${ACCEPTED_FILE_TYPES},image/*`
         : ACCEPTED_FILE_TYPES
-    )
-  }
+    );
+  };
 
   const handleSelectDeviceFile = async (file: File) => {
-    if (!profile || !selectedWorkspace || !chatSettings) return
+    if (!profile || !selectedWorkspace || !chatSettings) return;
 
-    setShowFilesDisplay(true)
-    setUseRetrieval(true)
+    setShowFilesDisplay(true);
+    setUseRetrieval(true);
 
     if (file) {
-      let simplifiedFileType = file.type.split("/")[1]
+      let simplifiedFileType = file.type.split('/')[1];
 
-      let reader = new FileReader()
+      const reader = new FileReader();
 
-      if (file.type.includes("image")) {
-        reader.readAsDataURL(file)
-      } else if (ACCEPTED_FILE_TYPES.split(",").includes(file.type)) {
-        if (simplifiedFileType.includes("vnd.adobe.pdf")) {
-          simplifiedFileType = "pdf"
-        } else if (
+      if (file.type.includes('image')) {
+        reader.readAsDataURL(file);
+      } else if (ACCEPTED_FILE_TYPES.split(',').includes(file.type)) {
+        if (simplifiedFileType.includes('vnd.adobe.pdf')) {
+          simplifiedFileType = 'pdf';
+        }
+        if (
           simplifiedFileType.includes(
-            "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-              "docx"
-          )
+            'vnd.openxmlformats-officedocument.wordprocessingml.document'
+          ) ||
+          simplifiedFileType.includes('docx')
         ) {
-          simplifiedFileType = "docx"
+          simplifiedFileType = 'docx';
         }
 
         setNewMessageFiles(prev => [
           ...prev,
           {
-            id: "loading",
+            id: 'loading',
             name: file.name,
             type: simplifiedFileType,
             file: file
           }
-        ])
+        ]);
 
         // Handle docx files
         if (
-          file.type.includes(
-            "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-              "docx"
-          )
+          simplifiedFileType.includes(
+            'vnd.openxmlformats-officedocument.wordprocessingml.document'
+          ) ||
+          simplifiedFileType.includes('docx')
         ) {
-          const arrayBuffer = await file.arrayBuffer()
+          const arrayBuffer = await file.arrayBuffer();
           const result = await mammoth.extractRawText({
             arrayBuffer
-          })
+          });
 
           const createdFile = await createDocXFile(
             result.value,
             file,
             {
               user_id: profile.user_id,
-              description: "",
-              file_path: "",
+              description: '',
+              file_path: '',
               name: file.name,
               size: file.size,
               tokens: 0,
@@ -106,13 +107,13 @@ export const useSelectFileHandler = () => {
             },
             selectedWorkspace.id,
             chatSettings.embeddingsProvider
-          )
+          );
 
-          setFiles(prev => [...prev, createdFile])
+          setFiles(prev => [...prev, createdFile]);
 
           setNewMessageFiles(prev =>
             prev.map(item =>
-              item.id === "loading"
+              item.id === 'loading'
                 ? {
                     id: createdFile.id,
                     name: createdFile.name,
@@ -121,45 +122,45 @@ export const useSelectFileHandler = () => {
                   }
                 : item
             )
-          )
+          );
 
-          reader.onloadend = null
+          reader.onloadend = null;
 
-          return
+          return;
         } else {
           // Use readAsArrayBuffer for PDFs and readAsText for other types
-          file.type.includes("pdf")
+          file.type.includes('pdf')
             ? reader.readAsArrayBuffer(file)
-            : reader.readAsText(file)
+            : reader.readAsText(file);
         }
       } else {
-        throw new Error("Unsupported file type")
+        throw new Error('Unsupported file type');
       }
 
       reader.onloadend = async function () {
         try {
-          if (file.type.includes("image")) {
+          if (file.type.includes('image')) {
             // Create a temp url for the image file
-            const imageUrl = URL.createObjectURL(file)
+            const imageUrl = URL.createObjectURL(file);
 
             // This is a temporary image for display purposes in the chat input
             setNewMessageImages(prev => [
               ...prev,
               {
-                messageId: "temp",
-                path: "",
+                messageId: 'temp',
+                path: '',
                 base64: reader.result, // base64 image
                 url: imageUrl,
                 file
               }
-            ])
+            ]);
           } else {
             const createdFile = await createFile(
               file,
               {
                 user_id: profile.user_id,
-                description: "",
-                file_path: "",
+                description: '',
+                file_path: '',
                 name: file.name,
                 size: file.size,
                 tokens: 0,
@@ -167,13 +168,13 @@ export const useSelectFileHandler = () => {
               },
               selectedWorkspace.id,
               chatSettings.embeddingsProvider
-            )
+            );
 
-            setFiles(prev => [...prev, createdFile])
+            setFiles(prev => [...prev, createdFile]);
 
             setNewMessageFiles(prev =>
               prev.map(item =>
-                item.id === "loading"
+                item.id === 'loading'
                   ? {
                       id: createdFile.id,
                       name: createdFile.name,
@@ -182,23 +183,25 @@ export const useSelectFileHandler = () => {
                     }
                   : item
               )
-            )
+            );
           }
         } catch (error: any) {
-          toast.error("Failed to upload. " + error?.message, {
+          toast.error('Failed to upload. ' + error?.message, {
             duration: 10000
-          })
+          });
           setNewMessageImages(prev =>
-            prev.filter(img => img.messageId !== "temp")
-          )
-          setNewMessageFiles(prev => prev.filter(file => file.id !== "loading"))
+            prev.filter(img => img.messageId !== 'temp')
+          );
+          setNewMessageFiles(prev =>
+            prev.filter(file => file.id !== 'loading')
+          );
         }
-      }
+      };
     }
-  }
+  };
 
   return {
     handleSelectDeviceFile,
     filesToAccept
-  }
-}
+  };
+};
