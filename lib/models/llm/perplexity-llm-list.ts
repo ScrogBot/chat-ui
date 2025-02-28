@@ -76,7 +76,32 @@ const llama_31_sonar_large_128k_chat: LLM = {
   platformLink: PERPLEXITY_PLATORM_LINK,
   imageInput: false
 };
-
+// Sonar UPDATED 7/25/24)
+const sonar: LLM = {
+  modelId: "sonar",
+  modelName: "Sonar",
+  provider: "perplexity",
+  hostedId: "sonar",
+  platformLink: PERPLEXITY_PLATORM_LINK,
+  imageInput: false
+};
+// Sonar Large Online (UPDATED 7/25/24)
+const sonar_pro: LLM = {
+  modelId: "sonar-pro",
+  modelName: "Sonar Pro",
+  provider: "perplexity",
+  hostedId: "sonar-pro",
+  platformLink: PERPLEXITY_PLATORM_LINK,
+  imageInput: false
+};
+const sonar_pro_reasoning: LLM = {
+  modelId: "sonar-pro-reasoning",
+  modelName: "Sonar Pro Reasoning",
+  provider: "perplexity",
+  hostedId: "sonar-pro-reasoning",
+  platformLink: PERPLEXITY_PLATORM_LINK,
+  imageInput: false
+};
 // Sonar Large Online (UPDATED 7/25/24)
 const llama_31_sonar_large_128k_online: LLM = {
   modelId: "llama-3.1-sonar-large-128k-online",
@@ -95,5 +120,8 @@ export const PERPLEXITY_LLM_LIST: LLM[] = [
   llama_31_sonar_small_128k_chat,
   llama_31_sonar_small_128k_online,
   llama_31_sonar_large_128k_chat,
+  sonar,
+  sonar-pro,
+  sonar-pro-reasoning,
   llama_31_sonar_large_128k_online
 ]
