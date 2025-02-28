@@ -69,6 +69,9 @@ export type PerplexityLLMID =
   | 'llama-3.1-sonar-small-128k-chat' // Sonar Small Chat
   | 'llama-3.1-sonar-small-128k-online' // Sonar Small Online
   | 'llama-3.1-sonar-large-128k-chat' // Sonar Large Chat
+  | 'sonar'
+  | 'sonar-pro'
+  | 'sonar-pro-reasoning'
   | 'llama-3.1-sonar-large-128k-online'; // Sonar Large Online
 
 export type CustomLLMID =
