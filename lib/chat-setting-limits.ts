@@ -65,12 +65,6 @@ export const CHAT_SETTING_LIMITS = {
   },
 
   // MISTRAL MODELS
-  'mistral-tiny': {
-    MIN_TEMPERATURE: 0.0,
-    MAX_TEMPERATURE: 1.0,
-    MAX_TOKEN_OUTPUT_LENGTH: 2000,
-    MAX_CONTEXT_LENGTH: 4000
-  },
   'mistral-small-latest': {
     MIN_TEMPERATURE: 0.0,
     MAX_TEMPERATURE: 1.0,
